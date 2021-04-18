@@ -1,112 +1,85 @@
-/**********************************
-
-Use: Main Screen Import
-
-***********************************/
-
-@import "reset.css";
-@import "core.css";
-
-@import "cmxformTemplate.css";
-@import "cmxform.css";
-
-
-
-/* Navbar*/
-.topnav {
-
-	background-color: #ccc;
-	overflow: hidden;
-	position: fixed;
-	top: 0;
-	width: 100%;
-	font-family: Arial, Helvetica, sans-serif;
-}
-
-/* Style the links inside the navigation bar */
-.topnav a {
-	float: left;
-	display: block;
-	color: black;
-	text-align: center;
-	padding: 14px 16px;
-	text-decoration: none;
+/* .has-feedback .form-control-feedback {
+	top: 33px;
+  }
+  
+  .validate_cus {
+	color: #a94442;
 	font-size: small;
-}
-/* Change the color of links on hover */
-.topnav a:hover {
-	background-color: #ddd;
-	color: black;
-}
-
-
-/*DIVS*/
-/* #bodyPage{
-	width: 100%;
-	height: 100%;
+  }
+  
+  label {
+	display: inline-block;
+	margin-bottom: 5px;
+	font-weight: 700;
+  }
+    
+  .field-wrap {
+	position: relative;
+	margin-bottom: 20px;
+  }
+  
+  input,
+  textarea {
+	font-size: 18px;
 	display: block;
-} */
+	height: 100%;
+	width: 100%;
+	padding: 5px 10px;
+	background: none;
+	background-image: none;
+	border: 1px solid #a0b3b0;
+	color: #545f58;
+	border-radius: 6px;
+	-webkit-transition: border-color .25s ease, box-shadow .25s ease;
+	transition: border-color .25s ease, box-shadow .25s ease;
+  }
+  input:disabled {
+	  background: #eee;
+  }
+  
+  .button:hover,
+  .button:focus {
+	background: #0b9444;
+  }
+  
+  .button-block {
+	display: block;
+	width: 50%;
+  }
+  
+  .button {
+	border: 0;
+	outline: none;
+	border-radius: 20px;
+	padding: 15px 0;
+	font-size: 1.6rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: .1em;
+	background: #187143;
+	color: #ffffff;
+	-webkit-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+	-webkit-appearance: none;
+  }
+  
+  #signup-form {
+	padding: 30px;
+  } */
 
-#WelcomePage {
-	margin-top: 100px;
-}
-#LOGIN {
-	display: none;
-}
-#SIGNUP {
-	display: none;
-}
-#configuration {
-	display: none;
-	/* margin-top: 100px;
-	padding-top: 50px;
-	height: 400px; */
-}
-#game {
-	display: none;
-	margin-top: 50px;
-	padding-top: 0px;
-	height: 400px;
-	/* text-align: center; */
-}
-#about {
-	display: none;
-	margin-top: 400px;
-	padding-top: 100px;
-	height: 400px;
-}
 
-#canvas {
-	/* text-align: center; */
-	border: 3px solid white;
-	background: #E7E7E7;
-	border: 5px solid white;
-	-ms-transform: translate(-50%, -50%);
-	transform: translate(50%, 10%);
-}
 
-#config {
-	display: none;
-	margin-top: 50px;
-	padding-top: 0px;
-	height: 500px;
-	width: 500px;
-	text-align:	center;
-	background: #888;
-	border-radius: 20px 20px 20px 20px;
-	border: 2px solid white;
-	margin: 0;
-	position: absolute;
-	top: 90%;
-	left: 80%;
-	-ms-transform: translate(-100%, -50%);
-	transform: translate(-50%, -100%);
+
+
+  #canvas{
+    background-image: url(welcomeImg.png);
+    background-size: 100% 100%;    
+	display: block;     /* to remove the scrollbars */                 
+    background-repeat:   no-repeat;
+    background-position: center center;
 }
 
 #centerSignUp {
-	background-color: transparent;
-	border-radius: 20px 20px 20px 20px;
-	border: 2px solid white;
 	margin: 0;
 	position: absolute;
 	top: 90%;
@@ -116,9 +89,6 @@ Use: Main Screen Import
 }
 
 #centerLogIn {
-	background-color: transparent;
-	border-radius: 20px 20px 20px 20px;
-	border: 2px solid white;
 	margin: 0;
 	position: absolute;
 	top: 90%;
@@ -127,34 +97,21 @@ Use: Main Screen Import
 	transform: translate(20%, -50%);
 }
 
-html {width:100%; height:100%;}
-
-
-
-
-
-
-body {font-family: Arial, Helvetica, sans-serif; width:100%; height:100%; background-image: url(welcomeImg.png);}
-
-/* Set a style for all buttons */
-input[type=submit] {
-	background-color: #2b179b;
-	color: white;
-	padding: 14px 5px;
-	margin: 8px 5px;
-	border: none;
-	cursor: pointer;
-	width: 80%;
-	}
-
-input:hover {
-opacity: 0.8;
+#whiteBG{
+	background-color: #ccc;
+	background-size: 100% 100%;    
+	display: block;     /* to remove the scrollbars */                 
+    background-repeat:   no-repeat;
+    background-position: center center; 
 }
+
+html {width:100%; height:100%;}
+body {font-family: Arial, Helvetica, sans-serif; width:100%; height:100%;}
 
 		/* Full-width input fields */
 		input[type=text], input[type=password] {
 		width: 100%;
-		padding: 12px 10px;
+		padding: 12px 20px;
 		margin: 8px 0;
 		display: inline-block;
 		border: 1px solid #ccc;
@@ -230,7 +187,7 @@ opacity: 0.8;
 		/* The Close Button (x) */
 		.close {
 		position: absolute;
-		right: 20px;
+		right: 25px;
 		top: 0;
 		color: #000;
 		font-size: 35px;
