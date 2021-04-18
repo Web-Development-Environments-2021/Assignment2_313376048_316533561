@@ -117,7 +117,7 @@
 
 		<div id="id02" class="modal">
   
-			<form id="log_in" class="modal-content animate" action="/action_page.php" method="post">
+			<form id="log_in" class="modal-content animate" method="post">
 			  <div class="imgcontainer">
 				<span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">&times;</span>
 			  </div>
@@ -148,11 +148,14 @@
  
 		<div id="id01" class="modal">
 		<span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-		<form class="modal-content" id="sign_up" action="/action_page.php">
+		<form class="modal-content" id="sign_up" >
 			<div class="container">
 				<h1>Sign Up</h1>
 				<p>Please fill in this form to create an account.</p>
 				<hr>
+				<label for="user name"><b>Username</b></label>
+				<input type="text" id="Username" placeholder="Enter Username" name="Username" required>
+			
 				<label for="email"><b>Email</b></label>
 				<input type="text" id="sign_upEmail" placeholder="Enter Email" name="email" required>
 			
@@ -161,6 +164,8 @@
 			
 				<label for="psw-repeat"><b>Repeat Password</b></label>
 				<input type="password" id="pswdSRepeat" placeholder="Repeat Password" name="psw-repeat" required>
+				<label for="full name"><b>Fullname</b></label>
+				<input type="text" id="Fullname" placeholder="Enter Fullname" name="Fullname" required>
 				
 				<!-- <label>
 					<input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
