@@ -7,7 +7,8 @@ var start_time;
 var time_elapsed;
 var interval;
 var PackmanScore;
-var t;
+var users = [['k','k','k','k@gmail.com',23,12,1994]];
+
 
 $(document).ready(function() {
 	//window.onload = function() {
@@ -35,120 +36,174 @@ $(document).ready(function() {
 		context.fontcolor="white";
 	}
 
-	function validateEmail($email) {
-		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-  		return regex.test($email);
-	}
-
-	var value = $("#password_reg").val();
-
-	$.validator.addMethod("checklower", function(value) {
-	return /[a-z]/.test(value);
-	});
-	$.validator.addMethod("checkupper", function(value) {
-	return /[A-Z]/.test(value);
-	});
-	$.validator.addMethod("checkdigit", function(value) {
-	return /[0-9]/.test(value);
-	});
-	$.validator.addMethod("pwcheck", function(value) {
-	return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) && /[a-z]/.test(value) && /\d/.test(value) && /[A-Z]/.test(value);
-	});
-
-	$('#sign_up').validate({
-		rules: {
-			pswdS: {
-			minlength: 6,
-			maxlength: 30,
-			required: true,
-			//pwcheck: true,
-			checklower: true,
-			checkupper: true,
-			checkdigit: true
-			},
-			pswdSRepeat: {
-			equalTo: "#psw",
-			},
-		},
-		messages: {
-			pswdS: {
-			pwcheck: "Password is not strong enough",
-			checklower: "Need atleast 1 lowercase alphabet",
-			checkupper: "Need atleast 1 uppercase alphabet",
-			checkdigit: "Need atleast 1 digit"
-			}
-		},
-		//   highlight: function(element) {
-		//     var id_attr = "#" + $(element).attr("id") + "1";
-		//     $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-		//     $(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
-		//     $('.form-group').css('margin-bottom', '5px');
-		//     $('.form').css('padding', '30px 40px');
-		//     $('.tab-group').css('margin', '0 0 25px 0');
-		//     $('.help-block').css('display', '');
-		//   },
-		//   unhighlight: function(element) {
-		//     var id_attr = "#" + $(element).attr("id") + "1";
-		//     $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-		//     $(id_attr).removeClass('glyphicon-remove').addClass('glyphicon-ok');
-		//     $('#confirmPassword').attr('disabled', false);
-		//   },
-		errorElement: 'span',
-		errorClass: 'validate_cus',
-		errorPlacement: function(error, element) {
-			x = element.length;
-			if (element.length) {
-			error.insertAfter(element);
-			} else {
-			error.insertAfter(element);
-			}
-		}
-
-	});
-
-
 	/*validate LOGIN */
-	let uname = $("#u_name");
+	$("#log_in").on("submit", (e)=>{
+		let uname = $("#u_name");
+		let passW = $("#pswdL");
+		for (let key =0; key<users.length; key++) {
+			if (users[key][0]==uname.val()) {
+				if(users[key][1]==passW.val()){
+					return true;
+				}
+				else{
+					alert("wrong password!");
+					return false;
+				}				
+			}
+			else{
+				alert("no such user name!");
+				return false;
+			}	
+		}
+	})
+
 
 	/*validate SIGNUP */
-	$("#sign_up").on("submit", (e)=>{
-		let sign_upEmail = $("#sign_upEmail").val();
-		let pswdS = $("#pswdS");
-		let pswdSRepeat = $("#pswdSRepeat");	
 
-		let signupStatus=0;
-		if(!validateEmail(sign_upEmail)){
-			signupStatus=0;
-			alert("Hello! I am an alert box!!1");
+	/* Date Picker */
+	$( function() {
+		$( "#Bday" ).datepicker();
+	} );
+
+
+	// function validateEmail($email) {
+	// 	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  	// 	return regex.test($email);
+	// }
+
+	// var value = $("#pswdS").val();
+
+	// $.validator.addMethod("checklower", function(value) {
+	// return /[a-z]/.test(value);
+	// });
+	// $.validator.addMethod("checkupper", function(value) {
+	// return /[A-Z]/.test(value);
+	// });
+	$.usernameValue.addMethod("checkdigit", function(value) {
+	return /[0-9]/.test(value);
+	});
+	// $.validator.addMethod("pwcheck", function(value) {
+	// return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) && /[a-z]/.test(value) && /\d/.test(value) && /[A-Z]/.test(value);
+	// });
+
+	// Validate User Full Name
+	$('#usercheck').hide();	
+	let usernameError = true;
+	$('#allName').keyup(function () {
+		validateUsername();
+	});
+
+	function validateUsername() {
+		let usernameValue = $('#allName').val();
+		if (usernameValue.length == '') {
+		$('#usercheck').show();
+			usernameError = false;
 			return false;
 		}
-		// if(validate(pswdS)){
-		// 	signupStatus=0;
-		// 	alert("Hello! I am an alert box!!2");
+		else if((usernameValue.length < 3)||
+				(usernameValue.length > 10)) {
+			$('#usercheck').show();
+			$('#usercheck').html
+		("**Full name must contain only digit");
+			usernameError = false;
+			return false;
+		}
+		// else if(usernameValue.length == true ) {
+		// 	$('#usercheck').show();
+		// 	$('#usercheck').html
+		// ("**Full name must contain only digit");
+		// 	usernameError = false;
 		// 	return false;
 		// }
-		// else if(!validate(pswdSRepeat)){
-		// 	signupStatus=0;
-		// 	alert("Hello! I am an alert box!!3");
-		// 	return false;
-		// }
-		if(!validate()){
-			signupStatus=0;
-			alert("Hello! I am an alert box!!2");
-			return false;
+		else {
+			$('#usercheck').hide();
 		}
-		else if(!pswdSRepeat != pswdS){
-			signupStatus=0;
-			alert("Hello! I am an alert box!!4");
-			return false;
-		}
-		else{ /* password is correct and ok */
-			signupStatus=1;
-			alert("Hello! I am an alert box!!5");
-			return true;
-		}
+	}
 
+	// Validate Email
+	const email =
+	document.getElementById('sign_upEmail');
+	email.addEventListener('blur', ()=>{
+	let regex =	/^([_\-\.0-9a-zA-Z]+)@([_\-\.0-9a-zA-Z]+)\.([a-zA-Z]){2,7}$/;
+	let s = email.value;
+	if(regex.test(s)){
+	email.classList.remove(
+			'is-invalid');
+	emailError = true;
+	}
+	else{
+		email.classList.add(
+			'is-invalid');
+		emailError = false;
+	}
 	})
+
+	// Validate Password
+	$('#passcheck').hide();
+	let passwordError = true;
+	$('#pswdS').keyup(function () {
+	validatePassword();
+	});
+	function validatePassword() {
+	let passwrdValue =
+		$('#pswdS').val();
+	if (passwrdValue.length == '') {
+		$('#passcheck').show();
+		passwordError = false;
+		return false;
+	}
+	if ((passwrdValue.length < 6)||
+		(passwrdValue.length > 10)) {
+		$('#passcheck').show();
+		$('#passcheck').html
+	("**length of your password must be between 3 and 10");
+		$('#passcheck').css("color", "red");
+		passwordError = false;
+		return false;
+	} else {
+		$('#passcheck').hide();
+	}
+	}
+
+	// Validate Confirm Password
+	$('#conpasscheck').hide();
+	let confirmPasswordError = true;
+	$('#pswdSRepeat').keyup(function () {
+	validateConfirmPasswrd();
+	});
+	function validateConfirmPasswrd() {
+	let confirmPasswordValue =
+		$('#pswdSRepeat').val();
+	let passwrdValue =
+		$('#pswdS').val();
+	if (passwrdValue != confirmPasswordValue) {
+		$('#conpasscheck').show();
+		$('#conpasscheck').html(
+			"**Password didn't Match");
+		$('#conpasscheck').css(
+			"color", "red");
+		confirmPasswordError = false;
+		return false;
+	} else {
+		$('#conpasscheck').hide();
+	}
+	}
+
+	// Submitt button
+	$('#submitbtn').click(function () {
+	validateUsername();
+	validatePassword();
+	validateConfirmPasswrd();
+	validateEmail();
+	if ((usernameError == true) &&
+		(passwordError == true) &&
+		(confirmPasswordError == true) &&
+		(emailError == true)) {
+		return true;
+	} else {
+		return false;
+	}
+	});
 
 	//Start()
 });
