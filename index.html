@@ -111,8 +111,8 @@
 				
 				<label for="fullName"><b>Full Name</b></label>
 				<input type="text" id="allName" placeholder="Enter Your Full Name" name="fulname" required>
-				<h5 id="usercheck" style="color: red;" >
-					**Full name must contain only digit
+				<h5 id="usercheck" style="color: red;">
+					**Full name must contain only letters
 				</h5>
 				
 				<label for="birthday"><b>Birthdate</b></label>
@@ -120,6 +120,9 @@
 			
 				<label for="email"><b>Email</b></label>
 				<input type="text" id="sign_upEmail" placeholder="Enter Email" name="email" required>
+				<small id="emailvalid" class="form-text	text-muted invalid-feedback">
+					Your email must be a valid email
+				</small>
 			
 				<label for="pswdS"><b>Password</b></label>
 				<input type="password" id="pswdS" placeholder="Enter Password" name="pswd" required>
