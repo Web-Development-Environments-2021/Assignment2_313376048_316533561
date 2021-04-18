@@ -7,23 +7,23 @@ var start_time;
 var time_elapsed;
 var interval;
 var PackmanScore;
-var users = [['k','k','k','k@gmail.com',23,12,1994]];
+var users = [['k', 'k', 'k', 'k@gmail.com', 23, 12, 1994]];
 
 
-$(document).ready(function() {
+$(document).ready(function () {
 	//window.onload = function() {
 	var canvas = document.getElementById('canvas'),
-	context = canvas.getContext("2d");
+		context = canvas.getContext("2d");
 
 	// Event handler to resize the canvas when the document view is changed
 	window.addEventListener('resize', resizeCanvas, false);
 
 	function resizeCanvas() {
-	  canvas.width = window.innerWidth;
-	  canvas.height = window.innerHeight;
-  
-	  // Redraw everything after resizing the window
-	  drawStuff(); 
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+
+		// Redraw everything after resizing the window
+		drawStuff();
 	}
 	resizeCanvas();
 
@@ -32,49 +32,47 @@ $(document).ready(function() {
 		context.fillStyle = "white";
 		context.fillText('Welcome to Packmen Game', 600, 80);
 		context.fillText('if you like the game tell to our HW checkers.', 600, 110);
-		context.fillText("If you don't like the keep it secret, your opinion is not matter to us", 600, 140);		
-		context.fontcolor="white";
+		context.fillText("If you don't like the keep it secret, your opinion is not matter to us", 600, 140);
+		context.fontcolor = "white";
 	}
 
 	/*validate LOGIN */
-	$("#log_in").on("submit", (e)=>{
+	$("#log_in").on("submit", (e) => {
 		let uname = $("#u_name");
 		let passW = $("#pswdL");
-		for (let key =0; key<users.length; key++) {
-			if (users[key][0]==uname.val()) {
-				if(users[key][1]==passW.val()){
+		for (let key = 0; key < users.length; key++) {
+			if (users[key][0] == uname.val()) {
+				if (users[key][1] == passW.val()) {
 					return true;
 				}
-				else{
+				else {
 					alert("wrong password!");
 					return false;
-				}				
+				}
 			}
-			else{
-				alert("no such user name!");
-				return false;
-			}	
 		}
+		alert("no such user name!");
+		return false;
 	})
 
 
 	/*validate SIGNUP */
 
 	/* Date Picker */
-	$( function() {
-		$( "#Bday" ).datepicker();
-	} );
+	$(function () {
+		$("#Bday").datepicker();
+	});
 
-	function checkletters(value){
+	function checkletters(value) {
 		return /[a-z]/.test(value) || /[a-z]/.test(value);
 	}
 
-	function checkdigit(value){
+	function checkdigit(value) {
 		return /[0-9]/.test(value);
 	}
 
 	// Validate User Full Name
-	$('#usercheck').hide();	
+	$('#usercheck').hide();
 	let usernameError = true;
 	$('#allName').keyup(function () {
 		validateUsername();
@@ -83,36 +81,39 @@ $(document).ready(function() {
 	function validateUsername() {
 		let usernameValue = $('#allName').val();
 		if (usernameValue.length == '') {
-		$('#usercheck').show();
+			$('#usercheck').show();
 			usernameError = false;
 			return false;
 		}
-		else if(checkdigit(usernameValue)){
+		else if (checkdigit(usernameValue)) {
 			$('#usercheck').show();
 			$('#usercheck').html("**Full name must contain only letters");
 			usernameError = false;
 			return false;
-		}else {
+		} else {
 			$('#usercheck').hide();
 		}
 	}
 
 	// Validate Email
+
 	const email = document.getElementById('sign_upEmail');
-	email.addEventListener('blur', ()=>{
-	let regex =	/^([_\-\.0-9a-zA-Z]+)@([_\-\.0-9a-zA-Z]+)\.([a-zA-Z]){2,7}$/;
-	let s = email.value;
-	if(regex.test(s)){
-	email.classList.remove(
-			'is-invalid');
-	emailError = true;
-	}
-	else{
-		email.classList.add(
-			'is-invalid');
-		emailError = false;
-	}
+	let emailError = true;
+	email.addEventListener('blur', () => {
+		let regex = /^([_\-\.0-9a-zA-Z]+)@([_\-\.0-9a-zA-Z]+)\.([a-zA-Z]){2,7}$/;
+		let s = email.value;
+		if (regex.test(s)) {
+			email.classList.remove(
+				'is-invalid');
+			emailError = true;
+		}
+		else {
+			email.classList.add(
+				'is-invalid');
+			emailError = false;
+		}
 	})
+
 
 	// Validate Password
 	$('#passcheck').hide();
@@ -121,100 +122,103 @@ $(document).ready(function() {
 		validatePassword();
 	});
 	function validatePassword() {
-	let passwrdValue =
-		$('#pswdS').val();
-	if (passwrdValue.length == '') {
-		$('#passcheck').show();
-		passwordError = false;
-		return false;
-	}
-	if ((passwrdValue.length < 6)||
-		(passwrdValue.length > 10)) {
-		$('#passcheck').show();
-		$('#passcheck').html
-	("**length of your password must be between 6 and 10");
-		$('#passcheck').css("color", "red");
-		passwordError = false;
-		return false;
-	} 
-	else if(!checkletters(passwrdValue)) {
-		$('#passcheck').show();
-		$('#passcheck').html
-	("**your password must contain letters!");
-		$('#passcheck').css("color", "red");
-		passwordError = false;
-		return false;
-	}
+		let passwrdValue =
+			$('#pswdS').val();
+		if (passwrdValue.length == '') {
+			$('#passcheck').show();
+			passwordError = false;
+			return false;
+		}
+		if ((passwrdValue.length < 6) ||
+			(passwrdValue.length > 10)) {
+			$('#passcheck').show();
+			$('#passcheck').html
+				("**length of your password must be between 6 and 10");
+			$('#passcheck').css("color", "red");
+			passwordError = false;
+			return false;
+		}
+		else if (!checkletters(passwrdValue)) {
+			$('#passcheck').show();
+			$('#passcheck').html
+				("**your password must contain letters!");
+			$('#passcheck').css("color", "red");
+			passwordError = false;
+			return false;
+		}
 
-	else if(!checkdigit(passwrdValue)) {
-		$('#passcheck').show();
-		$('#passcheck').html
-	("**your password must contain digits!");
-		$('#passcheck').css("color", "red");
-		passwordError = false;
-		return false;
-	}
+		else if (!checkdigit(passwrdValue)) {
+			$('#passcheck').show();
+			$('#passcheck').html
+				("**your password must contain digits!");
+			$('#passcheck').css("color", "red");
+			passwordError = false;
+			return false;
+		}
 
-	else {
-		$('#passcheck').hide();
-	}
+		else {
+			$('#passcheck').hide();
+		}
 	}
 
 	// Validate Confirm Password
 	$('#conpasscheck').hide();
 	let confirmPasswordError = true;
 	$('#pswdSRepeat').keyup(function () {
-	validateConfirmPasswrd();
+		validateConfirmPasswrd();
 	});
 	function validateConfirmPasswrd() {
-	let confirmPasswordValue =
-		$('#pswdSRepeat').val();
-	let passwrdValue =
-		$('#pswdS').val();
-	if (passwrdValue != confirmPasswordValue) {
-		$('#conpasscheck').show();
-		$('#conpasscheck').html(
-			"**Password didn't Match");
-		$('#conpasscheck').css(
-			"color", "red");
-		confirmPasswordError = false;
-		return false;
-	} else {
-		$('#conpasscheck').hide();
-	}
+		let confirmPasswordValue =
+			$('#pswdSRepeat').val();
+		let passwrdValue =
+			$('#pswdS').val();
+		if (passwrdValue != confirmPasswordValue) {
+			$('#conpasscheck').show();
+			$('#conpasscheck').html(
+				"**Password didn't Match");
+			$('#conpasscheck').css(
+				"color", "red");
+			confirmPasswordError = false;
+			return false;
+		} else {
+			$('#conpasscheck').hide();
+		}
 	}
 
 	// Submitt button
-	$('.signupbtn').click(function () {
+	// $('#signupbtn').click(function () {
+	$("#sign_up").on("submit", (e) => {
+
 		validateUsername();
 		validatePassword();
 		validateConfirmPasswrd();
-		validateEmail();
 		if ((usernameError == true) &&
 			(passwordError == true) &&
 			(confirmPasswordError == true) &&
 			(emailError == true)) {
-				new_user[0] = $("#user_name").val();
-				new_user[1] = $("#pswdS").val();
-				new_user[2] = $("#allName").val();
-				new_user[3] = $("#sign_upEmail").val();
-				new_user[4] = $("#Bday").val();
-				users.push(new_user);
+			let new_user = [5];
+			new_user[0] = $("#user_name").val();
+			new_user[1] = $("#pswdS").val();
+			new_user[2] = $("#allName").val();
+			new_user[3] = $("#sign_upEmail").val();
+			new_user[4] = $("#Bday").val();
+			users.push(new_user);
 			return true;
 		} else {
 			return false;
 		}
-	});
+
+	})
 
 	//Start()
 });
 
-function openDialog() { 
-	document.getElementById("myDialog").showModal(); 
-} 
+function openDialog() {
+	document.getElementById("myDialog").showModal();
+}
 
-function closeDialog() { 
-	document.getElementById("myDialog").close(); 
+function closeDialog() {
+	document.getElementById("myDialog").close();
 }
 
 
@@ -268,14 +272,14 @@ function Start() {
 	keysDown = {};
 	addEventListener(
 		"keydown",
-		function(e) {
+		function (e) {
 			keysDown[e.keyCode] = true;
 		},
 		false
 	);
 	addEventListener(
 		"keyup",
-		function(e) {
+		function (e) {
 			keysDown[e.keyCode] = false;
 		},
 		false
@@ -308,30 +312,30 @@ function GetKeyPressed() {
 	}
 }
 
-function DrawWelcomePage(){
-	return true;	
+function DrawWelcomePage() {
+	return true;
 }
 
-function scoreAndTime(){
+function scoreAndTime() {
 	// Score
 	context.fillStyle = "rgb(0, 0, 0)";
 	context.font = "24px Helvetica";
 	context.textBaseline = "top";
-	context.textAlign = "left";	
-	context.fillText("Score: " + PackmanScore + " Time left :" +  time_elapsed/1000 , 5, 5);
+	context.textAlign = "left";
+	context.fillText("Score: " + PackmanScore + " Time left :" + time_elapsed / 1000, 5, 5);
 }
 
 function Draw() {
 	canvas.width = canvas.width; //clean board
 	//lblScore.value = score;
 	//lblTime.value = time_elapsed;
-	
-	for (var i =0; i < 10; i++) {
+
+	for (var i = 0; i < 10; i++) {
 		for (var j = 1; j < 11; j++) {
 			var center = new Object();
 			center.x = i * 60 + 30;
 			center.y = j * 60 + 30;
-			
+
 			if ((board[i][j] == 2)) {
 				context.beginPath();
 				context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
@@ -427,10 +431,10 @@ function UpdatePosition() {
 //             hobbies.push(checkboxes[i].value);
 //         }
 //     }
-    
+
 // 	// Defining error variables with a default value
 //     var nameErr = emailErr = mobileErr = countryErr = genderErr = true;
-    
+
 //     // Validate name
 //     if(name == "") {
 //         printError("nameErr", "Please enter your name");
@@ -443,7 +447,7 @@ function UpdatePosition() {
 //             nameErr = false;
 //         }
 //     }
-    
+
 //     // Validate email address
 //     if(email == "") {
 //         printError("emailErr", "Please enter your email address");
@@ -457,7 +461,7 @@ function UpdatePosition() {
 //             emailErr = false;
 //         }
 //     }
-    
+
 //     // Validate mobile number
 //     if(mobile == "") {
 //         printError("mobileErr", "Please enter your mobile number");
@@ -470,7 +474,7 @@ function UpdatePosition() {
 //             mobileErr = false;
 //         }
 //     }
-    
+
 //     // Validate country
 //     if(country == "Select") {
 //         printError("countryErr", "Please select your country");
@@ -478,7 +482,7 @@ function UpdatePosition() {
 //         printError("countryErr", "");
 //         countryErr = false;
 //     }
-    
+
 //     // Validate gender
 //     if(gender == "") {
 //         printError("genderErr", "Please select your gender");
@@ -486,7 +490,7 @@ function UpdatePosition() {
 //         printError("genderErr", "");
 //         genderErr = false;
 //     }
-    
+
 //     // Prevent the form from being submitted if there are any errors
 //     if((nameErr || emailErr || mobileErr || countryErr || genderErr) == true) {
 //        return false;
