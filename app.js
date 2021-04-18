@@ -188,6 +188,12 @@ let pssibleDirections = [1,2,3,4];
 			(passwordError == true) &&
 			(confirmPasswordError == true) &&
 			(emailError == true)) {
+				new_user[0] = $("#user_name").val();
+				new_user[1] = $("#pswdS").val();
+				new_user[2] = $("#allName").val();
+				new_user[3] = $("#sign_upEmail").val();
+				new_user[4] = $("#Bday").val();
+				users.push(new_user);
 			return true;
 		} else {
 			return false;
