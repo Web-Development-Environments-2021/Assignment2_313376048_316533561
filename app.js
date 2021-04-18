@@ -65,26 +65,13 @@ $(document).ready(function() {
 		$( "#Bday" ).datepicker();
 	} );
 
+	function checkletters(value){
+		return /[a-z]/.test(value) || /[a-z]/.test(value);
+	}
 
-	// function validateEmail($email) {
-	// 	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-  	// 	return regex.test($email);
-	// }
-
-	// var value = $("#pswdS").val();
-
-	// $.validator.addMethod("checklower", function(value) {
-	// return /[a-z]/.test(value);
-	// });
-	// $.validator.addMethod("checkupper", function(value) {
-	// return /[A-Z]/.test(value);
-	// });
-	$.usernameValue.addMethod("checkdigit", function(value) {
-	return /[0-9]/.test(value);
-	});
-	// $.validator.addMethod("pwcheck", function(value) {
-	// return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) && /[a-z]/.test(value) && /\d/.test(value) && /[A-Z]/.test(value);
-	// });
+	function checkdigit(value){
+		return /[0-9]/.test(value);
+	}
 
 	// Validate User Full Name
 	$('#usercheck').hide();	
@@ -100,29 +87,18 @@ $(document).ready(function() {
 			usernameError = false;
 			return false;
 		}
-		else if((usernameValue.length < 3)||
-				(usernameValue.length > 10)) {
+		else if(checkdigit(usernameValue)){
 			$('#usercheck').show();
-			$('#usercheck').html
-		("**Full name must contain only digit");
+			$('#usercheck').html("**Full name must contain only letters");
 			usernameError = false;
 			return false;
-		}
-		// else if(usernameValue.length == true ) {
-		// 	$('#usercheck').show();
-		// 	$('#usercheck').html
-		// ("**Full name must contain only digit");
-		// 	usernameError = false;
-		// 	return false;
-		// }
-		else {
+		}else {
 			$('#usercheck').hide();
 		}
 	}
 
 	// Validate Email
-	const email =
-	document.getElementById('sign_upEmail');
+	const email = document.getElementById('sign_upEmail');
 	email.addEventListener('blur', ()=>{
 	let regex =	/^([_\-\.0-9a-zA-Z]+)@([_\-\.0-9a-zA-Z]+)\.([a-zA-Z]){2,7}$/;
 	let s = email.value;
@@ -142,7 +118,7 @@ $(document).ready(function() {
 	$('#passcheck').hide();
 	let passwordError = true;
 	$('#pswdS').keyup(function () {
-	validatePassword();
+		validatePassword();
 	});
 	function validatePassword() {
 	let passwrdValue =
@@ -156,11 +132,30 @@ $(document).ready(function() {
 		(passwrdValue.length > 10)) {
 		$('#passcheck').show();
 		$('#passcheck').html
-	("**length of your password must be between 3 and 10");
+	("**length of your password must be between 6 and 10");
 		$('#passcheck').css("color", "red");
 		passwordError = false;
 		return false;
-	} else {
+	} 
+	else if(!checkletters(passwrdValue)) {
+		$('#passcheck').show();
+		$('#passcheck').html
+	("**your password must contain letters!");
+		$('#passcheck').css("color", "red");
+		passwordError = false;
+		return false;
+	}
+
+	else if(!checkdigit(passwrdValue)) {
+		$('#passcheck').show();
+		$('#passcheck').html
+	("**your password must contain digits!");
+		$('#passcheck').css("color", "red");
+		passwordError = false;
+		return false;
+	}
+
+	else {
 		$('#passcheck').hide();
 	}
 	}
@@ -190,19 +185,19 @@ $(document).ready(function() {
 	}
 
 	// Submitt button
-	$('#submitbtn').click(function () {
-	validateUsername();
-	validatePassword();
-	validateConfirmPasswrd();
-	validateEmail();
-	if ((usernameError == true) &&
-		(passwordError == true) &&
-		(confirmPasswordError == true) &&
-		(emailError == true)) {
-		return true;
-	} else {
-		return false;
-	}
+	$('.signupbtn').click(function () {
+		validateUsername();
+		validatePassword();
+		validateConfirmPasswrd();
+		validateEmail();
+		if ((usernameError == true) &&
+			(passwordError == true) &&
+			(confirmPasswordError == true) &&
+			(emailError == true)) {
+			return true;
+		} else {
+			return false;
+		}
 	});
 
 	//Start()
