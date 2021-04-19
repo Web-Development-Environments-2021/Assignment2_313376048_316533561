@@ -10,148 +10,149 @@ var PackmanScore;
 var t;
 
 $(document).ready(function() {
-	//window.onload = function() {
-	var canvas = document.getElementById('canvas'),
+	// var canvas = document.getElementById('canvas'),
 	context = canvas.getContext("2d");
+	//Start();
 
-	// Event handler to resize the canvas when the document view is changed
-	window.addEventListener('resize', resizeCanvas, false);
-
-	function resizeCanvas() {
-	  canvas.width = window.innerWidth;
-	  canvas.height = window.innerHeight;
-  
-	  // Redraw everything after resizing the window
-	  drawStuff(); 
-	}
-	resizeCanvas();
-
-	function drawStuff() {
-		context.font = '20px serif';
-		context.fillStyle = "white";
-		context.fillText('Welcome to Packmen Game', 600, 80);
-		context.fillText('if you like the game tell to our HW checkers.', 600, 110);
-		context.fillText("If you don't like the keep it secret, your opinion is not matter to us", 600, 140);		
-		context.fontcolor="white";
-	}
-
-	function validateEmail($email) {
-		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-  		return regex.test($email);
-	}
-
-	var value = $("#password_reg").val();
-
-	$.validator.addMethod("checklower", function(value) {
-	return /[a-z]/.test(value);
-	});
-	$.validator.addMethod("checkupper", function(value) {
-	return /[A-Z]/.test(value);
-	});
-	$.validator.addMethod("checkdigit", function(value) {
-	return /[0-9]/.test(value);
-	});
-	$.validator.addMethod("pwcheck", function(value) {
-	return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) && /[a-z]/.test(value) && /\d/.test(value) && /[A-Z]/.test(value);
-	});
-
-	$('#sign_up').validate({
+	//LOGIN
+	$("#LOGIN").validate({
 		rules: {
-			pswdS: {
-			minlength: 6,
-			maxlength: 30,
-			required: true,
-			//pwcheck: true,
-			checklower: true,
-			checkupper: true,
-			checkdigit: true
+			uname: {
+				required: true,
 			},
-			pswdSRepeat: {
-			equalTo: "#psw",
-			},
+			pswdL: {
+				required: true,
+				validateUser: true
+			}
 		},
 		messages: {
-			pswdS: {
-			pwcheck: "Password is not strong enough",
-			checklower: "Need atleast 1 lowercase alphabet",
-			checkupper: "Need atleast 1 uppercase alphabet",
-			checkdigit: "Need atleast 1 digit"
+			uname: {
+				required: "Please enter username."
+			},
+			pswdL: {
+				required: "Please enter an password",
+				validateUser: "Username or password is not valid."
 			}
 		},
-		//   highlight: function(element) {
-		//     var id_attr = "#" + $(element).attr("id") + "1";
-		//     $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-		//     $(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
-		//     $('.form-group').css('margin-bottom', '5px');
-		//     $('.form').css('padding', '30px 40px');
-		//     $('.tab-group').css('margin', '0 0 25px 0');
-		//     $('.help-block').css('display', '');
-		//   },
-		//   unhighlight: function(element) {
-		//     var id_attr = "#" + $(element).attr("id") + "1";
-		//     $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-		//     $(id_attr).removeClass('glyphicon-remove').addClass('glyphicon-ok');
-		//     $('#confirmPassword').attr('disabled', false);
-		//   },
-		errorElement: 'span',
-		errorClass: 'validate_cus',
-		errorPlacement: function(error, element) {
-			x = element.length;
-			if (element.length) {
-			error.insertAfter(element);
-			} else {
-			error.insertAfter(element);
-			}
-		}
+		submitHandler: function () {
 
+			login();
+
+			//reset form details
+			let form = $("#LOGIN");
+			form[0].reset();
+		},
+	});
+
+	//REGISTER
+	$("#SIGNUP").validate({
+		rules: {
+			user_name: {
+				required: true,
+				validateUsername: true
+			},
+			Password: {
+				required: true,
+				strongPassword: true
+			},
+			allName: {
+				required: true,
+				lettersonly: true
+			},
+			sign_upEmail: {
+				required: true,
+				email: true
+			},
+			Bday: {
+				required: true
+			}
+		},
+		messages: {
+			user_name: {
+				required: "Please enter valid username address.",
+				validateUsername: "Username already taken."
+			},
+			Password: {
+				required: "Please enter an password",
+				strongPassword: "password MUST contain at least one character and one number."
+			},
+			allName: {
+				required: "Please enter a name.",
+				lettersonly: "Full name can be only letters."
+			},
+			sign_upEmail: {
+				required: "Please enter an email address.",
+				email: "Please enter a valid email."
+			},
+			registration_birth_day_name: {
+				required: "Please enter a birth day."
+			}
+		},
+		submitHandler: function () {
+
+			register();
+
+			//reset form details
+			let form = $("#SIGNUP");
+			form[0].reset();
+		},
+	});
+});
+
+$(function(){
+	//Password must contain at least 6 digit and contain one number and one char.
+	$.validator.addMethod('strongPassword', function (value, element) {
+		return this.optional(element) ||
+			value.length >= 6 &&
+			/\d/.test(value) &&
+			/[a-z]/i.test(value);
 	});
 
 
-	/*validate LOGIN */
-	let uname = $("#u_name");
+	//check if username already exists
+	$.validator.addMethod('validateUsername', function (value, element) {
+		return !isUserExists(value);
+	});
 
-	/*validate SIGNUP */
-	$("#sign_up").on("submit", (e)=>{
-		let sign_upEmail = $("#sign_upEmail").val();
-		let pswdS = $("#pswdS");
-		let pswdSRepeat = $("#pswdSRepeat");	
+	//Login
 
-		let signupStatus=0;
-		if(!validateEmail(sign_upEmail)){
-			signupStatus=0;
-			alert("Hello! I am an alert box!!1");
+	//check if password match user
+	$.validator.addMethod('validateUser', function (password, element) {
+
+		let user_input_username = document.getElementById("uname").value;
+
+		let localstorage_password = localStorage.getItem(user_input_username);
+
+		if(localstorage_password === null) {
 			return false;
 		}
-		// if(validate(pswdS)){
-		// 	signupStatus=0;
-		// 	alert("Hello! I am an alert box!!2");
-		// 	return false;
-		// }
-		// else if(!validate(pswdSRepeat)){
-		// 	signupStatus=0;
-		// 	alert("Hello! I am an alert box!!3");
-		// 	return false;
-		// }
-		if(!validate()){
-			signupStatus=0;
-			alert("Hello! I am an alert box!!2");
-			return false;
-		}
-		else if(!pswdSRepeat != pswdS){
-			signupStatus=0;
-			alert("Hello! I am an alert box!!4");
-			return false;
-		}
-		else{ /* password is correct and ok */
-			signupStatus=1;
-			alert("Hello! I am an alert box!!5");
+		else if(localstorage_password === password) {
 			return true;
 		}
 
-	})
+		return false;
+	});
+})
 
-	//Start()
-});
+function switchDives(Div_id){
+
+	$('#WelcomePage').hide();
+	$('#SIGNUP').hide();
+	$('#LOGIN').hide();
+	$('#centerSignUp').hide();
+	$('#centerLogIn').hide();
+	$('#game').hide();
+	$('#configuration').hide();
+	$('#about').hide();
+
+	$('#' + Div_id).show();
+
+	if(Div_id === 'game'){
+		Start();
+	}
+
+}
+
 
 function openDialog() { 
 	document.getElementById("myDialog").showModal(); 
@@ -163,11 +164,6 @@ function closeDialog() {
 
 
 function Start() {
-	//document.getElementById("whiteBG");
-	// var canvas = document.getElementById('canvas'),
-	// context = canvas.getContext("2d");
-	// context.fillStyle = "white";
-	// context.fillRect(0, 0, window.width, window.height);
 	board = new Array();
 	score = 0;
 	pac_color = "yellow";
@@ -343,110 +339,3 @@ function UpdatePosition() {
 		Draw();
 	}
 }
-
-
-
-
-
-
-
-// Defining a function to display error message
-// function printError(elemId, hintMsg) {
-//     document.getElementById(elemId).innerHTML = hintMsg;
-// }
-
-// // Defining a function to validate form 
-// function validateForm() {
-//     // Retrieving the values of form elements 
-//     var name = document.contactForm.name.value;
-//     var email = document.contactForm.email.value;
-//     var mobile = document.contactForm.mobile.value;
-//     var country = document.contactForm.country.value;
-//     var gender = document.contactForm.gender.value;
-//     var hobbies = [];
-//     var checkboxes = document.getElementsByName("hobbies[]");
-//     for(var i=0; i < checkboxes.length; i++) {
-//         if(checkboxes[i].checked) {
-//             // Populate hobbies array with selected values
-//             hobbies.push(checkboxes[i].value);
-//         }
-//     }
-    
-// 	// Defining error variables with a default value
-//     var nameErr = emailErr = mobileErr = countryErr = genderErr = true;
-    
-//     // Validate name
-//     if(name == "") {
-//         printError("nameErr", "Please enter your name");
-//     } else {
-//         var regex = /^[a-zA-Z\s]+$/;                
-//         if(regex.test(name) === false) {
-//             printError("nameErr", "Please enter a valid name");
-//         } else {
-//             printError("nameErr", "");
-//             nameErr = false;
-//         }
-//     }
-    
-//     // Validate email address
-//     if(email == "") {
-//         printError("emailErr", "Please enter your email address");
-//     } else {
-//         // Regular expression for basic email validation
-//         var regex = /^\S+@\S+\.\S+$/;
-//         if(regex.test(email) === false) {
-//             printError("emailErr", "Please enter a valid email address");
-//         } else{
-//             printError("emailErr", "");
-//             emailErr = false;
-//         }
-//     }
-    
-//     // Validate mobile number
-//     if(mobile == "") {
-//         printError("mobileErr", "Please enter your mobile number");
-//     } else {
-//         var regex = /^[1-9]\d{9}$/;
-//         if(regex.test(mobile) === false) {
-//             printError("mobileErr", "Please enter a valid 10 digit mobile number");
-//         } else{
-//             printError("mobileErr", "");
-//             mobileErr = false;
-//         }
-//     }
-    
-//     // Validate country
-//     if(country == "Select") {
-//         printError("countryErr", "Please select your country");
-//     } else {
-//         printError("countryErr", "");
-//         countryErr = false;
-//     }
-    
-//     // Validate gender
-//     if(gender == "") {
-//         printError("genderErr", "Please select your gender");
-//     } else {
-//         printError("genderErr", "");
-//         genderErr = false;
-//     }
-    
-//     // Prevent the form from being submitted if there are any errors
-//     if((nameErr || emailErr || mobileErr || countryErr || genderErr) == true) {
-//        return false;
-//     } else {
-//         // Creating a string from input data for preview
-//         var dataPreview = "You've entered the following details: \n" +
-//                           "Full Name: " + name + "\n" +
-//                           "Email Address: " + email + "\n" +
-//                           "Mobile Number: " + mobile + "\n" +
-//                           "Country: " + country + "\n" +
-//                           "Gender: " + gender + "\n";
-//         if(hobbies.length) {
-//             dataPreview += "Hobbies: " + hobbies.join(", ");
-//         }
-//         // Display input data in a dialog box before submitting the form
-//         alert(dataPreview);
-// 		Start();
-//     }
-// };
