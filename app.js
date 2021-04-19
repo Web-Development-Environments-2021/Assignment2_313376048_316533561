@@ -7,16 +7,24 @@ var start_time;
 var time_elapsed;
 var interval;
 var PackmanScore;
+var logged_in = false;
 var users = [['k', 'k', 'k', 'k@gmail.com', 23, 12, 1994]];
 
 
+
 $(document).ready(function () {
+
 	//window.onload = function() {
-	var canvas = document.getElementById('canvas'),
-		context = canvas.getContext("2d");
+	var canvas = document.getElementById('canvas');
+	context = canvas.getContext("2d");
+	$('#lblTime').hide();
+	$('#lblScore').hide();
+	$('#inputlblTime').hide();
+	$('#inputlblScore').hide();
+
 
 	// Event handler to resize the canvas when the document view is changed
-	window.addEventListener('resize', resizeCanvas, false);
+	// window.addEventListener('resize', resizeCanvas, false);
 
 	function resizeCanvas() {
 		canvas.width = window.innerWidth;
@@ -25,7 +33,7 @@ $(document).ready(function () {
 		// Redraw everything after resizing the window
 		drawStuff();
 	}
-	resizeCanvas();
+	// resizeCanvas();
 
 	function drawStuff() {
 		context.font = '20px serif';
@@ -36,26 +44,39 @@ $(document).ready(function () {
 		context.fontcolor = "white";
 	}
 
-	/*validate LOGIN */
-	$("#log_in").on("submit", (e) => {
-		let uname = $("#u_name");
-		let passW = $("#pswdL");
-		for (let key = 0; key < users.length; key++) {
-			if (users[key][0] == uname.val()) {
-				if (users[key][1] == passW.val()) {
-					return true;
-				}
-				else {
-					alert("wrong password!");
-					return false;
-				}
+
+
+/*validate LOGIN */
+$("#log_in").on("submit", () => {
+	let uname = $("#u_name");
+	let passW = $("#pswdL");
+	let correct_user = false;
+	for (let key = 0; key < users.length; key++) {
+		if (users[key][0] == uname.val()) {
+			correct_user = true;
+			if (users[key][1] == passW.val()) {
+				$("#menu").hide();
+				$("#id02").hide();
+				$('#lblTime').show();
+				$('#lblScore').show();
+				$('#inputlblTime').show();
+				$('#inputlblScore').show();
+				$("#game").show();
+				logged_in = true;
+				Start();
+				break;
+			}
+			else {
+				alert("wrong password!");
+				break;
 			}
 		}
+	}
+	if(!correct_user){
 		alert("no such user name!");
-		return false;
-	})
+	}
 
-
+})
 	/*validate SIGNUP */
 
 	/* Date Picker */
@@ -92,6 +113,7 @@ $(document).ready(function () {
 			return false;
 		} else {
 			$('#usercheck').hide();
+			usernameError = true;
 		}
 	}
 
@@ -158,6 +180,7 @@ $(document).ready(function () {
 
 		else {
 			$('#passcheck').hide();
+			passwordError = true;
 		}
 	}
 
@@ -182,6 +205,7 @@ $(document).ready(function () {
 			return false;
 		} else {
 			$('#conpasscheck').hide();
+			confirmPasswordError = true;
 		}
 	}
 
@@ -189,9 +213,9 @@ $(document).ready(function () {
 	// $('#signupbtn').click(function () {
 	$("#sign_up").on("submit", (e) => {
 
-		validateUsername();
-		validatePassword();
-		validateConfirmPasswrd();
+		// validateUsername();
+		// validatePassword();
+		// validateConfirmPasswrd();
 		if ((usernameError == true) &&
 			(passwordError == true) &&
 			(confirmPasswordError == true) &&
@@ -203,15 +227,19 @@ $(document).ready(function () {
 			new_user[3] = $("#sign_upEmail").val();
 			new_user[4] = $("#Bday").val();
 			users.push(new_user);
+			$("#id01").hide();
+			$("#id02").show();
 			return true;
 		} else {
 			return false;
 		}
 
-	})
-
-	//Start()
+	});
+	if(logged_in){
+		Start();
+	}
 });
+	
 
 function openDialog() {
 	document.getElementById("myDialog").showModal();
@@ -223,11 +251,6 @@ function closeDialog() {
 
 
 function Start() {
-	//document.getElementById("whiteBG");
-	// var canvas = document.getElementById('canvas'),
-	// context = canvas.getContext("2d");
-	// context.fillStyle = "white";
-	// context.fillRect(0, 0, window.width, window.height);
 	board = new Array();
 	score = 0;
 	pac_color = "yellow";
@@ -272,19 +295,19 @@ function Start() {
 	keysDown = {};
 	addEventListener(
 		"keydown",
-		function (e) {
+		function(e) {
 			keysDown[e.keyCode] = true;
 		},
 		false
 	);
 	addEventListener(
 		"keyup",
-		function (e) {
+		function(e) {
 			keysDown[e.keyCode] = false;
 		},
 		false
 	);
-	interval = setInterval(UpdatePosition, 250);
+	interval = setInterval(UpdatePosition(), 250);
 }
 
 function findRandomEmptyCell(board) {
@@ -312,9 +335,7 @@ function GetKeyPressed() {
 	}
 }
 
-function DrawWelcomePage() {
-	return true;
-}
+
 
 function scoreAndTime() {
 	// Score
@@ -327,16 +348,14 @@ function scoreAndTime() {
 
 function Draw() {
 	canvas.width = canvas.width; //clean board
-	//lblScore.value = score;
-	//lblTime.value = time_elapsed;
-
+	lblScore.value = score;
+	lblTime.value = time_elapsed;
 	for (var i = 0; i < 10; i++) {
-		for (var j = 1; j < 11; j++) {
+		for (var j = 0; j < 10; j++) {
 			var center = new Object();
 			center.x = i * 60 + 30;
 			center.y = j * 60 + 30;
-
-			if ((board[i][j] == 2)) {
+			if (board[i][j] == 2) {
 				context.beginPath();
 				context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
 				context.lineTo(center.x, center.y);
@@ -344,14 +363,12 @@ function Draw() {
 				context.fill();
 				context.beginPath();
 				context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
-				context.fillStyle = "blue"; //color - packman eye
+				context.fillStyle = "black"; //color
 				context.fill();
 			} else if (board[i][j] == 1) {
 				context.beginPath();
 				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
-				context.fillStyle = "#000";
-				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
-				context.fillStyle = "black"; //color - pills
+				context.fillStyle = "black"; //color
 				context.fill();
 			} else if (board[i][j] == 4) {
 				context.beginPath();
@@ -361,9 +378,7 @@ function Draw() {
 			}
 		}
 	}
-	scoreAndTime()
 }
-
 function UpdatePosition() {
 	board[shape.i][shape.j] = 0;
 	var x = GetKeyPressed();
