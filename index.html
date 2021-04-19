@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<script src="./jquery-3.4.1.slim.min.js"></script>
-		<script type="text/javascript" src="./app.js"></script>
-		<link rel="stylesheet" type="text/css" href="style.css" />	
-		<script src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/additional-methods.js"></script>
-	</head>
 
-	<body>
-		<div>
-			<!-- Navbar -->
-		<div id = "topnav">
+<head>
+	<script src="./jquery-3.4.1.slim.min.js"></script>
+	<script type="text/javascript" src="./app.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="Configurations.css" />
+	<script src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/additional-methods.js"></script>
+</head>
+
+<body>
+	<div>
+		<!-- Navbar -->
+		<div id="topnav">
 			<div class="topnav">
 				<div class="topnav-left">
 					<a id="Nabar_welcome">Packman</a>
@@ -20,62 +22,65 @@
 					<a id="Nabar_about" onclick="openDialog()">About</a>
 				</div>
 			</div>
-			
-		<!-- WelcomePage -->
-		</div id="WelcomePage">
-			<button type="button" id="centerSignUp" onclick="document.getElementById('LOGIN').style.display='block'" class="btn btn-outline-primary" style="width: 20%;">LOG IN</button>
-			<button type="button" id="centerLogIn" onclick="document.getElementById('SIGNUP').style.display='block'" class="btn btn-outline-primary" style="width: 20%;">SIGN UP</button>
-		</div>
 
-		
-		<!-- LOG_IN -->
-		<div id="LOGIN" class="modal">
-  
-			<form id="log_in" class="modal-content animate" >
-			  <div class="imgcontainer">
-				<span onclick="document.getElementById('LOGIN').style.display='none'" class="close" title="Close Modal">&times;</span>
-			  </div>
-		  
-			  <div class="container">
+			<!-- WelcomePage -->
+		</div id="WelcomePage">
+		<button type="button" id="centerSignUp" onclick="document.getElementById('LOGIN').style.display='block'"
+			class="btn btn-outline-primary" style="width: 20%;">LOG IN</button>
+		<button type="button" id="centerLogIn" onclick="document.getElementById('SIGNUP').style.display='block'"
+			class="btn btn-outline-primary" style="width: 20%;">SIGN UP</button>
+	</div>
+
+
+	<!-- LOG_IN -->
+	<div id="LOGIN" class="modal">
+
+		<form id="log_in" class="modal-content animate">
+			<div class="imgcontainer">
+				<span onclick="pressX()" class="close" title="Close Modal">&times;</span>
+			</div>
+
+			<div class="container">
 				<label for="uname"><b>User</b></label>
 				<input type="text" id="uname" placeholder="Enter Username" name="uname" required>
-		  
+
 				<label for="psw"><b>Password</b></label>
 				<input type="password" id="pswdL" placeholder="Enter Password" name="psw" required>
-				  
-				<button type="submit" onclick="switchDives('game')">Login</button>
 
-			  </div>
+				<button type="submit" onclick="switchDives('Configuration_div')">Login</button>
 
-			</form>
-		</div>
+			</div>
 
-		<dialog id="myDialog">
-			<h3>This is a dialog window!</h3>
-			<br>
-			<button onclick="closeDialog()">Close dialog</button>
-		</dialog>
- 
-		<!-- SIGN_UP -->
-		<div id="SIGNUP" class="modal">
-		<span onclick="document.getElementById('SIGNUP').style.display='none'" class="close" title="Close Modal">&times;</span>
+		</form>
+	</div>
+
+	<dialog id="myDialog">
+		<h3>This is a dialog window!</h3>
+		<br>
+		<button onclick="closeDialog()">Close dialog</button>
+	</dialog>
+
+	<!-- SIGN_UP -->
+	<div id="SIGNUP" class="modal">
+
+		<span onclick="pressX()" class="close" title="Close Modal">&times;</span>
 		<form class="modal-content" id="sign_up">
-			<div class="container">
+			<div class="container" id="sign_up2">
 				<h1>Sign Up</h1>
 				<p>Please fill in this form to create an account.</p>
 				<hr>
 				<label for="Username"><b>User Name</b></label>
 				<input type="text" id="user_name" placeholder="Enter Your Name" name="username" required>
-				
+
 				<label for="fullName"><b>Full Name</b></label>
 				<input type="text" id="allName" placeholder="Enter Your Full Name" name="fulname" required>
 				<!-- <h5 id="usercheck" style="color: red;" >
 					**Full name must contain only letters
 				</h5> -->
-				
+
 				<label for="birthday"><b>Birthdate</b></label>
 				<input type="text" id="Bday" placeholder="Please Enter Your Birthdate" name="brthday" required>
-			
+
 				<label for="email"><b>Email</b></label>
 				<input type="text" id="sign_upEmail" placeholder="Enter Email" name="email" required>
 				<!-- <small id="emailvalid" class="form-text	text-muted invalid-feedback">
@@ -83,48 +88,155 @@
 				</small> -->
 
 				<label for="pswdS"><b>Password</b></label>
-				<input type="password" id="pswdS" placeholder="Enter Password" name="pswd" required>
+				<input type="password" id="pswdS" placeholder="Enter Password" autocomplete="on" name="pswd" required>
 				<!-- <h5 id="passcheck" style="color: red;">
 					**Please Fill the password
 				</h5> -->
-				
+
 				<!--<label for="psw-repeat"><b>Repeat Password</b></label>
 				<input type="password" id="pswdSRepeat" placeholder="Repeat Password" name="psw-repeat" required>
 				 <h5 id="conpasscheck" style="color: red;">
 					**Password didn't match
 				</h5> -->
-				<br/><br/>
-									
+				<br /><br />
+
 				<div class="clearfix">
 					<button type="submit" class="signupbtn" onclick="switchDives('LOGIN')">Sign Up</button>
 				</div>
 			</div>
 		</form>
-		</div>
+	</div>
 
-
-		<div id="game" class="box">
-			<div id="score">
-				<label for="lblScore">SCORE:</label>
-				<input id="lblScore" type="text" size="5"/>
+	<!-- Configuration -->
+	<div id="Configuration_div" class="modal">
+		<form id="configuration" class="modal-content animate">
+			<div class="imgcontainer">
+				<span onclick="pressX()" class="close" title="Close Modal">&times;</span>
 			</div>
-			<div id="time">
-				<label for="lblTime">TIME:</label>
-				<input id="lblTime" type="text" size="30" />
-			</div>
-			<canvas id="canvas" height="600" width="600"></canvas>
-		</div>
 
-		<script>
+			<div class="container">
+				<label><b>Choose your keys to play with:</b></label>
+				<label><b>Move UP:</b></label>
+				<input type="text" size="15" onkeypress="uniCharCode(event)" onkeydown="uniKeyCode(event)">
+
+				<p>onkeypress - <span id="demo"></span></p>
+				<p>onkeydown - <span id="demo2"></span></p>
+
+				<label><b>Move DOWN:</b></label>
+				<input type="text" size="15" onkeypress="uniCharCode(event)" onkeydown="uniKeyCode(event)">
+
+				<p>onkeypress - <span id="demo"></span></p>
+				<p>onkeydown - <span id="demo2"></span></p>
+
+				<label><b>Move LEFT:</b></label>
+				<input type="text" size="15" onkeypress="uniCharCode(event)" onkeydown="uniKeyCode(event)">
+
+				<p>onkeypress - <span id="demo"></span></p>
+				<p>onkeydown - <span id="demo2"></span></p>
+
+				<label><b>Move RIGHT:</b></label>
+
+				<input type="text" size="15" onkeypress="uniCharCode(event)" onkeydown="uniKeyCode(event)">
+
+				<p>onkeypress - <span id="demo"></span></p>
+				<p>onkeydown - <span id="demo2"></span></p>
+
+
+
+				<div class="slidecontainer">
+					<label><b>How many balls do you want?</b></label>
+					<br />
+					<input type="range" min="50" max="90" value="70" class="slider" id="myRange">
+					<p>Value: <span id="balls_val"></span></p>
+				</div>
+				<label for="uname"><b>points for the balls</b></label>
+				<select name="ponits" id="cars">
+					<option></option>
+					<option style="background-color: royalblue;" value="blue_5">blue food - 5 points</option>
+					<option style="background-color: yellow;" value="yellow_15">yellow food - 15 points</option>
+					<option style="background-color: orange;" value="orenge_25">orange food - 25 points</option>
+				</select>
+				<br><br>
+				<label><b>Set Time to your game:</b></label>
+				<br>
+
+				<label><i style="color:slategray;">min: 60 sec max: as your laptop can could :)</i></label><br>
+				<input type="password" id="pswdL" placeholder="Enter Password" name="psw" required>
+
+				<br><br>
+
+				<label for="uname"><b>How many monsters do you want?</b></label>
+				<br><br>
+				<input type="radio" id="m1" name="monster" value="1">
+				<label for="m1">1</label>
+				<input type="radio" id="m2" name="monster" value="2">
+				<label for="m2">2</label>
+				<input type="radio" id="m4" name="monster" value="3">
+				<label for="m4">3</label>
+				<input type="radio" id="m4" name="monster" value="4">
+
+				<label for="m4">4</label>
+				<br><br>
+
+				<button type="submit" onclick="switchDives('game')">choose random</button>
+
+				<button type="submit" onclick="switchDives('game')">Strat Game</button>
+
+			</div>
+		</form>
+	</div>
+
+
+
+	<div id="game" class="box">
+		<div id="score">
+			<!-- <label for="lblScore">SCORE:</label> -->
+			<!-- <input id="lblScore" type="text" size="5"/> -->
+		</div>
+		<div id="time">
+			<!-- <label for="lblTime">TIME:</label> -->
+			<!-- <input id="lblTime" type="text" size="30" /> -->
+		</div>
+		<canvas id="canvas" height="600" width="600"></canvas>
+	</div>
+
+	<script>
 		// Get the modal
 		var modal = document.getElementById('SIGNUP');
-		
+
 		// When the user clicks anywhere outside of the modal, close it
-		window.onclick = function(event) {
+		window.onclick = function (event) {
 			if (event.target == modal) {
 				modal.style.display = "none";
+				$('#centerSignUp').show();
+				$('#centerLogIn').show();
 			}
 		}
-		</script>
-	</body>
+	</script>
+
+	<script>
+		// Get the modal
+		var modal2 = document.getElementById('LOGIN');
+
+		// When the user clicks anywhere outside of the modal, close it
+		window.onclick = function (event) {
+			if (event.target == modal2) {
+				modal2.style.display = "none";
+				$('#centerSignUp').show();
+				$('#centerLogIn').show();
+			}
+		}
+	</script>
+
+	<script>
+		var slider = document.getElementById("myRange");
+		var output = document.getElementById("balls_val");
+		output.innerHTML = slider.value;
+
+		slider.oninput = function () {
+			output.innerHTML = this.value;
+		}
+	</script>
+</body>
+
 </html>

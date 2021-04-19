@@ -45,13 +45,13 @@ $(document).ready(function() {
 	});
 
 	//REGISTER
-	$("#SIGNUP").validate({
+	$("#sign_up").validate({
 		rules: {
 			user_name: {
 				required: true,
 				validateUsername: true
 			},
-			Password: {
+			pswdS: {
 				required: true,
 				strongPassword: true
 			},
@@ -72,7 +72,7 @@ $(document).ready(function() {
 				required: "Please enter valid username address.",
 				validateUsername: "Username already taken."
 			},
-			Password: {
+			pswdS: {
 				required: "Please enter an password",
 				strongPassword: "password MUST contain at least one character and one number."
 			},
@@ -89,29 +89,49 @@ $(document).ready(function() {
 			}
 		},
 		submitHandler: function () {
+			
+			alert("fuck you2");
 
-			register();
+			//register();
 
 			//reset form details
-			let form = $("#SIGNUP");
-			form[0].reset();
+			// let form = $("#sign_up");
+			// form[0].reset();
 		},
 	});
 });
 
 $(function(){
+
 	//Password must contain at least 6 digit and contain one number and one char.
-	$.validator.addMethod('strongPassword', function (value, element) {
-		return this.optional(element) ||
-			value.length >= 6 &&
-			/\d/.test(value) &&
-			/[a-z]/i.test(value);
+	$.validator.addMethod('strongPassword', function (value, element) {		
+		//return this.optional(element) || value.length >= 6 && /\d/.test(value) && /[a-z]/i.test(value);
+		alert("fuck you");
+		return false;
 	});
 
 
 	//check if username already exists
 	$.validator.addMethod('validateUsername', function (value, element) {
-		return !isUserExists(value);
+		// let usernameValue = $('#allName').val();
+		// if (usernameValue.length == '') {
+		// 	$('#usercheck').show();
+		// 	usernameError = false;
+		// 	return false;
+		// }
+		// else if (checkdigit(usernameValue)) {
+		// 	$('#usercheck').show();
+		// 	$('#usercheck').html("**Full name must contain only letters");
+		// 	usernameError = false;
+		// 	return false;
+		// } else {
+		// 	$('#usercheck').hide();
+		// 	usernameError = true;
+		// 	return true;
+		// }
+		return false;	
+
+		//return !isUserExists(value);
 	});
 
 	//Login
@@ -119,30 +139,57 @@ $(function(){
 	//check if password match user
 	$.validator.addMethod('validateUser', function (password, element) {
 
-		let user_input_username = document.getElementById("uname").value;
+		// let user_input_username = document.getElementById("uname").value;
 
-		let localstorage_password = localStorage.getItem(user_input_username);
+		// let localstorage_password = localStorage.getItem(user_input_username);
 
-		if(localstorage_password === null) {
-			return false;
-		}
-		else if(localstorage_password === password) {
-			return true;
-		}
+		// if(localstorage_password === null) {
+		// 	return false;
+		// }
+		// else if(localstorage_password === password) {
+		// 	return true;
+		// }
 
 		return false;
 	});
 })
 
-function switchDives(Div_id){
+function checkletters(value) {
+	return /[a-z]/.test(value) || /[a-z]/.test(value);
+}
 
+function checkdigit(value) {
+	return /[0-9]/.test(value);
+}
+
+function uniCharCode(event) {
+	var char = event.which || event.keyCode;
+	document.getElementById("demo").innerHTML = "The Unicode CHARACTER code is: " + char;
+}
+
+function uniKeyCode(event) {
+	var key = event.keyCode;
+	document.getElementById("demo2").innerHTML = "The Unicode KEY code is: " + key;
+}
+
+
+function pressX(){
+	document.getElementById('LOGIN').style.display='none';
+	document.getElementById('SIGNUP').style.display='none';
+	document.getElementById('Configuration_div').style.display='none';
+	$('#centerSignUp').show();
+	$('#centerLogIn').show();
+}
+
+function switchDives(Div_id){
+	
 	$('#WelcomePage').hide();
 	$('#SIGNUP').hide();
 	$('#LOGIN').hide();
 	$('#centerSignUp').hide();
 	$('#centerLogIn').hide();
 	$('#game').hide();
-	$('#configuration').hide();
+	$('#Configuration_div').hide();
 	$('#about').hide();
 
 	$('#' + Div_id).show();
@@ -150,6 +197,11 @@ function switchDives(Div_id){
 	if(Div_id === 'game'){
 		Start();
 	}
+
+	// if(Div_id === 'WelcomePage'){
+	// 	$('#centerSignUp').show();
+	// 	$('#centerLogIn').show();
+	// }
 
 }
 
