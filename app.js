@@ -173,7 +173,7 @@ function checkdigit(value) {
 // }
 
 function uniKeyCode(lbl, event) {
-
+	// var key = evevnt.keyCode      colud be we will need this line later in the game
 	if(lbl === 'up_btn'){
 		keyArrowUp = event.key;
 		document.getElementById("up_btn").innerHTML = keyArrowUp;
@@ -193,6 +193,8 @@ function uniKeyCode(lbl, event) {
 	}	
 }
 
+
+
 function pressX(){
 	document.getElementById('LOGIN').style.display='none';
 	document.getElementById('SIGNUP').style.display='none';
@@ -211,18 +213,40 @@ function switchDives(Div_id){
 	$('#game').hide();
 	$('#Configuration_div').hide();
 	$('#about').hide();
+	$('#settings').hide();
+
 
 	$('#' + Div_id).show();
 
 	if(Div_id === 'game'){
 		Start();
+		DrawSettings();
 	}
+}
 
-	// if(Div_id === 'WelcomePage'){
-	// 	$('#centerSignUp').show();
-	// 	$('#centerLogIn').show();
-	// }
+function DrawSettings(){
+	$('#settings').show();
+	document.getElementById("settings").innerHTML =
+	"<br />" + " To go up press: " + keyArrowUp  + 
+	"<br />" + " To go down press: "+  keyArrowDown  + 
+	"<br />" + " To go left press: " + keyArrowLeft  + 
+	"<br />" + " To go right press: " + keyArrowRight +
+	"<br />" + " number of balls: " + document.getElementById("myRange").value +
+	"<br />" + " 5 point food color: " + document.getElementById("five_point_color_id").value +
+	"<br />" + " 15 point food color: " + document.getElementById("fifteen_point_color_id").value +
+	"<br />" + " 25 point food color: " + document.getElementById("twenty_five_point_color_id").value +
+	"<br />" + " total time: " +  document.getElementById("time").value +
+	"<br />" + " number of monsters: " + displayRadioValue(); //document.getElementsByName("monster").value;
 
+}
+
+function displayRadioValue() {
+	var ele = document.getElementsByName('monster');
+	  
+	for(i = 0; i < ele.length; i++) {
+		if(ele[i].checked)
+		return ele[i].value;
+	}
 }
 
 

@@ -142,25 +142,29 @@
 					<label><b>How many balls do you want?</b></label>
 					<br />
 					<input type="range" min="50" max="90" value="70" class="slider" id="myRange">
-					<p>Value: <span id="balls_val"></span></p>
+					<p>Value: <span id="balls_val" ></span></p>
 				</div>
-				<label for="uname"><b>points for the balls</b></label>
-				<select name="ponits" id="cars">
-					<option></option>
-					<option style="background-color: royalblue;" value="blue_5">blue food - 5 points</option>
-					<option style="background-color: yellow;" value="yellow_15">yellow food - 15 points</option>
-					<option style="background-color: orange;" value="orenge_25">orange food - 25 points</option>
-				</select>
+
+				<label><b>points for the balls</b></label>
+				<br><br>
+				<b>blue food - 5 points</b>
+				<input type="color" size="30px" value="#ff0000" id="five_point_color_id" >
+				<br><br>
+				<b>yellow food - 15 points</b>
+				<input type="color" size="30px" value="#ffffff" id="fifteen_point_color_id">
+				<br><br>
+				<b>orange food - 25 points</b>
+				<input type="color" size="30px" value="#0000ff" id="twenty_five_point_color_id">
 				<br><br>
 				<label><b>Set Time to your game:</b></label>
 				<br>
 
 				<label><i style="color:slategray;">min: 60 sec max: as your laptop can could :)</i></label><br>
-				<input type="password" id="pswdL" placeholder="Enter Password" name="psw" required>
+				<input type="text" id="time" placeholder="Only Digits" required >
 
 				<br><br>
 
-				<label for="uname"><b>How many monsters do you want?</b></label>
+				<label ><b>How many monsters do you want?</b></label>
 				<br><br>
 				<input type="radio" id="m1" name="monster" value="1">
 				<label for="m1">1</label>
@@ -169,7 +173,6 @@
 				<input type="radio" id="m4" name="monster" value="3">
 				<label for="m4">3</label>
 				<input type="radio" id="m4" name="monster" value="4">
-
 				<label for="m4">4</label>
 				<br><br>
 
@@ -183,16 +186,20 @@
 
 
 
-	<div id="game" class="box">
-		<div id="score">
+	<div id="game" >
+		<!-- <div id="score">
 			<label for="lblScore">SCORE:</label>
 			<input id="lblScore" type="text" size="5"/>
 		</div>
 		<div id="time">
-			<label for="lblTime">TIME:</label> -->
+			<label for="lblTime">TIME:</label>
 			<input id="lblTime" type="text" size="30" />
-		</div>
+		</div> -->
 		<canvas id="canvas" height="600" width="600"></canvas>
+
+		<div id="settings">
+
+		</div>
 	</div>
 
 	<script>
