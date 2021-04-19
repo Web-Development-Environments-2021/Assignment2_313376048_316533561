@@ -9,6 +9,11 @@ var interval;
 var PackmanScore;
 var t;
 
+var keyArrowUp ;
+var keyArrowDown ;
+var keyArrowLeft ;
+var keyArrowRight ;
+
 $(document).ready(function() {
 	// var canvas = document.getElementById('canvas'),
 	context = canvas.getContext("2d");
@@ -162,16 +167,31 @@ function checkdigit(value) {
 	return /[0-9]/.test(value);
 }
 
-function uniCharCode(event) {
-	var char = event.which || event.keyCode;
-	document.getElementById("demo").innerHTML = "The Unicode CHARACTER code is: " + char;
-}
+// function uniCharCode(event) {
+// 	var char = event.which || event.keyCode;
+// 	document.getElementById("demo").innerHTML = "The Unicode CHARACTER code is: " + char;
+// }
 
-function uniKeyCode(event) {
-	var key = event.keyCode;
-	document.getElementById("demo2").innerHTML = "The Unicode KEY code is: " + key;
-}
+function uniKeyCode(lbl, event) {
 
+	if(lbl === 'up_btn'){
+		keyArrowUp = event.key;
+		document.getElementById("up_btn").innerHTML = keyArrowUp;
+	}
+	else if(lbl === 'down_btn'){
+		keyArrowDown = event.key;
+		document.getElementById("down_btn").innerHTML = keyArrowDown;
+	}
+	else if(lbl === 'left_btn'){
+		keyArrowLeft = event.key;
+		document.getElementById("left_btn").innerHTML = keyArrowLeft;
+	
+	}
+	else if(lbl === 'right_btn'){
+		keyArrowRight = event.key;
+		document.getElementById("right_btn").innerHTML = keyArrowRight;
+	}	
+}
 
 function pressX(){
 	document.getElementById('LOGIN').style.display='none';
