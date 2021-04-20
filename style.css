@@ -81,6 +81,8 @@ Use: Main Screen Import
 	border: 3px solid white;
 	background: #E7E7E7;
 	border: 5px solid white;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(50%, 10%);
 }
 
 #config {

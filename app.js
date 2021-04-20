@@ -6,7 +6,6 @@ var pac_color;
 var start_time;
 var time_elapsed;
 var interval;
-var PackmanScore;
 
 var keyArrowUp ;
 var keyArrowDown ;
@@ -14,9 +13,27 @@ var keyArrowLeft ;
 var keyArrowRight ;
 var users_dict = { 'k' : 'k', 'kkk' : 'kkk'} // {username : password}
 
+
+var pacShape;;
+var monShape;;
+
+var monster_color;
+var time_elapsed;
+let dirction;
+var dirctions_dict = { 1: [-0.35, 1.35, 17], 2: [-1.35, 0.35, 17], 3: [-0.85, 0.85, 0], 4: [0.15, 1.85, 0] }
+var currentUser;
+let ate =false;
+let failCounter = 0;
+let was_food = false;
+let pssibleDirections = [1,2,3,4];
+
+
+
+
 $(document).ready(function() {
-	// var canvas = document.getElementById('canvas'),
 	context = canvas.getContext("2d");
+	context.fillStyle = "pink"
+	context.fillRect(0, 0, canvas.width, canvas.height);
 	//Start();
 
 
@@ -402,6 +419,7 @@ function Start() {
 	board = new Array();
 	score = 0;
 	pac_color = "yellow";
+	monster_color = "red";
 	var cnt = 100;
 	var food_remain = 50;
 	var pacman_remain = 1;
@@ -410,12 +428,27 @@ function Start() {
 		board[i] = new Array();
 		//put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
 		for (var j = 0; j < 10; j++) {
+			if (i == 0 && j == 0) {
+				board[i][j] = 3;
+				monShape = new Shape(i,j);
+				continue;
+			}
 			if (
+				(i == 2 && j == 3) ||
+				(i == 2 && j == 4) ||
+				(i == 4 && j == 6) ||
+				(i == 8 && j == 3) ||
+				(i == 8 && j == 2) ||
+				(i == 7 && j == 2) ||
+				(i == 4 && j == 7) ||
+				(i == 6 && j == 8) ||
+				(i == 6 && j == 8) ||
+				(i == 1 && j == 8) ||
+				(i == 2 && j == 8) ||
 				(i == 3 && j == 3) ||
 				(i == 3 && j == 4) ||
-				(i == 3 && j == 5) ||
-				(i == 6 && j == 1) ||
-				(i == 6 && j == 2)
+				(i == 7 && j == 8) ||
+				(i == 9 && j == 8)
 			) {
 				board[i][j] = 4;
 			} else {
@@ -424,8 +457,7 @@ function Start() {
 					food_remain--;
 					board[i][j] = 1;
 				} else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) {
-					shape.i = i;
-					shape.j = j;
+					pacShape = new Shape(i,j);
 					pacman_remain--;
 					board[i][j] = 2;
 				} else {
@@ -443,14 +475,14 @@ function Start() {
 	keysDown = {};
 	addEventListener(
 		"keydown",
-		function(e) {
+		function (e) {
 			keysDown[e.keyCode] = true;
 		},
 		false
 	);
 	addEventListener(
 		"keyup",
-		function(e) {
+		function (e) {
 			keysDown[e.keyCode] = false;
 		},
 		false
@@ -469,105 +501,247 @@ function findRandomEmptyCell(board) {
 }
 
 function GetKeyPressed() {
-	if (keysDown[38]) {
+	if (keysDown[38]) {//up
 		return 1;
 	}
-	if (keysDown[40]) {
+	if (keysDown[40]) {//down
 		return 2;
 	}
-	if (keysDown[37]) {
+	if (keysDown[37]) {//left
 		return 3;
 	}
-	if (keysDown[39]) {
+	if (keysDown[39]) {//right
 		return 4;
 	}
-}
-
-function DrawWelcomePage(){
-	return true;	
-}
-
-function scoreAndTime(){
-	// Score
-	context.fillStyle = "rgb(0, 0, 0)";
-	context.font = "24px Helvetica";
-	context.textBaseline = "top";
-	context.textAlign = "left";	
-	context.fillText("Score: " + PackmanScore + " Time left :" +  time_elapsed/1000 , 5, 5);
+	else {
+		return 0;
+	}
 }
 
 function Draw() {
 	canvas.width = canvas.width; //clean board
-	//lblScore.value = score;
-	//lblTime.value = time_elapsed;
-	
-	for (var i =0; i < 10; i++) {
-		for (var j = 1; j < 11; j++) {
+	context.fillStyle = "pink"
+	context.fillRect(0, 0, canvas.width, canvas.height);
+	lblScore.value = score;
+	lblTime.value = time_elapsed;
+	for (var i = 0; i < 10; i++) {
+		for (var j = 0; j < 10; j++) {
 			var center = new Object();
 			center.x = i * 60 + 30;
 			center.y = j * 60 + 30;
-			
-			if ((board[i][j] == 2)) {
+			if (board[i][j] == 2) {//pacman
+				let temp = GetKeyPressed();
+				if (dirction == null && temp == 0) {
+					dirction = 1;
+				}
+				if (temp != 0) {
+					dirction = temp;
+				}
 				context.beginPath();
-				context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
+				context.arc(center.x, center.y, 30, dirctions_dict[dirction][0] * Math.PI, dirctions_dict[dirction][1] * Math.PI); // half circle
 				context.lineTo(center.x, center.y);
-				context.fillStyle = pac_color; //color
+				context.fillStyle = pac_color; 
 				context.fill();
 				context.beginPath();
-				context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
-				context.fillStyle = "blue"; //color - packman eye
+				context.arc(center.x + 5 - dirctions_dict[dirction][2], center.y - 15 + dirctions_dict[dirction][2], 5, 0, 2 * Math.PI); // circle
+				context.fillStyle = "black"; 
 				context.fill();
-			} else if (board[i][j] == 1) {
+			} else if (board[i][j] == 1) {//food
 				context.beginPath();
 				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
-				context.fillStyle = "#000";
-				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
-				context.fillStyle = "black"; //color - pills
+				context.fillStyle = "black"; 
 				context.fill();
-			} else if (board[i][j] == 4) {
+			} else if (board[i][j] == 4) {//wall
 				context.beginPath();
 				context.rect(center.x - 30, center.y - 30, 60, 60);
-				context.fillStyle = "grey"; //color
+				context.fillStyle = "grey"; 
+				context.fill();
+			}
+			else if (board[i][j] == 3) {//monster
+				temp = GetKeyPressed();
+				if (dirction == null && temp == 0) {
+					dirction = 1;
+				}
+				if (temp != 0) {
+					dirction = temp;
+				}
+				context.beginPath();
+				context.arc(center.x, center.y, 30, dirctions_dict[dirction][0] * Math.PI, dirctions_dict[dirction][1] * Math.PI); // half circle
+				context.lineTo(center.x, center.y);
+				context.fillStyle = monster_color; //color
+				context.fill();
+				context.beginPath();
+				context.arc(center.x + 5 - dirctions_dict[dirction][2], center.y - 15 + dirctions_dict[dirction][2], 5, 0, 2 * Math.PI); // circle
+				context.fillStyle = "black"; //color
 				context.fill();
 			}
 		}
 	}
-	scoreAndTime()
+}
+class User {
+	constructor(username, passward, score) {
+		this.username = username;
+		this.passward = passward;
+		this.score = score;
+	}
+}
+class Shape {
+	constructor(i, j) {
+		this.i = i;
+		this.j = j;
+	}
+}
+class monsterShape extends Shape {
+	constructor(i, j) {
+		super(i,j);
+		this.visited = board;
+	}
+}
+function getRandomInt(min, max) {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+  }
+function PositionMove(dirction, Shape){
+	if (dirction == 1) {
+		if (Shape.j > 0 && board[Shape.i][Shape.j - 1] != 4) {
+			Shape.j--;
+			return true;
+		}
+	}
+	if (dirction == 2) {
+		if (Shape.j < 9 && board[Shape.i][Shape.j + 1] != 4) {
+			Shape.j++;
+			return true;
+		}
+	}
+	if (dirction == 3) {
+		if (Shape.i > 0 && board[Shape.i - 1][Shape.j] != 4) {
+			Shape.i--;
+			return true;
+		}
+	}
+	if (dirction == 4) {
+		if (Shape.i < 9 && board[Shape.i + 1][Shape.j] != 4) {
+			Shape.i++;
+			return true;
+		}
+	}
+	else{
+		return false;
+	}
+}
+function sleep(milliseconds) {
+	const date = Date.now();
+	let currentDate = null;
+	do {
+	  currentDate = Date.now();
+	} while (currentDate - date < milliseconds);
+  }
+function monsterWaze(monShape, pacShape, helpAlpha=0){
+	// m = (monShape.i-pacShape.i)/(monShape.j-pacShape.j);
+	// m = Math.abs(monShape.i-pacShape.i)/Math.abs(monShape.j-pacShape.j);
+	alpha =(180*Math.atan2((monShape.j-pacShape.j),(monShape.i-pacShape.i))/Math.PI);
+	// alpha =(180*Math.atan(m)/Math.PI);
+	if (alpha<=0){
+		alpha = 360 + alpha;
+	}
+
+	if(alpha >= 315 || alpha < 45){//RIGHT
+		return 4;
+	}
+	if(alpha >= 45 && alpha < 135){//DOWN
+		return 2;
+	}
+	if(alpha >= 135 && alpha < 225){//left
+		return 3;
+	}
+	if(alpha >= 225 &&   alpha < 315){//UP
+		return 1;
+	}
 }
 
 function UpdatePosition() {
-	board[shape.i][shape.j] = 0;
-	var x = GetKeyPressed();
-	if (x == 1) {
-		if (shape.j > 0 && board[shape.i][shape.j - 1] != 4) {
-			shape.j--;
-		}
+	let helpAlpha = 0;
+	oldPacShape = new Shape(pacShape.i,pacShape.j)
+	oldMonShape = new Shape(monShape.i,monShape.j)
+
+	let x = GetKeyPressed();
+	PositionMove(x,pacShape);
+	// let monX = getRandomInt(1,5);
+	let monX = monsterWaze(pacShape,oldMonShape);
+	let mooved = PositionMove(monX,monShape);
+
+	while(!mooved){
+		pssibleDirections.splice(monX-1,monX-1);
+		monX = pssibleDirections[Math.floor(Math.random() * pssibleDirections.length)];	
+		mooved = PositionMove(monX,monShape);
 	}
-	if (x == 2) {
-		if (shape.j < 9 && board[shape.i][shape.j + 1] != 4) {
-			shape.j++;
-		}
-	}
-	if (x == 3) {
-		if (shape.i > 0 && board[shape.i - 1][shape.j] != 4) {
-			shape.i--;
-		}
-	}
-	if (x == 4) {
-		if (shape.i < 9 && board[shape.i + 1][shape.j] != 4) {
-			shape.i++;
-		}
-	}
-	if (board[shape.i][shape.j] == 1) {
+	pssibleDirections = [1,2,3,4];
+
+	helpAlpha = 0;
+	if (board[pacShape.i][pacShape.j] == 1) {
 		score++;
+		ate = true;
 	}
-	board[shape.i][shape.j] = 2;
+
+	if (board[monShape.i][monShape.j] == 2) {
+		score= Math.max(score-10, 0);
+		let revers;//back direction
+		if (monX%2==0){
+			revers = monX-1;
+		}
+		else{
+			revers = monX+1;
+		}
+		PositionMove(revers,monShape);
+		failCounter++;
+		if(failCounter<6){
+			monShape.i = 0;			
+			monShape.j = 0;				
+		}
+	}
+	if (board[pacShape.i][pacShape.j] == 3) {
+		score= Math.max(score-10, 0);
+		let revers;//back direction
+		if (x%2==0){
+			revers = x-1;
+		}
+		else{
+			revers = x+1;
+		}
+		PositionMove(revers,pacShape);
+		failCounter++;
+		if(failCounter<6){
+			monShape.i = 0;			
+			monShape.j = 0;			
+		}
+	}
+
+	board[oldPacShape.i][oldPacShape.j] = 0;
+	if(was_food){
+		board[oldMonShape.i][oldMonShape.j] = 1;
+		was_food =false;
+	}
+	else{
+		board[oldMonShape.i][oldMonShape.j] = 0;
+	}
+	if(board[monShape.i][monShape.j]==1){
+		was_food = true;
+	}
+	board[pacShape.i][pacShape.j] = 2;
+	board[monShape.i][monShape.j] = 3;
+	
+
+
+	
 	var currentTime = new Date();
 	time_elapsed = (currentTime - start_time) / 1000;
 	if (score >= 20 && time_elapsed <= 10) {
 		pac_color = "green";
 	}
 	if (score == 50) {
+		currentUser.score = score;
 		window.clearInterval(interval);
 		window.alert("Game completed");
 	} else {
