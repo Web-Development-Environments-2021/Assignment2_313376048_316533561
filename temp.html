@@ -66,3 +66,80 @@
 
 		</form>
 	</div>
+
+
+	<!-- Configuration -->
+	<div id="Configuration_div" class="modal">
+		<form id="configuration" class="modal-content animate">
+			<div class="imgcontainer">
+				<span onclick="pressX()" class="close" title="Close Modal">&times;</span>
+			</div>
+
+			<div class="container">
+				<label><b>Choose your keys to play with:</b></label>
+				<br><br>
+				<label><b>Move UP:</b></label>
+				<input type="text" size="15" onkeydown="uniKeyCode('up_btn',event)"
+					placeholder="Click in here and please press a key">
+
+				<p>You press:<span id="up_btn"></span></p>
+
+				<label><b>Move DOWN:</b></label>
+				<input type="text" size="15" onkeydown="uniKeyCode('down_btn',event)"
+					placeholder="Click in here and please press a key">
+
+				<p>You press:<span id="down_btn"></span></p>
+
+				<label><b>Move LEFT:</b></label>
+				<input type="text" size="15" onkeydown="uniKeyCode('left_btn',event)"
+					placeholder="Click in here and please press a key">
+
+				<p>You press:<span id="left_btn"></span></p>
+
+				<label><b>Move RIGHT:</b></label>
+
+				<input type="text" size="15" onkeydown="uniKeyCode('right_btn',event)"
+					placeholder="Click in here and please press a key">
+
+				<p>You press:<span id="right_btn"></span></p>
+
+				<div class="slidecontainer">
+					<label><b>How many balls do you want?</b></label>
+					<br />
+					<input type="range" min="50" max="90" value="70" class="slider" id="myRange">
+					<p>Value: <span id="balls_val"></span></p>
+				</div>
+
+				<label><b>points for the balls</b></label>
+				<br><br>
+				<b>blue food - 5 points</b>
+				<input type="color" size="30px" value="#ff0000" id="five_point_color_id">
+				<br><br>
+				<b>yellow food - 15 points</b>
+				<input type="color" size="30px" value="#ffffff" id="fifteen_point_color_id">
+				<br><br>
+				<b>orange food - 25 points</b>
+				<input type="color" size="30px" value="#0000ff" id="twenty_five_point_color_id">
+				<br><br>
+				<label><b>Set Time to your game:</b></label>
+				<br>
+
+				<label><i style="color:slategray;">min: 60 sec max: as your laptop can could :)</i></label><br>
+				<input type="number" id="TotalTime" placeholder="Only Digits" min="60" value="90">
+
+				<br><br>
+
+				<fieldset>
+					<legend>How many monsters do you want?</legend>
+					<input type="radio" name="monster" id="m1">1<br>
+					<input type="radio" name="monster" id="m2">2<br>
+					<input type="radio" name="monster" id="m3">3<br>
+					<input type="radio" name="monster" id="m4">4<br>
+				</fieldset>
+
+				<!-- <button type="submit" onclick="switchDives('Random_game')">choose random</button> -->
+
+				<input type="submit" onclick="switchDives('game')" id="config_btn" value="Start Game"></input>
+
+			</div>
+		</form>

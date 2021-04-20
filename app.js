@@ -12,7 +12,7 @@ var keyArrowUp ;
 var keyArrowDown ;
 var keyArrowLeft ;
 var keyArrowRight ;
-var users_dict = { 'k' : 'k'} // {username : password}
+var users_dict = { 'k' : 'k', 'kkk' : 'kkk'} // {username : password}
 
 $(document).ready(function() {
 	// var canvas = document.getElementById('canvas'),
@@ -43,7 +43,7 @@ $(document).ready(function() {
 		submitHandler: function() {
 			document.getElementById("usernameLogin").value = null;
 			document.getElementById("passwordLogin").value = null;
-			switchDives('Configuration_div');
+			switchDives('configuration');
 		}
 	});
 
@@ -61,7 +61,8 @@ $(document).ready(function() {
 			},
 			username: {
 				required: true,
-				minlength: 2
+				minlength: 2,
+				usernameisExist: true,
 			},
 			password: {
 				required: true,
@@ -90,7 +91,9 @@ $(document).ready(function() {
 			
 			username: {
 				required: "Please enter a username",
-				minlength: "Your username must consist of at least 2 characters"
+				minlength: "Your username must consist of at least 2 characters",
+				usernameisExist: "These user Name is allready exist please choose other user Name"
+
 			},
 			password: {
 				required: "Please provide a password",
@@ -108,37 +111,85 @@ $(document).ready(function() {
 			addUser();
 		}
 	});
+
+
+	// validate signup form on keyup and submit
+	$("#configuration").validate({
+		rules: {
+			up_btn: {
+				required: true,
+				notEqual : down_btn,
+				notEqual : left_btn,
+				notEqual : right_btn,
+			},
+			down_btn: {
+				required: true,
+				notEqual : up_btn,
+				notEqual : left_btn,
+				notEqual : right_btn,
+			},
+			left_btn: {
+				required: true,
+				notEqual : up_btn,
+				notEqual : down_btn,
+				notEqual : right_btn,
+			},
+			right_btn: {
+				required: true,
+				notEqual : up_btn,
+				notEqual : down_btn,
+				notEqual : left_btn,				
+			},			
+		},
+		messages: {
+			up_btn: {
+				required: "Please chosse key",
+				notEqual: "You chose this key allready"				
+			},			
+			down_btn: {
+				required: "Please chosse key",
+				notEqual: "You chose this key allready"			
+			},
+			left_btn: {
+				required: "Please chosse key",
+				notEqual: "You chose this key allready"
+			},
+			right_btn: {
+				required: "Please chosse key",
+				notEqual: "You chose this key allready"
+			},
+		},
+		submitHandler: function() {
+			switchDives('game');
+		}
+	});
 });
 
 $(function(){
 
-	//Password must contain at least 6 digit and contain one number and one char.
+	// //check if key all ready choosen
+	// $.validator.addMethod('keysHasChosse', function () {		
+	// 	if(keyArrowUp ===  keyArrowDown)
+
+	// 	keyArrowUp = "ArrowUp";
+	// 	keyArrowDown = "ArrowDown";
+	// 	keyArrowLeft = "ArrowLeft";
+	// 	keyArrowRight = "ArrowRight";
+	// });
+
+	//Password must contain at least 6 digit, number ,char.
 	$.validator.addMethod('strongPassword', function (value, element) {		
 		return this.optional(element) || /\d/.test(value) && /[a-z]/i.test(value);
 	});
 
 
 	//check if username already exists
-	$.validator.addMethod('validateUsername', function (value, element) {
-		// let usernameValue = $('#allName').val();
-		// if (usernameValue.length == '') {
-		// 	$('#usercheck').show();
-		// 	usernameError = false;
-		// 	return false;
-		// }
-		// else if (checkdigit(usernameValue)) {
-		// 	$('#usercheck').show();
-		// 	$('#usercheck').html("**Full name must contain only letters");
-		// 	usernameError = false;
-		// 	return false;
-		// } else {
-		// 	$('#usercheck').hide();
-		// 	usernameError = true;
-		// 	return true;
-		// }
-		return false;	
-
-		//return !isUserExists(value);
+	$.validator.addMethod('usernameisExist', function (value, element) {
+		for(var  usernameKey in users_dict){
+			if(usernameKey === value)
+			return false;	
+		}
+		return true;	
 	});
 
 	//Login
@@ -154,9 +205,7 @@ $(function(){
 			// document.getElementById("passwordLogin").value = null;
 			return true;
 		}
-		
-		return false;
-		
+		return false;		
 	});
 })
 
@@ -190,7 +239,7 @@ function canlogin(){
 	if(inputPassword === userPassword){
 		// document.getElementById("usernameLogin").value = null;
 		// document.getElementById("passwordLogin").value = null;
-		switchDives('Configuration_div');
+		switchDives('configuration');
 	}
 	else{
 		//alert("User name not exist or incorrect password");
@@ -230,7 +279,7 @@ function uniKeyCode(lbl, event) {
 function pressX(){
 	document.getElementById('LOGIN').style.display='none';
 	document.getElementById('SIGNUP').style.display='none';
-	document.getElementById('Configuration_div').style.display='none';
+	document.getElementById('configuration').style.display='none';
 	$('#centerSignUp').show();
 	$('#centerLogIn').show();
 }
@@ -243,7 +292,7 @@ function switchDives(Div_id){
 	$('#centerSignUp').hide();
 	$('#centerLogIn').hide();
 	$('#game').hide();
-	$('#Configuration_div').hide();
+	$('#configuration').hide();
 	$('#about').hide();
 	$('#config').hide();
 
@@ -254,60 +303,63 @@ function switchDives(Div_id){
 		Start();
 		DrawSettings();		
 	}
-	// else if(Div_id === 'Random_game'){
-	// 	$('#game').show();
-	// 	//$('#settings').show();
+	else if(Div_id === 'Random_game'){
+		$('#game').show();
+		//$('#settings').show();
 
-	// 	//setRandomData();
-	// 	Start();
-	// 	DrawSettings();
-	// }
+		setRandomData();
+		Start();
+		DrawSettings();
+	}
 }
 
-// function setRandomData(){
-// 	setkeysForGame();
-// 	setBallsNmber();
-// 	setPointsColor();
-// 	//setTotalTime();
-// 	// setNumberOfMonsters();
-// }
+function setRandomData(){
+	setkeysForGame();
+	setBallsNmber();
+	setPointsColor();
+	setTotalTime();
+	setNumberOfMonsters();
+}
 
 
-// function setkeysForGame(){
-// 	keyArrowUp = "ArrowUp";
-// 	keyArrowDown = "ArrowDown";
-// 	keyArrowLeft = "ArrowLeft";
-// 	keyArrowRight = "ArrowRight";
-// }
+function setkeysForGame(){
+	keyArrowUp = "ArrowUp";
+	keyArrowDown = "ArrowDown";
+	keyArrowLeft = "ArrowLeft";
+	keyArrowRight = "ArrowRight";
+}
 
-// function setBallsNmber(){
-// 	document.getElementById("myRange").value = Math.floor(Math.random() * 90) + 50;
-// }
+function setBallsNmber(){
+	document.getElementById("myRange").value = Math.floor(Math.random() * 90) + 50;
+}
 
-// function getRandomColor() {
-// 	var letters = '0123456789ABCDEF';
-// 	var color = '#';
-// 	for (var i = 0; i < 6; i++) {
-// 	  color += letters[Math.floor(Math.random() * 16)];
-// 	}
-// 	return color;
-//   }
+function getRandomColor() {
+	var letters = '0123456789ABCDEF';
+	var color = '#';
+	for (var i = 0; i < 6; i++) {
+	  color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
+  }
 
-// function setPointsColor(){
-// 	 document.getElementById("five_point_color_id").value = getRandomColor();
-// 	 document.getElementById("fifteen_point_color_id").value = getRandomColor();
-// 	 document.getElementById("twenty_five_point_color_id").value = getRandomColor();
-// }
+function setPointsColor(){
+	 document.getElementById("five_point_color_id").value = getRandomColor();
+	 document.getElementById("fifteen_point_color_id").value = getRandomColor();
+	 document.getElementById("twenty_five_point_color_id").value = getRandomColor();
+}
 
 
-// function setTotalTime(){
-// 	document.getElementById("TotalTime").value = Math.floor(Math.random() * 360) + 60;
-// }
+function setTotalTime(){
+	document.getElementById("TotalTime").value = Math.floor(Math.random() * 360) + 60;
+}
 
-// function setNumberOfMonsters(){
-// 	var index = Math.floor(Math.random() * 4) + 1;  // returns a random integer from 1 to 4
-// 	document.getElementsByName('monster')[index] = index;
-// }
+function setNumberOfMonsters(){
+	
+	var index = Math.floor(Math.random() * 4) + 1;  // returns a random integer from 1 to 4
+	
+	document.getElementsByName('monster')[index-1].value = index;
+	document.getElementsByName('monster')[index-1].checked = true;
+}
 
 
 
@@ -332,7 +384,7 @@ function displayRadioValue() {
 	  
 	for(i = 0; i < ele.length; i++) {
 		if(ele[i].checked)
-		return ele[i].value;
+			return ele[i].value;
 	}
 }
 
