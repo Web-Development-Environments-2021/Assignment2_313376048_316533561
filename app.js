@@ -27,6 +27,7 @@ let failCounter = 0;
 let was_food = false;
 let pssibleDirections = [1,2,3,4]; //1=up 2= down 3= left 4 =right
 let arrowsKeys = [];
+let userLogedin;
 
 
 
@@ -188,15 +189,6 @@ $(document).ready(function() {
 $(function(){
 
 	// //check if key all ready choosen
-	// $.validator.addMethod('keysHasChosse', function () {		
-	// 	if(keyArrowUp ===  keyArrowDown)
-
-	// 	keyArrowUp = "ArrowUp";
-	// 	keyArrowDown = "ArrowDown";
-	// 	keyArrowLeft = "ArrowLeft";
-	// 	keyArrowRight = "ArrowRight";
-	// });
-
 	$.validator.addMethod("notEqual", function(value, param) {
 		return value != $(param).val();
 	});
@@ -225,6 +217,7 @@ $(function(){
 		var inputPassword = document.getElementById("passwordLogin").value;
 		var userPassword = users_dict[user];
 		if(inputPassword === userPassword){
+			userLogedin = user;
 			// document.getElementById("usernameLogin").value = null;
 			// document.getElementById("passwordLogin").value = null;
 			return true;
@@ -435,6 +428,8 @@ function closeDialog() {
 
 
 function Start() {
+	document.getElementById("playerName").innerHTML = userLogedin;
+
 	board = new Array();
 	score = 0;
 	pac_color = "yellow";

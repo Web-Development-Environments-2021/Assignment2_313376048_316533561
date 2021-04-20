@@ -72,7 +72,14 @@ Use: Main Screen Import
 	display: none;
 	margin-top: 50px;
 	padding-top: 0px;
-	height: 400px;
+	height: 800px;
+	width: 650px;
+	background: #888;
+	border: 3px solid white;
+	border: 5px solid white;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(25%, 10%);
+
 	/* text-align: center; */
 }
 #about {
@@ -87,8 +94,7 @@ Use: Main Screen Import
 	border: 3px solid white;
 	background: #E7E7E7;
 	border: 5px solid white;
-	-ms-transform: translate(-50%, -50%);
-	transform: translate(50%, 10%);
+	transform: translate(3%, 0%);
 }
 
 #config {

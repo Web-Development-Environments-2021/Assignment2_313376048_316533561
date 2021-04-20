@@ -185,23 +185,24 @@
 
 
 		<div id="game">
-			<div id="score">
-				<label for="lblScore">SCORE:</label>
-				<input id="lblScore" type="text" size="5"/>
-			</div>
-			<div id="time">
-				<label for="lblTime">TIME:</label>
-				<input id="lblTime" type="text" size="30" />
-			</div>
+			<b>Welcome: <span id="playerName"></span></b>
+			<br/><br/>
+			<label for="lblScore">SCORE: </label>
+			<input id="lblScore" type="text" size="5" style="width: 10%"/>
+			<label for="lblTime">TIME REM: </label>
+			<input id="lblTime" type="text" size="5" style="width: 10%"/>
+			<label for="lblTime"> LIVES: </label>
+			<input id="lblTime" type="text" size="5" style="width: 10%"/>
+			<br/><br/>
+			
+			<button type="submit" id="newGame_btn" style="size: 50px; position: absolute; top: 15%; left: 50%; background-color: grass;
+			border-radius: 20px 20px 20px 20px; border: 2px solid white;"; onclick="switchDives('configuration')">Start New Game</button>
 			<canvas id="canvas" height="600" width="600"></canvas>
-
-			<div id="config">
-					
-			</div>
-			<button type="submit" id="newGame_btn" style="  size: 50px; position: absolute; bottom: 3%; left: 77%; background-color: transparent; border-radius: 20px 20px 20px 20px; border: 2px solid white;" onclick="switchDives('configuration')">New Game</button>
+			
 			
 		</div>
 
+		<div id="config"></div>
 		
 		
 		<dialog id="myDialog" style="border-radius: 20px 20px 20px 20px;">
