@@ -8,7 +8,6 @@ var time_elapsed;
 var interval;
 var PackmanScore;
 var t;
-var users = [['k','k','k','k@gmail.com',23,12,1994]];
 
 var keyArrowUp ;
 var keyArrowDown ;
@@ -132,31 +131,13 @@ $(document).ready(function() {
 
 
 	/*validate LOGIN */
-	$("#log_in").on("submit", (e)=>{
-		let uname = $("#u_name");
-		let passW = $("#pswdL");
-		for (let key =0; key<users.length; key++) {
-			if (users[key][0]==uname.val()) {
-				if(users[key][1]==passW.val()){
-					return true;
-				}
-				else{
-					alert("wrong password!");
-					return false;
-				}				
-			}
-			else{
-				alert("no such user name!");
-				return false;
-			}	
-		}
-	})
+	let uname = $("#u_name");
 
 	/*validate SIGNUP */
 	$("#sign_up").on("submit", (e)=>{
 		let sign_upEmail = $("#sign_upEmail").val();
-		let pswdS = $("#pswdS").val();
-		let pswdSRepeat = $("#pswdSRepeat").val();	
+		let pswdS = $("#pswdS");
+		let pswdSRepeat = $("#pswdSRepeat");	
 
 		let signupStatus=0;
 		if(!validateEmail(sign_upEmail)){
@@ -187,8 +168,6 @@ $(document).ready(function() {
 		else{ /* password is correct and ok */
 			signupStatus=1;
 			alert("Hello! I am an alert box!!5");
-			let new_user = [sign_upEmail,pswdS]
-			users.push(new_user)
 			return true;
 		}
 
