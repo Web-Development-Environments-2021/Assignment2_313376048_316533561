@@ -194,6 +194,10 @@ $(function(){
 	// 	keyArrowRight = "ArrowRight";
 	// });
 
+	$.validator.addMethod("notEqual", function(value, element, param) {
+		return this.optional(element) || value != param;
+	});
+
 	//Password must contain at least 6 digit, number ,char.
 	$.validator.addMethod('strongPassword', function (value, element) {		
 		return this.optional(element) || /\d/.test(value) && /[a-z]/i.test(value);
