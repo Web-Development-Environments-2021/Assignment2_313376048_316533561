@@ -6,8 +6,6 @@ var pac_color;
 var start_time;
 var time_elapsed;
 var interval;
-var PackmanScore;
-var t;
 
 var keyArrowUp ;
 var keyArrowDown ;
@@ -33,148 +31,380 @@ let pssibleDirections = [1,2,3,4];
 
 
 $(document).ready(function() {
-	//window.onload = function() {
-	var canvas = document.getElementById('canvas'),
 	context = canvas.getContext("2d");
+	context.fillStyle = "pink"
+	context.fillRect(0, 0, canvas.width, canvas.height);
+	//Start();
 
-	// Event handler to resize the canvas when the document view is changed
-	window.addEventListener('resize', resizeCanvas, false);
 
-	function resizeCanvas() {
-	  canvas.width = window.innerWidth;
-	  canvas.height = window.innerHeight;
-  
-	  // Redraw everything after resizing the window
-	  drawStuff(); 
-	}
-	resizeCanvas();
-
-	function drawStuff() {
-		context.font = '20px serif';
-		context.fillStyle = "white";
-		context.fillText('Welcome to Packmen Game', 600, 80);
-		context.fillText('if you like the game tell to our HW checkers.', 600, 110);
-		context.fillText("If you don't like the keep it secret, your opinion is not matter to us", 600, 140);		
-		context.fontcolor="white";
-	}
-
-	function validateEmail($email) {
-		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-  		return regex.test($email);
-	}
-
-	var value = $("#password_reg").val();
-
-	$.validator.addMethod("checklower", function(value) {
-	return /[a-z]/.test(value);
-	});
-	$.validator.addMethod("checkupper", function(value) {
-	return /[A-Z]/.test(value);
-	});
-	$.validator.addMethod("checkdigit", function(value) {
-	return /[0-9]/.test(value);
-	});
-	$.validator.addMethod("pwcheck", function(value) {
-	return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) && /[a-z]/.test(value) && /\d/.test(value) && /[A-Z]/.test(value);
-	});
-
-	$('#sign_up').validate({
+	// validate signup form on keyup and submit
+	$("#LOGIN").validate({
 		rules: {
-			pswdS: {
-			minlength: 6,
-			maxlength: 30,
-			required: true,
-			//pwcheck: true,
-			checklower: true,
-			checkupper: true,
-			checkdigit: true
+			usernameLogin: {
+				required: true,
 			},
-			pswdSRepeat: {
-			equalTo: "#psw",
+			passwordLogin: {
+				required: true,
+				verfieUser: true
+			},			
+		},
+		messages: {			
+			usernameLogin: {
+				required: "Please enter a username",
+			},
+			passwordLogin: {
+				required: "Please provide a password",
+				verfieUser: "User name not exist or incorrect password"
+			},
+		},
+		submitHandler: function() {
+			document.getElementById("usernameLogin").value = null;
+			document.getElementById("passwordLogin").value = null;
+			switchDives('configuration');
+		}
+	});
+
+
+	// validate signup form on keyup and submit
+	$("#SIGNUP").validate({
+		rules: {
+			firstname: {
+				required: true,
+				lettersonly: true
+			},
+			lastname: {
+				required: true,
+				lettersonly: true
+			},
+			username: {
+				required: true,
+				minlength: 2,
+				usernameisExist: true,
+			},
+			password: {
+				required: true,
+				strongPassword: true,
+				minlength: 6
+			},
+			confirm_password: {
+				required: true,
+				minlength: 6,
+				equalTo: "#password"
+			},
+			email: {
+				required: true,
+				email: true
 			},
 		},
 		messages: {
-			pswdS: {
-			pwcheck: "Password is not strong enough",
-			checklower: "Need atleast 1 lowercase alphabet",
-			checkupper: "Need atleast 1 uppercase alphabet",
-			checkdigit: "Need atleast 1 digit"
-			}
-		},
-		//   highlight: function(element) {
-		//     var id_attr = "#" + $(element).attr("id") + "1";
-		//     $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-		//     $(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
-		//     $('.form-group').css('margin-bottom', '5px');
-		//     $('.form').css('padding', '30px 40px');
-		//     $('.tab-group').css('margin', '0 0 25px 0');
-		//     $('.help-block').css('display', '');
-		//   },
-		//   unhighlight: function(element) {
-		//     var id_attr = "#" + $(element).attr("id") + "1";
-		//     $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-		//     $(id_attr).removeClass('glyphicon-remove').addClass('glyphicon-ok');
-		//     $('#confirmPassword').attr('disabled', false);
-		//   },
-		errorElement: 'span',
-		errorClass: 'validate_cus',
-		errorPlacement: function(error, element) {
-			x = element.length;
-			if (element.length) {
-			error.insertAfter(element);
-			} else {
-			error.insertAfter(element);
-			}
-		}
+			firstname: {
+				required: "Please enter your firstname",
+				lettersonly: "Please Enter letters only"
+			},
+			lastname: {
+				required: "Please enter your lastname",
+				lettersonly: "Please Enter letters only"
+			},
+			
+			username: {
+				required: "Please enter a username",
+				minlength: "Your username must consist of at least 2 characters",
+				usernameisExist: "These user Name is allready exist please choose other user Name"
 
+			},
+			password: {
+				required: "Please provide a password",
+				strongPassword: "Password must contain letters and digits",
+				minlength: "Your password must be at least 6 characters long"
+			},
+			confirm_password: {
+				required: "Please provide a password",
+				minlength: "Your password must be at least 6 characters long",
+				equalTo: "Please enter the same password as above"
+			},
+			email: "Please enter a valid email address",
+		},
+		submitHandler: function() {
+			addUser();
+		}
 	});
 
 
-	/*validate LOGIN */
-	let uname = $("#u_name");
+	// validate signup form on keyup and submit
+	$("#configuration").validate({
+		rules: {
+			up_btn: {
+				required: true,
+				notEqual : down_btn,
+				notEqual : left_btn,
+				notEqual : right_btn,
+			},
+			down_btn: {
+				required: true,
+				notEqual : up_btn,
+				notEqual : left_btn,
+				notEqual : right_btn,
+			},
+			left_btn: {
+				required: true,
+				notEqual : up_btn,
+				notEqual : down_btn,
+				notEqual : right_btn,
+			},
+			right_btn: {
+				required: true,
+				notEqual : up_btn,
+				notEqual : down_btn,
+				notEqual : left_btn,				
+			},			
+		},
+		messages: {
+			up_btn: {
+				required: "Please chosse key",
+				notEqual: "You chose this key allready"				
+			},			
+			down_btn: {
+				required: "Please chosse key",
+				notEqual: "You chose this key allready"			
+			},
+			left_btn: {
+				required: "Please chosse key",
+				notEqual: "You chose this key allready"
+			},
+			right_btn: {
+				required: "Please chosse key",
+				notEqual: "You chose this key allready"
+			},
+		},
+		submitHandler: function() {
+			switchDives('game');
+		}
+	});
+});
 
-	/*validate SIGNUP */
-	$("#sign_up").on("submit", (e)=>{
-		let sign_upEmail = $("#sign_upEmail").val();
-		let pswdS = $("#pswdS");
-		let pswdSRepeat = $("#pswdSRepeat");	
+$(function(){
 
-		let signupStatus=0;
-		if(!validateEmail(sign_upEmail)){
-			signupStatus=0;
-			alert("Hello! I am an alert box!!1");
-			return false;
+	// //check if key all ready choosen
+	// $.validator.addMethod('keysHasChosse', function () {		
+	// 	if(keyArrowUp ===  keyArrowDown)
+
+	// 	keyArrowUp = "ArrowUp";
+	// 	keyArrowDown = "ArrowDown";
+	// 	keyArrowLeft = "ArrowLeft";
+	// 	keyArrowRight = "ArrowRight";
+	// });
+
+	//Password must contain at least 6 digit, number ,char.
+	$.validator.addMethod('strongPassword', function (value, element) {		
+		return this.optional(element) || /\d/.test(value) && /[a-z]/i.test(value);
+	});
+
+
+	//check if username already exists
+	$.validator.addMethod('usernameisExist', function (value, element) {
+		for(var  usernameKey in users_dict){
+			if(usernameKey === value)
+			return false;	
 		}
-		// if(validate(pswdS)){
-		// 	signupStatus=0;
-		// 	alert("Hello! I am an alert box!!2");
-		// 	return false;
-		// }
-		// else if(!validate(pswdSRepeat)){
-		// 	signupStatus=0;
-		// 	alert("Hello! I am an alert box!!3");
-		// 	return false;
-		// }
-		if(!validate()){
-			signupStatus=0;
-			alert("Hello! I am an alert box!!2");
-			return false;
-		}
-		else if(!pswdSRepeat != pswdS){
-			signupStatus=0;
-			alert("Hello! I am an alert box!!4");
-			return false;
-		}
-		else{ /* password is correct and ok */
-			signupStatus=1;
-			alert("Hello! I am an alert box!!5");
+		return true;	
+	});
+
+	//Login
+
+	//check if password match user
+	$.validator.addMethod('verfieUser', function () {
+
+		var user = document.getElementById("usernameLogin").value;
+		var inputPassword = document.getElementById("passwordLogin").value;
+		var userPassword = users_dict[user];
+		if(inputPassword === userPassword){
+			// document.getElementById("usernameLogin").value = null;
+			// document.getElementById("passwordLogin").value = null;
 			return true;
 		}
+		return false;		
+	});
+})
 
-	})
+function checkletters(value) {
+	return /[a-z]/.test(value) || /[a-z]/.test(value);
+}
 
-	//Start()
-});
+function checkdigit(value) {
+	return /[0-9]/.test(value);
+}
+
+function addUser(){
+	var user = document.getElementById("username").value;
+	var inputPassword = document.getElementById("password").value;
+	users_dict[user]=inputPassword;
+	// empty the input form buffer
+	document.getElementById("firstname").value = null;
+	document.getElementById("lastname").value = null;
+	document.getElementById("username").value = null;
+	document.getElementById("password").value = null;
+	document.getElementById("confirm_password").value = null;
+	document.getElementById("email").value = null;
+
+	switchDives('LOGIN');
+}
+
+function canlogin(){
+	var user = document.getElementById("usernameLogin").value;
+	var inputPassword = document.getElementById("passwordLogin").value;
+	var userPassword = users_dict[user];
+	if(inputPassword === userPassword){
+		// document.getElementById("usernameLogin").value = null;
+		// document.getElementById("passwordLogin").value = null;
+		switchDives('configuration');
+	}
+	else{
+		//alert("User name not exist or incorrect password");
+		return false;
+	}
+}
+
+// function uniCharCode(event) {
+// 	var char = event.which || event.keyCode;
+// 	document.getElementById("demo").innerHTML = "The Unicode CHARACTER code is: " + char;
+// }
+
+
+function uniKeyCode(lbl, event) {
+	// var key = evevnt.keyCode      colud be we will need this line later in the game
+	if(lbl === 'up_btn'){
+		keyArrowUp = event.key;
+		document.getElementById("up_btn").innerHTML = keyArrowUp;
+	}
+	else if(lbl === 'down_btn'){
+		keyArrowDown = event.key;
+		document.getElementById("down_btn").innerHTML = keyArrowDown;
+	}
+	else if(lbl === 'left_btn'){
+		keyArrowLeft = event.key;
+		document.getElementById("left_btn").innerHTML = keyArrowLeft;
+	
+	}
+	else if(lbl === 'right_btn'){
+		keyArrowRight = event.key;
+		document.getElementById("right_btn").innerHTML = keyArrowRight;
+	}	
+}
+
+
+
+function pressX(){
+	document.getElementById('LOGIN').style.display='none';
+	document.getElementById('SIGNUP').style.display='none';
+	document.getElementById('configuration').style.display='none';
+	$('#centerSignUp').show();
+	$('#centerLogIn').show();
+}
+
+function switchDives(Div_id){
+	
+	$('#WelcomePage').hide();
+	$('#SIGNUP').hide();
+	$('#LOGIN').hide();
+	$('#centerSignUp').hide();
+	$('#centerLogIn').hide();
+	$('#game').hide();
+	$('#configuration').hide();
+	$('#about').hide();
+	$('#config').hide();
+
+
+	$('#' + Div_id).show();
+
+	if(Div_id === 'game'){
+		Start();
+		DrawSettings();		
+	}
+	else if(Div_id === 'Random_game'){
+		$('#game').show();
+		//$('#settings').show();
+
+		setRandomData();
+		Start();
+		DrawSettings();
+	}
+}
+
+function setRandomData(){
+	setkeysForGame();
+	setBallsNmber();
+	setPointsColor();
+	setTotalTime();
+	setNumberOfMonsters();
+}
+
+
+function setkeysForGame(){
+	keyArrowUp = "ArrowUp";
+	keyArrowDown = "ArrowDown";
+	keyArrowLeft = "ArrowLeft";
+	keyArrowRight = "ArrowRight";
+}
+
+function setBallsNmber(){
+	document.getElementById("myRange").value = Math.floor(Math.random() * 90) + 50;
+}
+
+function getRandomColor() {
+	var letters = '0123456789ABCDEF';
+	var color = '#';
+	for (var i = 0; i < 6; i++) {
+	  color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
+  }
+
+function setPointsColor(){
+	 document.getElementById("five_point_color_id").value = getRandomColor();
+	 document.getElementById("fifteen_point_color_id").value = getRandomColor();
+	 document.getElementById("twenty_five_point_color_id").value = getRandomColor();
+}
+
+
+function setTotalTime(){
+	document.getElementById("TotalTime").value = Math.floor(Math.random() * 360) + 60;
+}
+
+function setNumberOfMonsters(){
+	
+	var index = Math.floor(Math.random() * 4) + 1;  // returns a random integer from 1 to 4
+	
+	document.getElementsByName('monster')[index-1].value = index;
+	document.getElementsByName('monster')[index-1].checked = true;
+}
+
+
+
+function DrawSettings(){
+	$('#config').show();
+	document.getElementById("config").innerHTML =
+	"<br />" + " To go up press: " + keyArrowUp  + 
+	"<br />" + " To go down press: "+  keyArrowDown  + 
+	"<br />" + " To go left press: " + keyArrowLeft  + 
+	"<br />" + " To go right press: " + keyArrowRight +
+	"<br />" + " number of balls: " + document.getElementById("myRange").value +
+	"<br />" + " 5 point food color: " + document.getElementById("five_point_color_id").value +
+	"<br />" + " 15 point food color: " + document.getElementById("fifteen_point_color_id").value +
+	"<br />" + " 25 point food color: " + document.getElementById("twenty_five_point_color_id").value +
+	"<br />" + " total time: " +  document.getElementById("TotalTime").value +
+	"<br />" + " number of monsters: " + displayRadioValue(); 
+
+}
+
+function displayRadioValue() {
+	var ele = document.getElementsByName('monster');
+	  
+	for(i = 0; i < ele.length; i++) {
+		if(ele[i].checked)
+			return ele[i].value;
+	}
+}
+
 
 function openDialog() { 
 	document.getElementById("myDialog").showModal(); 
@@ -186,11 +416,6 @@ function closeDialog() {
 
 
 function Start() {
-	//document.getElementById("whiteBG");
-	// var canvas = document.getElementById('canvas'),
-	// context = canvas.getContext("2d");
-	// context.fillStyle = "white";
-	// context.fillRect(0, 0, window.width, window.height);
 	board = new Array();
 	score = 0;
 	pac_color = "yellow";
@@ -293,46 +518,38 @@ function GetKeyPressed() {
 	}
 }
 
-function DrawWelcomePage(){
-	return true;	
-}
-
-function scoreAndTime(){
-	// Score
-	context.fillStyle = "rgb(0, 0, 0)";
-	context.font = "24px Helvetica";
-	context.textBaseline = "top";
-	context.textAlign = "left";	
-	context.fillText("Score: " + PackmanScore + " Time left :" +  time_elapsed/1000 , 5, 5);
-}
-
 function Draw() {
 	canvas.width = canvas.width; //clean board
-	//lblScore.value = score;
-	//lblTime.value = time_elapsed;
-	
-	for (var i =0; i < 10; i++) {
-		for (var j = 1; j < 11; j++) {
+	context.fillStyle = "pink"
+	context.fillRect(0, 0, canvas.width, canvas.height);
+	lblScore.value = score;
+	lblTime.value = time_elapsed;
+	for (var i = 0; i < 10; i++) {
+		for (var j = 0; j < 10; j++) {
 			var center = new Object();
 			center.x = i * 60 + 30;
 			center.y = j * 60 + 30;
-			
-			if ((board[i][j] == 2)) {
+			if (board[i][j] == 2) {//pacman
+				let temp = GetKeyPressed();
+				if (dirction == null && temp == 0) {
+					dirction = 1;
+				}
+				if (temp != 0) {
+					dirction = temp;
+				}
 				context.beginPath();
 				context.arc(center.x, center.y, 30, dirctions_dict[dirction][0] * Math.PI, dirctions_dict[dirction][1] * Math.PI); // half circle
 				context.lineTo(center.x, center.y);
 				context.fillStyle = pac_color; 
 				context.fill();
 				context.beginPath();
-				context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
-				context.fillStyle = "blue"; //color - packman eye
+				context.arc(center.x + 5 - dirctions_dict[dirction][2], center.y - 15 + dirctions_dict[dirction][2], 5, 0, 2 * Math.PI); // circle
+				context.fillStyle = "black"; 
 				context.fill();
 			} else if (board[i][j] == 1) {//food
 				context.beginPath();
 				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
-				context.fillStyle = "#000";
-				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
-				context.fillStyle = "black"; //color - pills
+				context.fillStyle = "black"; 
 				context.fill();
 			} else if (board[i][j] == 4) {//wall
 				context.beginPath();
@@ -360,7 +577,6 @@ function Draw() {
 			}
 		}
 	}
-	scoreAndTime()
 }
 class User {
 	constructor(username, passward, score) {
@@ -532,110 +748,3 @@ function UpdatePosition() {
 		Draw();
 	}
 }
-
-
-
-
-
-
-
-// Defining a function to display error message
-// function printError(elemId, hintMsg) {
-//     document.getElementById(elemId).innerHTML = hintMsg;
-// }
-
-// // Defining a function to validate form 
-// function validateForm() {
-//     // Retrieving the values of form elements 
-//     var name = document.contactForm.name.value;
-//     var email = document.contactForm.email.value;
-//     var mobile = document.contactForm.mobile.value;
-//     var country = document.contactForm.country.value;
-//     var gender = document.contactForm.gender.value;
-//     var hobbies = [];
-//     var checkboxes = document.getElementsByName("hobbies[]");
-//     for(var i=0; i < checkboxes.length; i++) {
-//         if(checkboxes[i].checked) {
-//             // Populate hobbies array with selected values
-//             hobbies.push(checkboxes[i].value);
-//         }
-//     }
-    
-// 	// Defining error variables with a default value
-//     var nameErr = emailErr = mobileErr = countryErr = genderErr = true;
-    
-//     // Validate name
-//     if(name == "") {
-//         printError("nameErr", "Please enter your name");
-//     } else {
-//         var regex = /^[a-zA-Z\s]+$/;                
-//         if(regex.test(name) === false) {
-//             printError("nameErr", "Please enter a valid name");
-//         } else {
-//             printError("nameErr", "");
-//             nameErr = false;
-//         }
-//     }
-    
-//     // Validate email address
-//     if(email == "") {
-//         printError("emailErr", "Please enter your email address");
-//     } else {
-//         // Regular expression for basic email validation
-//         var regex = /^\S+@\S+\.\S+$/;
-//         if(regex.test(email) === false) {
-//             printError("emailErr", "Please enter a valid email address");
-//         } else{
-//             printError("emailErr", "");
-//             emailErr = false;
-//         }
-//     }
-    
-//     // Validate mobile number
-//     if(mobile == "") {
-//         printError("mobileErr", "Please enter your mobile number");
-//     } else {
-//         var regex = /^[1-9]\d{9}$/;
-//         if(regex.test(mobile) === false) {
-//             printError("mobileErr", "Please enter a valid 10 digit mobile number");
-//         } else{
-//             printError("mobileErr", "");
-//             mobileErr = false;
-//         }
-//     }
-    
-//     // Validate country
-//     if(country == "Select") {
-//         printError("countryErr", "Please select your country");
-//     } else {
-//         printError("countryErr", "");
-//         countryErr = false;
-//     }
-    
-//     // Validate gender
-//     if(gender == "") {
-//         printError("genderErr", "Please select your gender");
-//     } else {
-//         printError("genderErr", "");
-//         genderErr = false;
-//     }
-    
-//     // Prevent the form from being submitted if there are any errors
-//     if((nameErr || emailErr || mobileErr || countryErr || genderErr) == true) {
-//        return false;
-//     } else {
-//         // Creating a string from input data for preview
-//         var dataPreview = "You've entered the following details: \n" +
-//                           "Full Name: " + name + "\n" +
-//                           "Email Address: " + email + "\n" +
-//                           "Mobile Number: " + mobile + "\n" +
-//                           "Country: " + country + "\n" +
-//                           "Gender: " + gender + "\n";
-//         if(hobbies.length) {
-//             dataPreview += "Hobbies: " + hobbies.join(", ");
-//         }
-//         // Display input data in a dialog box before submitting the form
-//         alert(dataPreview);
-// 		Start();
-//     }
-// };
