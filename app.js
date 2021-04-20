@@ -231,7 +231,16 @@ $(function(){
 		}
 		return false;		
 	});
+
+	$( "#dob" ).datepicker( {
+		changeMonth: true,
+		changeYear: true,
+		yearRange: "-100:+0",
+		maxDate: "+0D"
+	} );
 })
+
+
 
 function checkletters(value) {
 	return /[a-z]/.test(value) || /[a-z]/.test(value);

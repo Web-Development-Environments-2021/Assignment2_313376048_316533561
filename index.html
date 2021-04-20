@@ -7,7 +7,6 @@
 	<script type="text/javascript" src="./app.js"></script>
 	<link rel="stylesheet" type="text/css" href="style.css" />
 	<link rel="stylesheet" type="text/css" href="Configurations.css" />
-
 	<script src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/additional-methods.js"></script>
 
@@ -15,19 +14,20 @@
 </head>
 
 <body >
-	<div >
+	<div id="myModal">
 		<!-- Navbar -->
 		<div id="topnav">
 			<div class="topnav">
-				<div class="topnav-left">
-					<a id="Nabar_welcome">Packman</a>
-					<a id="Nabar_login" onclick="switchDives('LOGIN')">Log In</a>
-					<a id="Nabar_register" onclick="switchDives('SIGNUP')">Sign Up</a>
-					<a id="Nabar_about" onclick="openDialog()">About</a>
+				<div class="topnav-left" >
+					<img src="logo.png" alt="packman" id="logo">
+					<a id="Navbar_welcome">Packman</a>
+					<a id="Navbar_login" onclick="switchDives('LOGIN')">Log In</a>
+					<a id="Navbar_register" onclick="switchDives('SIGNUP')">Sign Up</a>
+					<a id="Nabvar_about" onclick="openDialog()">About</a>
 				</div>
 			</div>
 		</div>
-
+		Navbar_register centerSignUp centerLogIn
 		<!-- WelcomePage -->
 		</div id="WelcomePage">
 			<button type="button" id="centerSignUp" onclick="document.getElementById('LOGIN').style.display='block'"
@@ -62,11 +62,7 @@
 			</fieldset>
 		</form>
 
-		<dialog id="myDialog">
-			<h3>This is a dialog window!</h3>
-			<br>
-			<button onclick="closeDialog()">Close dialog</button>
-		</dialog>
+		
 
 		<!-- SIGN_UP -->
 		<form class="cmxform animate" id="SIGNUP">	<!-- onsubmit="return addUser()"-->
@@ -87,6 +83,10 @@
 				<p>
 					<label for="username">Username</label>
 					<input id="username" name="username" type="text">
+				</p>
+				<p>
+				<label for="dob" class="formlabel">Date of Birth</label>
+				<input type="date" id="dob" name="dob" required>
 				</p>
 				<p>
 					<label for="password">Password</label>
@@ -199,7 +199,50 @@
 			</div>
 		</div>
 
+		
+		
+		<dialog id="myDialog" style="border-radius: 20px 20px 20px 20px;">
+			
+			<span class="close " onclick="closeDialog()">&times;</span>
+			<h2> This game was developed by Shimon Shouei and Shai Shimon Levi</h2>
+			<br>
+			<h2> We use the jquery validate plug-in and date picker plugin</h2>
+			<br>
+			<h2>The main difficulty in creating the game is to understand the concept of replacing screens(divs) and understanding the use of jquery's validate plug in </h2>
+			<button onclick="closeDialog()">Close dialog</button>
+		</dialog>
+		
 		<script>
+			var myModal= $("#myModal")
+
+			$(document.body).click( function(e) {
+				var $target = $(e.target);
+				if(!$target.is($("#Nabvar_about"))){
+					closeDialog();
+				}
+				/*if(!$target.is($("#Navbar_login")) || ($target.is($("#centerLogIn")))){
+					pressX();
+				}
+				if($target.is($("#Navbar_login")) || (!$target.is($("#centerLogIn")))){
+					pressX();
+				}
+
+				if(!$target.is($("#Navbar_register")) || ($target.is($("#centerSignUp")))){
+					pressX();
+				}
+				if($target.is($("#Navbar_register")) || (!$target.is($("#centerSignUp")))){
+					pressX();
+				}*/
+			});
+			 
+
+			
+			/*$(".dialog").click( function(e) {
+				e.stopPropagation(); // this stops the event from bubbling up to the body
+			});*/
+		</script>
+
+		<!-- <script>
 			// Get the modal
 			var modal = document.getElementById('SIGNUP');
 
@@ -211,7 +254,7 @@
 					$('#centerLogIn').show();
 				}
 			}
-		</script>
+		</script> -->
 
 		<script>
 			// Get the modal
