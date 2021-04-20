@@ -7,102 +7,106 @@ var start_time;
 var time_elapsed;
 var interval;
 var PackmanScore;
-var t;
 
 var keyArrowUp ;
 var keyArrowDown ;
 var keyArrowLeft ;
 var keyArrowRight ;
+var users_dict = { 'k' : 'k'} // {username : password}
 
 $(document).ready(function() {
 	// var canvas = document.getElementById('canvas'),
 	context = canvas.getContext("2d");
 	//Start();
 
-	//LOGIN
+
+	// validate signup form on keyup and submit
 	$("#LOGIN").validate({
 		rules: {
-			uname: {
+			usernameLogin: {
 				required: true,
 			},
-			pswdL: {
+			passwordLogin: {
 				required: true,
-				validateUser: true
-			}
+				verfieUser: true
+			},			
 		},
-		messages: {
-			uname: {
-				required: "Please enter username."
+		messages: {			
+			usernameLogin: {
+				required: "Please enter a username",
 			},
-			pswdL: {
-				required: "Please enter an password",
-				validateUser: "Username or password is not valid."
-			}
+			passwordLogin: {
+				required: "Please provide a password",
+				verfieUser: "User name not exist or incorrect password"
+			},
 		},
-		submitHandler: function () {
-
-			login();
-
-			//reset form details
-			let form = $("#LOGIN");
-			form[0].reset();
-		},
+		submitHandler: function() {
+			document.getElementById("usernameLogin").value = null;
+			document.getElementById("passwordLogin").value = null;
+			switchDives('Configuration_div');
+		}
 	});
 
-	//REGISTER
-	$("#sign_up").validate({
+
+	// validate signup form on keyup and submit
+	$("#SIGNUP").validate({
 		rules: {
-			user_name: {
-				required: true,
-				validateUsername: true
-			},
-			pswdS: {
-				required: true,
-				strongPassword: true
-			},
-			allName: {
+			firstname: {
 				required: true,
 				lettersonly: true
 			},
-			sign_upEmail: {
+			lastname: {
+				required: true,
+				lettersonly: true
+			},
+			username: {
+				required: true,
+				minlength: 2
+			},
+			password: {
+				required: true,
+				strongPassword: true,
+				minlength: 6
+			},
+			confirm_password: {
+				required: true,
+				minlength: 6,
+				equalTo: "#password"
+			},
+			email: {
 				required: true,
 				email: true
 			},
-			Bday: {
-				required: true
-			}
 		},
 		messages: {
-			user_name: {
-				required: "Please enter valid username address.",
-				validateUsername: "Username already taken."
+			firstname: {
+				required: "Please enter your firstname",
+				lettersonly: "Please Enter letters only"
 			},
-			pswdS: {
-				required: "Please enter an password",
-				strongPassword: "password MUST contain at least one character and one number."
+			lastname: {
+				required: "Please enter your lastname",
+				lettersonly: "Please Enter letters only"
 			},
-			allName: {
-				required: "Please enter a name.",
-				lettersonly: "Full name can be only letters."
-			},
-			sign_upEmail: {
-				required: "Please enter an email address.",
-				email: "Please enter a valid email."
-			},
-			registration_birth_day_name: {
-				required: "Please enter a birth day."
-			}
-		},
-		submitHandler: function () {
 			
-			alert("fuck you2");
-
-			//register();
-
-			//reset form details
-			// let form = $("#sign_up");
-			// form[0].reset();
+			username: {
+				required: "Please enter a username",
+				minlength: "Your username must consist of at least 2 characters"
+			},
+			password: {
+				required: "Please provide a password",
+				strongPassword: "Password must contain letters and digits",
+				minlength: "Your password must be at least 6 characters long"
+			},
+			confirm_password: {
+				required: "Please provide a password",
+				minlength: "Your password must be at least 6 characters long",
+				equalTo: "Please enter the same password as above"
+			},
+			email: "Please enter a valid email address",
 		},
+		submitHandler: function() {
+			addUser();
+		}
 	});
 });
 
@@ -110,9 +114,7 @@ $(function(){
 
 	//Password must contain at least 6 digit and contain one number and one char.
 	$.validator.addMethod('strongPassword', function (value, element) {		
-		//return this.optional(element) || value.length >= 6 && /\d/.test(value) && /[a-z]/i.test(value);
-		alert("fuck you");
-		return false;
+		return this.optional(element) || /\d/.test(value) && /[a-z]/i.test(value);
 	});
 
 
@@ -142,20 +144,19 @@ $(function(){
 	//Login
 
 	//check if password match user
-	$.validator.addMethod('validateUser', function (password, element) {
+	$.validator.addMethod('verfieUser', function () {
 
-		// let user_input_username = document.getElementById("uname").value;
-
-		// let localstorage_password = localStorage.getItem(user_input_username);
-
-		// if(localstorage_password === null) {
-		// 	return false;
-		// }
-		// else if(localstorage_password === password) {
-		// 	return true;
-		// }
-
+		var user = document.getElementById("usernameLogin").value;
+		var inputPassword = document.getElementById("passwordLogin").value;
+		var userPassword = users_dict[user];
+		if(inputPassword === userPassword){
+			// document.getElementById("usernameLogin").value = null;
+			// document.getElementById("passwordLogin").value = null;
+			return true;
+		}
+		
 		return false;
+		
 	});
 })
 
@@ -167,10 +168,41 @@ function checkdigit(value) {
 	return /[0-9]/.test(value);
 }
 
+function addUser(){
+	var user = document.getElementById("username").value;
+	var inputPassword = document.getElementById("password").value;
+	users_dict[user]=inputPassword;
+	// empty the input form buffer
+	document.getElementById("firstname").value = null;
+	document.getElementById("lastname").value = null;
+	document.getElementById("username").value = null;
+	document.getElementById("password").value = null;
+	document.getElementById("confirm_password").value = null;
+	document.getElementById("email").value = null;
+
+	switchDives('LOGIN');
+}
+
+function canlogin(){
+	var user = document.getElementById("usernameLogin").value;
+	var inputPassword = document.getElementById("passwordLogin").value;
+	var userPassword = users_dict[user];
+	if(inputPassword === userPassword){
+		// document.getElementById("usernameLogin").value = null;
+		// document.getElementById("passwordLogin").value = null;
+		switchDives('Configuration_div');
+	}
+	else{
+		//alert("User name not exist or incorrect password");
+		return false;
+	}
+}
+
 // function uniCharCode(event) {
 // 	var char = event.which || event.keyCode;
 // 	document.getElementById("demo").innerHTML = "The Unicode CHARACTER code is: " + char;
 // }
+
 
 function uniKeyCode(lbl, event) {
 	// var key = evevnt.keyCode      colud be we will need this line later in the game
@@ -213,20 +245,75 @@ function switchDives(Div_id){
 	$('#game').hide();
 	$('#Configuration_div').hide();
 	$('#about').hide();
-	$('#settings').hide();
+	$('#config').hide();
 
 
 	$('#' + Div_id).show();
 
 	if(Div_id === 'game'){
 		Start();
-		DrawSettings();
+		DrawSettings();		
 	}
+	// else if(Div_id === 'Random_game'){
+	// 	$('#game').show();
+	// 	//$('#settings').show();
+
+	// 	//setRandomData();
+	// 	Start();
+	// 	DrawSettings();
+	// }
 }
 
+// function setRandomData(){
+// 	setkeysForGame();
+// 	setBallsNmber();
+// 	setPointsColor();
+// 	//setTotalTime();
+// 	// setNumberOfMonsters();
+// }
+
+
+// function setkeysForGame(){
+// 	keyArrowUp = "ArrowUp";
+// 	keyArrowDown = "ArrowDown";
+// 	keyArrowLeft = "ArrowLeft";
+// 	keyArrowRight = "ArrowRight";
+// }
+
+// function setBallsNmber(){
+// 	document.getElementById("myRange").value = Math.floor(Math.random() * 90) + 50;
+// }
+
+// function getRandomColor() {
+// 	var letters = '0123456789ABCDEF';
+// 	var color = '#';
+// 	for (var i = 0; i < 6; i++) {
+// 	  color += letters[Math.floor(Math.random() * 16)];
+// 	}
+// 	return color;
+//   }
+
+// function setPointsColor(){
+// 	 document.getElementById("five_point_color_id").value = getRandomColor();
+// 	 document.getElementById("fifteen_point_color_id").value = getRandomColor();
+// 	 document.getElementById("twenty_five_point_color_id").value = getRandomColor();
+// }
+
+
+// function setTotalTime(){
+// 	document.getElementById("TotalTime").value = Math.floor(Math.random() * 360) + 60;
+// }
+
+// function setNumberOfMonsters(){
+// 	var index = Math.floor(Math.random() * 4) + 1;  // returns a random integer from 1 to 4
+// 	document.getElementsByName('monster')[index] = index;
+// }
+
+
+
 function DrawSettings(){
-	$('#settings').show();
-	document.getElementById("settings").innerHTML =
+	$('#config').show();
+	document.getElementById("config").innerHTML =
 	"<br />" + " To go up press: " + keyArrowUp  + 
 	"<br />" + " To go down press: "+  keyArrowDown  + 
 	"<br />" + " To go left press: " + keyArrowLeft  + 
@@ -235,8 +322,8 @@ function DrawSettings(){
 	"<br />" + " 5 point food color: " + document.getElementById("five_point_color_id").value +
 	"<br />" + " 15 point food color: " + document.getElementById("fifteen_point_color_id").value +
 	"<br />" + " 25 point food color: " + document.getElementById("twenty_five_point_color_id").value +
-	"<br />" + " total time: " +  document.getElementById("time").value +
-	"<br />" + " number of monsters: " + displayRadioValue(); //document.getElementsByName("monster").value;
+	"<br />" + " total time: " +  document.getElementById("TotalTime").value +
+	"<br />" + " number of monsters: " + displayRadioValue(); 
 
 }
 
