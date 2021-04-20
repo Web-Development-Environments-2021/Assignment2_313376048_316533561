@@ -25,7 +25,8 @@ var currentUser;
 let ate =false;
 let failCounter = 0;
 let was_food = false;
-let pssibleDirections = [1,2,3,4];
+let pssibleDirections = [1,2,3,4]; //1=up 2= down 3= left 4 =right
+let arrowsKeys = [];
 
 
 
@@ -122,7 +123,9 @@ $(document).ready(function() {
 				minlength: "Your password must be at least 6 characters long",
 				equalTo: "Please enter the same password as above"
 			},
-			email: "Please enter a valid email address",
+			email: {
+				email:"Please enter a valid email address"
+			},
 		},
 		submitHandler: function() {
 			addUser();
@@ -133,45 +136,45 @@ $(document).ready(function() {
 	// validate signup form on keyup and submit
 	$("#configuration").validate({
 		rules: {
-			up_btn: {
+			inputup_btn: {
 				required: true,
-				notEqual : down_btn,
-				notEqual : left_btn,
-				notEqual : right_btn,
+				notEqual : '#inputdown_btn',
+				notEqual : '#inputleft_btn',
+				notEqual : '#inputright_btn',
 			},
-			down_btn: {
+			inputdown_btn: {
 				required: true,
-				notEqual : up_btn,
-				notEqual : left_btn,
-				notEqual : right_btn,
+				notEqual : '#inputup_btn',
+				notEqual : '#inputleft_btn',
+				notEqual : '#inputright_btn',
 			},
-			left_btn: {
+			inputleft_btn: {
 				required: true,
-				notEqual : up_btn,
-				notEqual : down_btn,
-				notEqual : right_btn,
+				notEqual : '#inputup_btn',
+				notEqual : '#inputdown_btn',
+				notEqual : '#inputright_btn',
 			},
-			right_btn: {
+			inputright_btn: {
 				required: true,
-				notEqual : up_btn,
-				notEqual : down_btn,
-				notEqual : left_btn,				
+				notEqual : '#inputup_btn',
+				notEqual : '#inputdown_btn',
+				notEqual : '#inputleft_btn',				
 			},			
 		},
 		messages: {
-			up_btn: {
+			inputup_btn: {
 				required: "Please chosse key",
 				notEqual: "You chose this key allready"				
 			},			
-			down_btn: {
+			inputdown_btn: {
 				required: "Please chosse key",
 				notEqual: "You chose this key allready"			
 			},
-			left_btn: {
+			inputleft_btn: {
 				required: "Please chosse key",
 				notEqual: "You chose this key allready"
 			},
-			right_btn: {
+			inputright_btn: {
 				required: "Please chosse key",
 				notEqual: "You chose this key allready"
 			},
@@ -194,8 +197,8 @@ $(function(){
 	// 	keyArrowRight = "ArrowRight";
 	// });
 
-	$.validator.addMethod("notEqual", function(value, element, param) {
-		return this.optional(element) || value != param;
+	$.validator.addMethod("notEqual", function(value, param) {
+		return value != $(param).val();
 	});
 
 	//Password must contain at least 6 digit, number ,char.
@@ -276,6 +279,16 @@ function canlogin(){
 
 function uniKeyCode(lbl, event) {
 	// var key = evevnt.keyCode      colud be we will need this line later in the game
+	var error = document.getElementById(lbl)
+	for (var i = 0; i < 4; i++) {
+		if(arrowsKeys[i] === event.keyCode){
+			error.innerHTML = "<span style='color: red;'>"+
+                        "You chose this key allready</span>"
+			//document.getElementsById(lbl).error("You chose this key allready")
+			//arrowsKeys[i]=null;
+			return false;
+		}
+	}
 	if(lbl === 'up_btn'){
 		keyArrowUp = event.key;
 		document.getElementById("up_btn").innerHTML = keyArrowUp;
@@ -293,9 +306,9 @@ function uniKeyCode(lbl, event) {
 		keyArrowRight = event.key;
 		document.getElementById("right_btn").innerHTML = keyArrowRight;
 	}	
+	arrowsKeys.push(event.keyCode)
+
 }
-
-
 
 function pressX(){
 	document.getElementById('LOGIN').style.display='none';
