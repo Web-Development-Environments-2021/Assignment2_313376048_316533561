@@ -6,9 +6,6 @@ var pac_color;
 var start_time;
 var time_elapsed;
 var interval;
-var PackmanScore;
-var users = [['k','k','k','k@gmail.com',23,12,1994]];
-
 
 var keyArrowUp ;
 var keyArrowDown ;
@@ -30,178 +27,384 @@ let failCounter = 0;
 let was_food = false;
 let pssibleDirections = [1,2,3,4];
 
-	/*validate LOGIN */
-	$("#log_in").on("submit", (e)=>{
-		let uname = $("#u_name");
-		let passW = $("#pswdL");
-		for (let key =0; key<users.length; key++) {
-			if (users[key][0]==uname.val()) {
-				if(users[key][1]==passW.val()){
-					return true;
-				}
-				else{
-					alert("wrong password!");
-					return false;
-				}				
-			}
-			else{
-				alert("no such user name!");
-				return false;
-			}	
+
+
+
+$(document).ready(function() {
+	context = canvas.getContext("2d");
+	context.fillStyle = "pink"
+	context.fillRect(0, 0, canvas.width, canvas.height);
+	//Start();
+
+
+	// validate signup form on keyup and submit
+	$("#LOGIN").validate({
+		rules: {
+			usernameLogin: {
+				required: true,
+			},
+			passwordLogin: {
+				required: true,
+				verfieUser: true
+			},			
+		},
+		messages: {			
+			usernameLogin: {
+				required: "Please enter a username",
+			},
+			passwordLogin: {
+				required: "Please provide a password",
+				verfieUser: "User name not exist or incorrect password"
+			},
+		},
+		submitHandler: function() {
+			document.getElementById("usernameLogin").value = null;
+			document.getElementById("passwordLogin").value = null;
+			switchDives('configuration');
 		}
-	})
-
-
-	/*validate SIGNUP */
-
-	/* Date Picker */
-	$( function() {
-		$( "#Bday" ).datepicker();
-	} );
-
-	function checkletters(value){
-		return /[a-z]/.test(value) || /[a-z]/.test(value);
-	}
-
-	function checkdigit(value){
-		return /[0-9]/.test(value);
-	}
-
-	// Validate User Full Name
-	$('#usercheck').hide();	
-	let usernameError = true;
-	$('#allName').keyup(function () {
-		validateUsername();
 	});
 
-	function validateUsername() {
-		let usernameValue = $('#allName').val();
-		if (usernameValue.length == '') {
-		$('#usercheck').show();
-			usernameError = false;
-			return false;
-		}
-		else if(checkdigit(usernameValue)){
-			$('#usercheck').show();
-			$('#usercheck').html("**Full name must contain only letters");
-			usernameError = false;
-			return false;
-		}else {
-			$('#usercheck').hide();
-		}
-	}
 
-	// Validate Email
-	const email = document.getElementById('sign_upEmail');
-	email.addEventListener('blur', ()=>{
-	let regex =	/^([_\-\.0-9a-zA-Z]+)@([_\-\.0-9a-zA-Z]+)\.([a-zA-Z]){2,7}$/;
-	let s = email.value;
-	if(regex.test(s)){
-	email.classList.remove(
-			'is-invalid');
-	emailError = true;
+	// validate signup form on keyup and submit
+	$("#SIGNUP").validate({
+		rules: {
+			firstname: {
+				required: true,
+				lettersonly: true
+			},
+			lastname: {
+				required: true,
+				lettersonly: true
+			},
+			username: {
+				required: true,
+				minlength: 2,
+				usernameisExist: true,
+			},
+			password: {
+				required: true,
+				strongPassword: true,
+				minlength: 6
+			},
+			confirm_password: {
+				required: true,
+				minlength: 6,
+				equalTo: "#password"
+			},
+			email: {
+				required: true,
+				email: true
+			},
+		},
+		messages: {
+			firstname: {
+				required: "Please enter your firstname",
+				lettersonly: "Please Enter letters only"
+			},
+			lastname: {
+				required: "Please enter your lastname",
+				lettersonly: "Please Enter letters only"
+			},
+			
+			username: {
+				required: "Please enter a username",
+				minlength: "Your username must consist of at least 2 characters",
+				usernameisExist: "These user Name is allready exist please choose other user Name"
+
+			},
+			password: {
+				required: "Please provide a password",
+				strongPassword: "Password must contain letters and digits",
+				minlength: "Your password must be at least 6 characters long"
+			},
+			confirm_password: {
+				required: "Please provide a password",
+				minlength: "Your password must be at least 6 characters long",
+				equalTo: "Please enter the same password as above"
+			},
+			email: "Please enter a valid email address",
+		},
+		submitHandler: function() {
+			addUser();
+		}
+	});
+
+
+	// validate signup form on keyup and submit
+	$("#configuration").validate({
+		rules: {
+			up_btn: {
+				required: true,
+				notEqual : down_btn,
+				notEqual : left_btn,
+				notEqual : right_btn,
+			},
+			down_btn: {
+				required: true,
+				notEqual : up_btn,
+				notEqual : left_btn,
+				notEqual : right_btn,
+			},
+			left_btn: {
+				required: true,
+				notEqual : up_btn,
+				notEqual : down_btn,
+				notEqual : right_btn,
+			},
+			right_btn: {
+				required: true,
+				notEqual : up_btn,
+				notEqual : down_btn,
+				notEqual : left_btn,				
+			},			
+		},
+		messages: {
+			up_btn: {
+				required: "Please chosse key",
+				notEqual: "You chose this key allready"				
+			},			
+			down_btn: {
+				required: "Please chosse key",
+				notEqual: "You chose this key allready"			
+			},
+			left_btn: {
+				required: "Please chosse key",
+				notEqual: "You chose this key allready"
+			},
+			right_btn: {
+				required: "Please chosse key",
+				notEqual: "You chose this key allready"
+			},
+		},
+		submitHandler: function() {
+			switchDives('game');
+		}
+	});
+});
+
+$(function(){
+
+	// //check if key all ready choosen
+	// $.validator.addMethod('keysHasChosse', function () {		
+	// 	if(keyArrowUp ===  keyArrowDown)
+
+	// 	keyArrowUp = "ArrowUp";
+	// 	keyArrowDown = "ArrowDown";
+	// 	keyArrowLeft = "ArrowLeft";
+	// 	keyArrowRight = "ArrowRight";
+	// });
+
+	//Password must contain at least 6 digit, number ,char.
+	$.validator.addMethod('strongPassword', function (value, element) {		
+		return this.optional(element) || /\d/.test(value) && /[a-z]/i.test(value);
+	});
+
+
+	//check if username already exists
+	$.validator.addMethod('usernameisExist', function (value, element) {
+		for(var  usernameKey in users_dict){
+			if(usernameKey === value)
+			return false;	
+		}
+		return true;	
+	});
+
+	//Login
+
+	//check if password match user
+	$.validator.addMethod('verfieUser', function () {
+
+		var user = document.getElementById("usernameLogin").value;
+		var inputPassword = document.getElementById("passwordLogin").value;
+		var userPassword = users_dict[user];
+		if(inputPassword === userPassword){
+			// document.getElementById("usernameLogin").value = null;
+			// document.getElementById("passwordLogin").value = null;
+			return true;
+		}
+		return false;		
+	});
+})
+
+function checkletters(value) {
+	return /[a-z]/.test(value) || /[a-z]/.test(value);
+}
+
+function checkdigit(value) {
+	return /[0-9]/.test(value);
+}
+
+function addUser(){
+	var user = document.getElementById("username").value;
+	var inputPassword = document.getElementById("password").value;
+	users_dict[user]=inputPassword;
+	// empty the input form buffer
+	document.getElementById("firstname").value = null;
+	document.getElementById("lastname").value = null;
+	document.getElementById("username").value = null;
+	document.getElementById("password").value = null;
+	document.getElementById("confirm_password").value = null;
+	document.getElementById("email").value = null;
+
+	switchDives('LOGIN');
+}
+
+function canlogin(){
+	var user = document.getElementById("usernameLogin").value;
+	var inputPassword = document.getElementById("passwordLogin").value;
+	var userPassword = users_dict[user];
+	if(inputPassword === userPassword){
+		// document.getElementById("usernameLogin").value = null;
+		// document.getElementById("passwordLogin").value = null;
+		switchDives('configuration');
 	}
 	else{
-		email.classList.add(
-			'is-invalid');
-		emailError = false;
-	}
-	})
-
-	// Validate Password
-	$('#passcheck').hide();
-	let passwordError = true;
-	$('#pswdS').keyup(function () {
-		validatePassword();
-	});
-	function validatePassword() {
-	let passwrdValue =
-		$('#pswdS').val();
-	if (passwrdValue.length == '') {
-		$('#passcheck').show();
-		passwordError = false;
+		//alert("User name not exist or incorrect password");
 		return false;
 	}
-	if ((passwrdValue.length < 6)||
-		(passwrdValue.length > 10)) {
-		$('#passcheck').show();
-		$('#passcheck').html
-	("**length of your password must be between 6 and 10");
-		$('#passcheck').css("color", "red");
-		passwordError = false;
-		return false;
-	} 
-	else if(!checkletters(passwrdValue)) {
-		$('#passcheck').show();
-		$('#passcheck').html
-	("**your password must contain letters!");
-		$('#passcheck').css("color", "red");
-		passwordError = false;
-		return false;
-	}
+}
 
-	else if(!checkdigit(passwrdValue)) {
-		$('#passcheck').show();
-		$('#passcheck').html
-	("**your password must contain digits!");
-		$('#passcheck').css("color", "red");
-		passwordError = false;
-		return false;
-	}
+// function uniCharCode(event) {
+// 	var char = event.which || event.keyCode;
+// 	document.getElementById("demo").innerHTML = "The Unicode CHARACTER code is: " + char;
+// }
 
-	else {
-		$('#passcheck').hide();
-	}
-	}
 
-	// Validate Confirm Password
-	$('#conpasscheck').hide();
-	let confirmPasswordError = true;
-	$('#pswdSRepeat').keyup(function () {
-	validateConfirmPasswrd();
-	});
-	function validateConfirmPasswrd() {
-	let confirmPasswordValue =
-		$('#pswdSRepeat').val();
-	let passwrdValue =
-		$('#pswdS').val();
-	if (passwrdValue != confirmPasswordValue) {
-		$('#conpasscheck').show();
-		$('#conpasscheck').html(
-			"**Password didn't Match");
-		$('#conpasscheck').css(
-			"color", "red");
-		confirmPasswordError = false;
-		return false;
-	} else {
-		$('#conpasscheck').hide();
+function uniKeyCode(lbl, event) {
+	// var key = evevnt.keyCode      colud be we will need this line later in the game
+	if(lbl === 'up_btn'){
+		keyArrowUp = event.key;
+		document.getElementById("up_btn").innerHTML = keyArrowUp;
 	}
+	else if(lbl === 'down_btn'){
+		keyArrowDown = event.key;
+		document.getElementById("down_btn").innerHTML = keyArrowDown;
 	}
+	else if(lbl === 'left_btn'){
+		keyArrowLeft = event.key;
+		document.getElementById("left_btn").innerHTML = keyArrowLeft;
+	
+	}
+	else if(lbl === 'right_btn'){
+		keyArrowRight = event.key;
+		document.getElementById("right_btn").innerHTML = keyArrowRight;
+	}	
+}
 
-	// Submitt button
-	$('.signupbtn').click(function () {
-		validateUsername();
-		validatePassword();
-		validateConfirmPasswrd();
-		validateEmail();
-		if ((usernameError == true) &&
-			(passwordError == true) &&
-			(confirmPasswordError == true) &&
-			(emailError == true)) {
-				new_user[0] = $("#user_name").val();
-				new_user[1] = $("#pswdS").val();
-				new_user[2] = $("#allName").val();
-				new_user[3] = $("#sign_upEmail").val();
-				new_user[4] = $("#Bday").val();
-				users.push(new_user);
-			return true;
-		} else {
-			return false;
-		}
-	});
 
-	//Start()
-});
+
+function pressX(){
+	document.getElementById('LOGIN').style.display='none';
+	document.getElementById('SIGNUP').style.display='none';
+	document.getElementById('configuration').style.display='none';
+	$('#centerSignUp').show();
+	$('#centerLogIn').show();
+}
+
+function switchDives(Div_id){
+	
+	$('#WelcomePage').hide();
+	$('#SIGNUP').hide();
+	$('#LOGIN').hide();
+	$('#centerSignUp').hide();
+	$('#centerLogIn').hide();
+	$('#game').hide();
+	$('#configuration').hide();
+	$('#about').hide();
+	$('#config').hide();
+
+
+	$('#' + Div_id).show();
+
+	if(Div_id === 'game'){
+		Start();
+		DrawSettings();		
+	}
+	else if(Div_id === 'Random_game'){
+		$('#game').show();
+		//$('#settings').show();
+
+		setRandomData();
+		Start();
+		DrawSettings();
+	}
+}
+
+function setRandomData(){
+	setkeysForGame();
+	setBallsNmber();
+	setPointsColor();
+	setTotalTime();
+	setNumberOfMonsters();
+}
+
+
+function setkeysForGame(){
+	keyArrowUp = "ArrowUp";
+	keyArrowDown = "ArrowDown";
+	keyArrowLeft = "ArrowLeft";
+	keyArrowRight = "ArrowRight";
+}
+
+function setBallsNmber(){
+	document.getElementById("myRange").value = Math.floor(Math.random() * 90) + 50;
+}
+
+function getRandomColor() {
+	var letters = '0123456789ABCDEF';
+	var color = '#';
+	for (var i = 0; i < 6; i++) {
+	  color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
+  }
+
+function setPointsColor(){
+	 document.getElementById("five_point_color_id").value = getRandomColor();
+	 document.getElementById("fifteen_point_color_id").value = getRandomColor();
+	 document.getElementById("twenty_five_point_color_id").value = getRandomColor();
+}
+
+
+function setTotalTime(){
+	document.getElementById("TotalTime").value = Math.floor(Math.random() * 360) + 60;
+}
+
+function setNumberOfMonsters(){
+	
+	var index = Math.floor(Math.random() * 4) + 1;  // returns a random integer from 1 to 4
+	
+	document.getElementsByName('monster')[index-1].value = index;
+	document.getElementsByName('monster')[index-1].checked = true;
+}
+
+
+
+function DrawSettings(){
+	$('#config').show();
+	document.getElementById("config").innerHTML =
+	"<br />" + " To go up press: " + keyArrowUp  + 
+	"<br />" + " To go down press: "+  keyArrowDown  + 
+	"<br />" + " To go left press: " + keyArrowLeft  + 
+	"<br />" + " To go right press: " + keyArrowRight +
+	"<br />" + " number of balls: " + document.getElementById("myRange").value +
+	"<br />" + " 5 point food color: " + document.getElementById("five_point_color_id").value +
+	"<br />" + " 15 point food color: " + document.getElementById("fifteen_point_color_id").value +
+	"<br />" + " 25 point food color: " + document.getElementById("twenty_five_point_color_id").value +
+	"<br />" + " total time: " +  document.getElementById("TotalTime").value +
+	"<br />" + " number of monsters: " + displayRadioValue(); 
+
+}
+
+function displayRadioValue() {
+	var ele = document.getElementsByName('monster');
+	  
+	for(i = 0; i < ele.length; i++) {
+		if(ele[i].checked)
+			return ele[i].value;
+	}
+}
+
 
 function openDialog() { 
 	document.getElementById("myDialog").showModal(); 
