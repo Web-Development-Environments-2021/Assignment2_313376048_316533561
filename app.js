@@ -417,6 +417,7 @@ function closeDialog() {
 
 
 function Start(over = false) {
+    document.getElementById("playerName").innerHTML = userLogedin;
     if (!over) {
         board = new Array();
         var cnt = 100;
