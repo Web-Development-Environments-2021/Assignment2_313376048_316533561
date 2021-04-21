@@ -317,6 +317,7 @@ function switchDives(Div_id){
 	
 	$('#WelcomePage').hide();
 	$('#SIGNUP').hide();
+	$('#footer_left').hide();
 	$('#LOGIN').hide();
 	$('#centerSignUp').hide();
 	$('#centerLogIn').hide();
@@ -328,9 +329,17 @@ function switchDives(Div_id){
 
 	$('#' + Div_id).show();
 
+	// if((Div_id === 'SIGNUP')||(Div_id === 'configuration')
+	// 	||(Div_id === 'centerSignUp'))
+	// $('#footer_center').hide();
+	// $('#footer_right').show();
+
 	if(Div_id === 'game'){
 		Start();
-		DrawSettings();		
+		DrawSettings();	
+		$('#footer_center').hide();
+		$('#footer_right').show();
+	
 	}
 	else if(Div_id === 'Random_game'){
 		$('#game').show();
@@ -405,26 +414,17 @@ function DrawSettings(){
 
 	// points color per food
 	document.getElementById("food_5").value = document.getElementById("five_point_color_id").value;
+	document.getElementById("food_5").disabled = true;
 	document.getElementById("food_15").value = document.getElementById("fifteen_point_color_id").value;
+	document.getElementById("food_15").disabled = true;
 	document.getElementById("food_25").value = document.getElementById("twenty_five_point_color_id").value;
+	document.getElementById("food_25").disabled = true;
 
 	// time
 	document.getElementById("time_display").value = document.getElementById("TotalTime").value;
 
 	// number of monsters
 	document.getElementById("monster_display").value = displayRadioValue();
-
-	// document.getElementById("config").innerHTML =
-	// "<br />" + " To go up press: " + keyArrowUp  + 
-	// "<br />" + " To go down press: "+  keyArrowDown  + 
-	// "<br />" + " To go left press: " + keyArrowLeft  + 
-	// "<br />" + " To go right press: " + keyArrowRight +
-	// "<br />" + " number of balls: " + document.getElementById("myRange").value +
-	// "<br />" + " 5 point food color: " + document.getElementById("five_point_color_id").value +
-	// "<br />" + " 15 point food color: " + document.getElementById("fifteen_point_color_id").value +
-	// "<br />" + " 25 point food color: " + document.getElementById("twenty_five_point_color_id").value +
-	// "<br />" + " total time: " +  document.getElementById("TotalTime").value +
-	// "<br />" + " number of monsters: " + displayRadioValue(); 
 
 }
 
