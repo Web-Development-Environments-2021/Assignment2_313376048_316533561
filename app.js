@@ -30,7 +30,7 @@ let ate =false;
 let failCounter = 0;
 let was_food = false;
 let pssibleDirections = [1,2,3,4]; //1=up 2= down 3= left 4 =right
-let arrowsKeys = [];
+let arrowsKeys = [-1, -1, -1, -1]; // up, down, left, right
 let userLogedin;
 let figuere_array = [];
 
@@ -279,7 +279,7 @@ function canlogin(){
 function uniKeyCode(lbl, event) {
 	// var key = evevnt.keyCode      colud be we will need this line later in the game
 	var error = document.getElementById(lbl)
-	for (var i = 0; i < 4; i++) {
+	for (var i = 0; i < arrowsKeys.length; i++) {
 		if(arrowsKeys[i] === event.keyCode){
 			error.innerHTML = "<span style='color: red;'>"+
                         "You chose this key allready</span>"
@@ -287,25 +287,32 @@ function uniKeyCode(lbl, event) {
 			//arrowsKeys[i]=null;
 			return false;
 		}
+		else{
+			error.innerHTML = "";
+		}
 	}
 	if(lbl === 'up_btn'){
 		keyArrowUp = event.key;
 		document.getElementById("up_btn").innerHTML = keyArrowUp;
+		arrowsKeys[0]= event.keyCode;
 	}
 	else if(lbl === 'down_btn'){
 		keyArrowDown = event.key;
 		document.getElementById("down_btn").innerHTML = keyArrowDown;
+		arrowsKeys[1]= event.keyCode;
 	}
 	else if(lbl === 'left_btn'){
 		keyArrowLeft = event.key;
 		document.getElementById("left_btn").innerHTML = keyArrowLeft;
+		arrowsKeys[2]= event.keyCode;
 	
 	}
 	else if(lbl === 'right_btn'){
 		keyArrowRight = event.key;
 		document.getElementById("right_btn").innerHTML = keyArrowRight;
+		arrowsKeys[3]= event.keyCode;
 	}	
-	arrowsKeys.push(event.keyCode)
+	
 
 }
 
@@ -355,7 +362,7 @@ function switchDives(Div_id){
 		//$('#settings').show();
 
 		setRandomData();
-		Start();
+		// Start();
 		DrawSettings();
 	}
 }
@@ -374,6 +381,10 @@ function setkeysForGame(){
 	keyArrowDown = "ArrowDown";
 	keyArrowLeft = "ArrowLeft";
 	keyArrowRight = "ArrowRight";
+	arrowsKeys[0]= 38; // up
+	arrowsKeys[1]= 40; // down
+	arrowsKeys[2]= 39; // left
+	arrowsKeys[3]= 37; // right
 }
 
 function setBallsNmber(){
@@ -604,19 +615,19 @@ function Start(over = false) {
         while (food1_remain > 0) {
             var emptyCell = findRandomEmptyCell(board);
             board[emptyCell[0]][emptyCell[1]] = 1;
-            food1_remain--;
+            food_remain--;
             food1_remain--;
         }
         while (food2_remain > 0) {
             var emptyCell = findRandomEmptyCell(board);
             board[emptyCell[0]][emptyCell[1]] = 8;
-            food2_remain--;
+            food_remain--;
             food2_remain--;
         }
         while (food3_remain > 0) {
             var emptyCell = findRandomEmptyCell(board);
             board[emptyCell[0]][emptyCell[1]] = 9;
-            food3_remain--;
+            food_remain--;
             food3_remain--;
         }
         keysDown = {};
@@ -657,10 +668,10 @@ function GetKeyPressed() {
         return 2;
     }
     if (keysDown[arrowsKeys[2]]) { //left
-        return 3;
+        return 4;
     }
     if (keysDown[arrowsKeys[3]]) { //right
-        return 4;
+        return 3;
     } else {
         return 0;
     }
@@ -742,25 +753,25 @@ function getRandomInt(min, max) {
 }
 
 function PositionMove(dirction, Shape) {
-    if (dirction == 1) {
+    if (dirction == 1) { //up
         if (Shape.j > 0 && board[Shape.i][Shape.j - 1] != 4) {
             Shape.j--;
             return true;
         }
     }
-    if (dirction == 2) {
+    if (dirction == 2) { //down
         if (Shape.j < 9 && board[Shape.i][Shape.j + 1] != 4) {
             Shape.j++;
             return true;
         }
     }
-    if (dirction == 3) {
+    if (dirction == 3) { //right
         if (Shape.i > 0 && board[Shape.i - 1][Shape.j] != 4) {
             Shape.i--;
             return true;
         }
     }
-    if (dirction == 4) {
+    if (dirction == 4) { //left
         if (Shape.i < 9 && board[Shape.i + 1][Shape.j] != 4) {
             Shape.i++;
             return true;
