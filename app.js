@@ -474,6 +474,12 @@ function Start(over = false) {
     monster3_color = "black";
     monster4_color = "gray";
     mon_color_array = [monster1_color, monster2_color, monster3_color, monster4_color];
+	monsterNumber = displayRadioValue(); // get monster number from radio buttons
+	monsterArray = [0,0,0,0];
+	for( var i=0 ; i < monsterNumber; i++){
+		monsterArray[i] = 1;
+	}
+	
     var pacman_remain = 1;
     for (var i = 0; i < 10; i++) {
         if (!over) {
@@ -481,7 +487,7 @@ function Start(over = false) {
         }
         //put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
         for (var j = 0; j < 10; j++) {
-            if (i == 0 && j == 0) {
+            if ((i == 0 && j == 0) && (monsterArray[0] == 1))  {
                 if (over) {
                     oldMonShape1 = new Shape(monShape1.i, monShape1.j, monShape1.color, monShape1.number)
                     monShape1.i = i;
@@ -489,11 +495,13 @@ function Start(over = false) {
                     ClearAfterMonster(oldMonShape1, monShape1);
                 } else {
                     monShape1 = new Shape(i, j, monster1_color, 3, 0, 0);
+					board[i][j] = 3;
+					figuere_array.push(monShape1);
                 }
-                board[i][j] = 3;
+                
                 continue;
             }
-            if (i == 0 && j == 9) {
+            if ((i == 0 && j == 9) && (monsterArray[1] == 1)) {
                 if (over) {
                     oldMonShape2 = new Shape(monShape2.i, monShape2.j, monShape2.color, monShape2.number)
                     monShape2.i = i;
@@ -502,10 +510,11 @@ function Start(over = false) {
                 } else {
                     monShape2 = new Shape(i, j, monster2_color, 5, 0, 9);
                     board[i][j] = 5;
+					figuere_array.push(monShape2);
                 }
                 continue;
             }
-            if (i == 9 && j == 0) {
+            if ((i == 9 && j == 0) && (monsterArray[2] == 1)) {
                 if (over) {
                     oldMonShape3 = new Shape(monShape3.i, monShape3.j, monShape3.color, monShape3.number)
                     monShape3.i = i;
@@ -514,10 +523,11 @@ function Start(over = false) {
                 } else {
                     monShape3 = new Shape(i, j, monster3_color, 6, 9, 0);
                     board[i][j] = 6;
+					figuere_array.push(monShape3);
                 }
                 continue;
             }
-            if (i == 9 && j == 9) {
+            if ((i == 9 && j == 9) && (monsterArray[3] == 1)) {
                 if (over) {
                     oldMonShape4 = new Shape(monShape4.i, monShape4.j, monShape4.color, monShape4.number)
                     monShape4.i = i;
@@ -526,6 +536,7 @@ function Start(over = false) {
                 } else {
                     monShape4 = new Shape(i, j, monster4_color, 7, 9, 9);
                     board[i][j] = 7;
+					figuere_array.push(monShape4);
                 }
                 continue;
             }
@@ -576,6 +587,7 @@ function Start(over = false) {
                     }
                 } else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) {
                     pacShape = new Shape(i, j, pac_color, 2, i, j);
+					figuere_array.push(pacShape);
                     pacman_remain--;
                     board[i][j] = 2;
                 } else {
@@ -587,7 +599,7 @@ function Start(over = false) {
             }
         }
     }
-    figuere_array = [pacShape, monShape1, monShape2, monShape3, monShape4];
+    // figuere_array = [pacShape, monShape1, monShape2, monShape3, monShape4];
     if (!over) {
         while (food1_remain > 0) {
             var emptyCell = findRandomEmptyCell(board);
@@ -669,27 +681,27 @@ function Draw() {
             center.y = j * 60 + 30;
             if (board[i][j] == 2) { //pacman
                 DrawFiguere(center, pac_color)
-            } else if (board[i][j] == 1) { //food1
-                DrawFood(center, "black")
-            } else if (board[i][j] == 8) { //food2
-                DrawFood(center, "purple")
-            } else if (board[i][j] == 9) { //food3
-                DrawFood(center, "brown")
+            } else if (board[i][j] == 1) { //food1 = 5 points
+                DrawFood(center, document.getElementById("food_5").value)
+            } else if (board[i][j] == 8) { //food2 = 15 points
+                DrawFood(center, document.getElementById("food_15").value)
+            } else if (board[i][j] == 9) { //food3 = 25 points
+                DrawFood(center, document.getElementById("food_25").value)
             } else if (board[i][j] == 4) { //wall
                 context.beginPath();
                 context.rect(center.x - 30, center.y - 30, 60, 60);
                 context.fillStyle = "grey";
-                context.fill();
-            } else if (board[i][j] == 3) { //monster
+                context.fill(); 
+            } else if ((board[i][j] == 3) && (monsterArray[0])) { //monster
                 DrawFiguere(center, monster1_color)
 
-            } else if (board[i][j] == 5) { //monster
+            } else if ((board[i][j] == 5) && (monsterArray[1])) { //monster
                 DrawFiguere(center, monster2_color)
 
-            } else if (board[i][j] == 6) { //monster
+            } else if ((board[i][j] == 6) && (monsterArray[2])) { //monster
                 DrawFiguere(center, monster3_color)
 
-            } else if (board[i][j] == 7) { //monster
+            } else if ((board[i][j] == 7) && (monsterArray[3])) { //monster
                 DrawFiguere(center, monster4_color)
             }
         }
@@ -846,14 +858,25 @@ function MoveMonster(oldPacShape, oldMonShape, monShape) {
 }
 
 function UpdateMonPosition() {
-    oldMonShape1 = new Shape(monShape1.i, monShape1.j, monShape1.color, monShape1.number)
-    oldMonShape2 = new Shape(monShape2.i, monShape2.j, monShape2.color, monShape2.number)
-    oldMonShape3 = new Shape(monShape3.i, monShape3.j, monShape3.color, monShape3.number)
-    oldMonShape4 = new Shape(monShape4.i, monShape4.j, monShape4.color, monShape4.number)
-    MoveMonster(oldPacShape, oldMonShape1, monShape1);
-    MoveMonster(oldPacShape, oldMonShape2, monShape2);
-    MoveMonster(oldPacShape, oldMonShape3, monShape3);
-    MoveMonster(oldPacShape, oldMonShape4, monShape4);
+	if (monsterArray[0]) { //monster
+		oldMonShape1 = new Shape(monShape1.i, monShape1.j, monShape1.color, monShape1.number);
+   		MoveMonster(oldPacShape, oldMonShape1, monShape1);
+	}
+
+	if (monsterArray[1]) { //monster
+		oldMonShape2 = new Shape(monShape2.i, monShape2.j, monShape2.color, monShape2.number);
+    	MoveMonster(oldPacShape, oldMonShape2, monShape2);
+	}
+
+	if (monsterArray[2]) { //monster
+		oldMonShape3 = new Shape(monShape3.i, monShape3.j, monShape3.color, monShape3.number);
+    	MoveMonster(oldPacShape, oldMonShape3, monShape3);
+	}
+
+	if (monsterArray[3]) { //monster
+		oldMonShape4 = new Shape(monShape4.i, monShape4.j, monShape4.color, monShape4.number);
+    	MoveMonster(oldPacShape, oldMonShape4, monShape4);
+	}
 }
 
 function UpdatePosition() {
@@ -879,7 +902,7 @@ function UpdatePosition() {
         currentUser.score = score;
         window.clearInterval(interval);
         window.clearInterval(intervalMon);
-        window.alert("Game completed");
+        alert("Game completed");
     } else {
         Draw();
     }
