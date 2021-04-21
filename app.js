@@ -668,10 +668,10 @@ function GetKeyPressed() {
         return 2;
     }
     if (keysDown[arrowsKeys[2]]) { //left
-        return 4;
+        return 3;
     }
     if (keysDown[arrowsKeys[3]]) { //right
-        return 3;
+        return 4;
     } else {
         return 0;
     }
