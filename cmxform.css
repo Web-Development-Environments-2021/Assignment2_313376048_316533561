@@ -6,8 +6,7 @@ Name: cmxform Styles
 form.cmxform {
 	width: 600px;
 	font-size: 1.0em;
-	color: #333;
-    
+	color: #333;    
 }
 
 form.cmxform legend {
@@ -29,8 +28,9 @@ form.cmxform fieldset {
 	position: relative;
 	top: 50%;
 	left: 45%;
-	-ms-transform: translate(-0%, 10%);
-	transform: translate(30%, 10%);
+	-ms-transform: translate(-10%, 10%);
+	transform: translate(50%, 10%);
+	
 }
 
 form.cmxform fieldset fieldset {
@@ -38,7 +38,7 @@ form.cmxform fieldset fieldset {
 }
 
 form.cmxform fieldset p, form.cmxform fieldset fieldset {
-	padding: 5px 10px 7px;
+	padding: 5px 10px 3px;
 	/* background: url(../images/cmxform-divider.gif) left bottom repeat-x; */
 }
 

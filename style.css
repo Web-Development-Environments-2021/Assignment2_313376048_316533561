@@ -56,6 +56,19 @@ Use: Main Screen Import
 #WelcomePage {
 	margin-left: 80px;
 }
+
+footer {
+	text-align: center;
+	padding: 3px;
+	background-color: #ccccffd8;
+	color: white;
+	clear: both;
+	position: absolute;
+	height: 50px;
+	width: 100%;
+	bottom: 0;
+}
+
 #LOGIN {
 	display: none;
 }
@@ -64,21 +77,21 @@ Use: Main Screen Import
 }
 #configuration {
 	display: none;
-	/* margin-top: 100px;
-	padding-top: 50px;
-	height: 400px; */
+	/* position: absolute; */
+	/* top: 30px; */
+	/* height: 400px; */
 }
 #game {
 	display: none;
 	margin-top: 50px;
 	padding-top: 0px;
-	height: 800px;
+	height: 750px;
 	width: 650px;
 	background: #888;
 	border: 3px solid white;
 	border: 5px solid white;
 	-ms-transform: translate(-50%, -50%);
-	transform: translate(25%, 10%);
+	transform: translate(25%, 0%);
 
 	/* text-align: center; */
 }
@@ -94,14 +107,16 @@ Use: Main Screen Import
 	border: 3px solid white;
 	background: #E7E7E7;
 	border: 5px solid white;
-	transform: translate(3%, 0%);
+	transform: translate(3%, 3%);
+	position: absolute;
+
 }
 
 #config {
 	display: none;
 	margin-top: 50px;
 	padding-top: 0px;
-	height: 500px;
+	height: 400px;
 	width: 500px;
 	text-align:	center;
 	background: #888;
@@ -113,7 +128,7 @@ Use: Main Screen Import
 	left: 80%;
 	-ms-transform: translate(-100%, -50%);
 	transform: translate(-50%, -100%);
-}
+} 
 
 #centerSignUp {
 	background-color: transparent;
@@ -121,39 +136,39 @@ Use: Main Screen Import
 	border: 2px solid white;
 	margin: 0;
 	position: absolute;
-	top: 90%;
+	/* top: 90%; */
 	left: 60%;
-	-ms-transform: translate(-80%, -50%);
-	transform: translate(-20%, -50%);
+	bottom: 80px;
+	/* -ms-transform: translate(-80%, -50%);
+	transform: translate(-20%, -50%); */
 }
-
 #centerLogIn {
 	background-color: transparent;
 	border-radius: 20px 20px 20px 20px;
 	border: 2px solid white;
 	margin: 0;
 	position: absolute;
-	top: 90%;
+	/* top: 90%; */
+	bottom: 80px;
 	left: 20%;
-	-ms-transform: translate(20%, -50%);
-	transform: translate(20%, -50%);
+	/* -ms-transform: translate(20%, -50%);
+	transform: translate(20%, -50%);*/
+} 
+
+html ,body {
+	font-family: Arial, Helvetica, sans-serif;
+	width:100%;
+	height:100%;
+	background-image: url(welcomeImg.png);
+	overflow: auto;
 }
-
-html {width:100%; height:100%;}
-
-
-
-
-
-
-body {font-family: Arial, Helvetica, sans-serif; width:100%; height:100%; background-image: url(welcomeImg.png);}
 
 /* Set a style for all buttons */
 input[type=submit] {
 	background-color: #2b179b;
 	color: white;
 	padding: 14px 5px;
-	margin: 8px 5px;
+	margin: 4px 5px;
 	border: none;
 	cursor: pointer;
 	width: 80%;
@@ -171,6 +186,25 @@ margin: 8px 0;
 display: inline-block;
 border: 1px solid #ccc;
 box-sizing: border-box;
+}
+
+#game button{
+	size: 50px;
+	position: absolute;
+	top: 5%;
+	left: 70%;
+	background-color: grass;
+	border-radius: 20px 20px 20px 20px;
+	border: 2px solid white;
+}
+
+#config b{
+	font-size: 20px;
+	color:#2b179b;
+}
+
+#config input{
+	height: 4%; border: 3px solid #000;
 }
 
 /* Set a style for all buttons */
@@ -217,25 +251,26 @@ padding-top: 16px;
 
 /* The Modal (background) */
 .modal {
-display: none; /* Hidden by default */
-position: fixed; /* Stay in place */
-z-index: 1; /* Sit on top */
-left: 0;
-top: 0;
-width: 100%; /* Full width */
-height: 100%; /* Full height */
-overflow: auto; /* Enable scroll if needed */
-background-color: rgb(0,0,0); /* Fallback color */
-background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-padding-top: 60px;
+	display: none; /* Hidden by default */
+	position: relative; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	padding-top: 50px;
 }
 
 /* Modal Content/Box */
 .modal-content {
-background-color: #fefefe;
-margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
-border: 1px solid #888;
-width: 80%; /* Could be more or less, depending on screen size */
+	background-color: #fefefe;
+	margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+	border: 1px solid #888;
+	width: 80%; /* Could be more or less, depending on screen size */
+	overflow: auto; /*Enable scroll if needed */
 }
 
 /* The Close Button (x) */
