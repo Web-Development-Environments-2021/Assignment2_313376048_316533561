@@ -1,34 +1,38 @@
 var context;
-var shape = new Object();
+var shape;
 var board;
-var score;
+var score =0 ;
 var pac_color;
 var start_time;
 var time_elapsed;
 var interval;
+var intervalMon;
 
 var keyArrowUp ;
 var keyArrowDown ;
 var keyArrowLeft ;
 var keyArrowRight ;
-var users_dict = { 'k' : 'k', 'kkk' : 'kkk'} // {username : password}
+var users_dict = { 'k' : 'k'} // {username : password}
 
 
-var pacShape;;
-var monShape;;
+var pacShape;
+var monShape1;
 
-var monster_color;
+var monster1_color;
+var monster2_color;	
+var monster3_color;	
+var monster4_color;
 var time_elapsed;
 let dirction;
 var dirctions_dict = { 1: [-0.35, 1.35, 17], 2: [-1.35, 0.35, 17], 3: [-0.85, 0.85, 0], 4: [0.15, 1.85, 0] }
-var currentUser;
+var currentUser  = new Object();
 let ate =false;
 let failCounter = 0;
 let was_food = false;
 let pssibleDirections = [1,2,3,4]; //1=up 2= down 3= left 4 =right
 let arrowsKeys = [];
 let userLogedin;
-
+let figuere_array = [];
 
 
 
@@ -334,6 +338,11 @@ function switchDives(Div_id){
 	// $('#footer_center').hide();
 	// $('#footer_right').show();
 
+	if(!(Div_id === 'game')){
+		$('#footer_center').show ();
+		$('#footer_right').hide();
+	}
+
 	if(Div_id === 'game'){
 		Start();
 		DrawSettings();	
@@ -447,338 +456,449 @@ function closeDialog() {
 }
 
 
-function Start() {
-	document.getElementById("playerName").innerHTML = userLogedin;
-
-	board = new Array();
-	score = 0;
-	pac_color = "yellow";
-	monster_color = "red";
-	var cnt = 100;
-	var food_remain = 50;
-	var pacman_remain = 1;
-	start_time = new Date();
-	for (var i = 0; i < 10; i++) {
-		board[i] = new Array();
-		//put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
-		for (var j = 0; j < 10; j++) {
-			if (i == 0 && j == 0) {
-				board[i][j] = 3;
-				monShape = new Shape(i,j);
-				continue;
-			}
-			if (
-				(i == 2 && j == 3) ||
-				(i == 2 && j == 4) ||
-				(i == 4 && j == 6) ||
-				(i == 8 && j == 3) ||
-				(i == 8 && j == 2) ||
-				(i == 7 && j == 2) ||
-				(i == 4 && j == 7) ||
-				(i == 6 && j == 8) ||
-				(i == 6 && j == 8) ||
-				(i == 1 && j == 8) ||
-				(i == 2 && j == 8) ||
-				(i == 3 && j == 3) ||
-				(i == 3 && j == 4) ||
-				(i == 7 && j == 8) ||
-				(i == 9 && j == 8)
-			) {
-				board[i][j] = 4;
-			} else {
-				var randomNum = Math.random();
-				if (randomNum <= (1.0 * food_remain) / cnt) {
-					food_remain--;
-					board[i][j] = 1;
-				} else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) {
-					pacShape = new Shape(i,j);
-					pacman_remain--;
-					board[i][j] = 2;
-				} else {
-					board[i][j] = 0;
-				}
-				cnt--;
-			}
-		}
-	}
-	while (food_remain > 0) {
-		var emptyCell = findRandomEmptyCell(board);
-		board[emptyCell[0]][emptyCell[1]] = 1;
-		food_remain--;
-	}
-	keysDown = {};
-	addEventListener(
-		"keydown",
-		function (e) {
-			keysDown[e.keyCode] = true;
-		},
-		false
-	);
-	addEventListener(
-		"keyup",
-		function (e) {
-			keysDown[e.keyCode] = false;
-		},
-		false
-	);
-	interval = setInterval(UpdatePosition, 250);
+function Start(over = false) {
+    document.getElementById("playerName").innerHTML = userLogedin;
+    if (!over) {
+        board = new Array();
+        var cnt = 100;
+        var food_remain = 50;
+        var food1_remain = 0.6 * food_remain;
+        var food2_remain = 0.3 * food_remain;
+        var food3_remain = 0.1 * food_remain;
+        start_time = new Date();
+    }
+    score = 0;
+    pac_color = "yellow";
+    monster1_color = "red";
+    monster2_color = "white";
+    monster3_color = "black";
+    monster4_color = "gray";
+    mon_color_array = [monster1_color, monster2_color, monster3_color, monster4_color];
+    var pacman_remain = 1;
+    for (var i = 0; i < 10; i++) {
+        if (!over) {
+            board[i] = new Array();
+        }
+        //put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
+        for (var j = 0; j < 10; j++) {
+            if (i == 0 && j == 0) {
+                if (over) {
+                    oldMonShape1 = new Shape(monShape1.i, monShape1.j, monShape1.color, monShape1.number)
+                    monShape1.i = i;
+                    monShape1.j = j;
+                    ClearAfterMonster(oldMonShape1, monShape1);
+                } else {
+                    monShape1 = new Shape(i, j, monster1_color, 3, 0, 0);
+                }
+                board[i][j] = 3;
+                continue;
+            }
+            if (i == 0 && j == 9) {
+                if (over) {
+                    oldMonShape2 = new Shape(monShape2.i, monShape2.j, monShape2.color, monShape2.number)
+                    monShape2.i = i;
+                    monShape2.j = j;
+                    ClearAfterMonster(oldMonShape2, monShape2);
+                } else {
+                    monShape2 = new Shape(i, j, monster2_color, 5, 0, 9);
+                    board[i][j] = 5;
+                }
+                continue;
+            }
+            if (i == 9 && j == 0) {
+                if (over) {
+                    oldMonShape3 = new Shape(monShape3.i, monShape3.j, monShape3.color, monShape3.number)
+                    monShape3.i = i;
+                    monShape3.j = j;
+                    ClearAfterMonster(oldMonShape3, monShape3);
+                } else {
+                    monShape3 = new Shape(i, j, monster3_color, 6, 9, 0);
+                    board[i][j] = 6;
+                }
+                continue;
+            }
+            if (i == 9 && j == 9) {
+                if (over) {
+                    oldMonShape4 = new Shape(monShape4.i, monShape4.j, monShape4.color, monShape4.number)
+                    monShape4.i = i;
+                    monShape4.j = j;
+                    ClearAfterMonster(oldMonShape4, monShape4);
+                } else {
+                    monShape4 = new Shape(i, j, monster4_color, 7, 9, 9);
+                    board[i][j] = 7;
+                }
+                continue;
+            }
+            if (
+                (i == 1 && j == 6) ||
+                (i == 2 && j == 2) ||
+                (i == 2 && j == 3) ||
+                (i == 2 && j == 4) ||
+                (i == 2 && j == 6) ||
+                (i == 2 && j == 8) ||
+                (i == 3 && j == 2) ||
+                (i == 3 && j == 6) ||
+                (i == 3 && j == 8) ||
+                (i == 4 && j == 2) ||
+                (i == 4 && j == 4) ||
+                (i == 4 && j == 6) ||
+                (i == 4 && j == 8) ||
+                (i == 4 && j == 9) ||
+                (i == 5 && j == 4) ||
+                (i == 6 && j == 2) ||
+                (i == 6 && j == 3) ||
+                (i == 6 && j == 4) ||
+                (i == 6 && j == 5) ||
+                (i == 6 && j == 7) ||
+                (i == 6 && j == 8) ||
+                (i == 6 && j == 9) ||
+                (i == 7 && j == 5) ||
+                (i == 8 && j == 1) ||
+                (i == 8 && j == 2) ||
+                (i == 8 && j == 7) ||
+                (i == 8 && j == 8) ||
+                (i == 9 && j == 5)
+            ) {
+                board[i][j] = 4;
+            } else {
+                var randomNum = Math.random();
+                if (randomNum <= (1.0 * food_remain) / cnt && !over) {
+                    food_remain--;
+                    if (randomNum <= (1.0 * food1_remain) / food_remain) {
+                        food1_remain--;
+                        board[i][j] = 1;
+                    } else if (randomNum <= (1.0 * food2_remain) / food_remain) {
+                        food2_remain--;
+                        board[i][j] = 8;
+                    } else if (randomNum <= (1.0 * food3_remain) / food_remain) {
+                        food3_remain--;
+                        board[i][j] = 9;
+                    }
+                } else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) {
+                    pacShape = new Shape(i, j, pac_color, 2, i, j);
+                    pacman_remain--;
+                    board[i][j] = 2;
+                } else {
+                    if (!over) {
+                        board[i][j] = 0;
+                    }
+                }
+                cnt--;
+            }
+        }
+    }
+    figuere_array = [pacShape, monShape1, monShape2, monShape3, monShape4];
+    if (!over) {
+        while (food1_remain > 0) {
+            var emptyCell = findRandomEmptyCell(board);
+            board[emptyCell[0]][emptyCell[1]] = 1;
+            food1_remain--;
+            food1_remain--;
+        }
+        while (food2_remain > 0) {
+            var emptyCell = findRandomEmptyCell(board);
+            board[emptyCell[0]][emptyCell[1]] = 8;
+            food2_remain--;
+            food2_remain--;
+        }
+        while (food3_remain > 0) {
+            var emptyCell = findRandomEmptyCell(board);
+            board[emptyCell[0]][emptyCell[1]] = 9;
+            food3_remain--;
+            food3_remain--;
+        }
+        keysDown = {};
+        addEventListener(
+            "keydown",
+            function(e) {
+                keysDown[e.keyCode] = true;
+            },
+            false
+        );
+        addEventListener(
+            "keyup",
+            function(e) {
+                keysDown[e.keyCode] = false;
+            },
+            false
+        );
+        interval = setInterval(UpdatePosition, 250);
+        intervalMon = setInterval(UpdateMonPosition, 1000);
+    }
 }
 
 function findRandomEmptyCell(board) {
-	var i = Math.floor(Math.random() * 9 + 1);
-	var j = Math.floor(Math.random() * 9 + 1);
-	while (board[i][j] != 0) {
-		i = Math.floor(Math.random() * 9 + 1);
-		j = Math.floor(Math.random() * 9 + 1);
-	}
-	return [i, j];
+    var i = Math.floor(Math.random() * 9 + 1);
+    var j = Math.floor(Math.random() * 9 + 1);
+    while (board[i][j] != 0) {
+        i = Math.floor(Math.random() * 9 + 1);
+        j = Math.floor(Math.random() * 9 + 1);
+    }
+    return [i, j];
 }
 
 function GetKeyPressed() {
-	if (keysDown[38]) {//up
-		return 1;
-	}
-	if (keysDown[40]) {//down
-		return 2;
-	}
-	if (keysDown[37]) {//left
-		return 3;
-	}
-	if (keysDown[39]) {//right
-		return 4;
-	}
-	else {
-		return 0;
-	}
+    if (keysDown[arrowsKeys[0]]) { //up
+        return 1;
+    }
+    if (keysDown[arrowsKeys[1]]) { //down
+        return 2;
+    }
+    if (keysDown[arrowsKeys[2]]) { //left
+        return 3;
+    }
+    if (keysDown[arrowsKeys[3]]) { //right
+        return 4;
+    } else {
+        return 0;
+    }
 }
+
+
 
 function Draw() {
-	canvas.width = canvas.width; //clean board
-	context.fillStyle = "pink"
-	context.fillRect(0, 0, canvas.width, canvas.height);
-	lblScore.value = score;
-	lblTime.value = time_elapsed;
-	for (var i = 0; i < 10; i++) {
-		for (var j = 0; j < 10; j++) {
-			var center = new Object();
-			center.x = i * 60 + 30;
-			center.y = j * 60 + 30;
-			if (board[i][j] == 2) {//pacman
-				let temp = GetKeyPressed();
-				if (dirction == null && temp == 0) {
-					dirction = 1;
-				}
-				if (temp != 0) {
-					dirction = temp;
-				}
-				context.beginPath();
-				context.arc(center.x, center.y, 30, dirctions_dict[dirction][0] * Math.PI, dirctions_dict[dirction][1] * Math.PI); // half circle
-				context.lineTo(center.x, center.y);
-				context.fillStyle = pac_color; 
-				context.fill();
-				context.beginPath();
-				context.arc(center.x + 5 - dirctions_dict[dirction][2], center.y - 15 + dirctions_dict[dirction][2], 5, 0, 2 * Math.PI); // circle
-				context.fillStyle = "black"; 
-				context.fill();
-			} else if (board[i][j] == 1) {//food
-				context.beginPath();
-				context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
-				context.fillStyle = "black"; 
-				context.fill();
-			} else if (board[i][j] == 4) {//wall
-				context.beginPath();
-				context.rect(center.x - 30, center.y - 30, 60, 60);
-				context.fillStyle = "grey"; 
-				context.fill();
-			}
-			else if (board[i][j] == 3) {//monster
-				temp = GetKeyPressed();
-				if (dirction == null && temp == 0) {
-					dirction = 1;
-				}
-				if (temp != 0) {
-					dirction = temp;
-				}
-				context.beginPath();
-				context.arc(center.x, center.y, 30, dirctions_dict[dirction][0] * Math.PI, dirctions_dict[dirction][1] * Math.PI); // half circle
-				context.lineTo(center.x, center.y);
-				context.fillStyle = monster_color; //color
-				context.fill();
-				context.beginPath();
-				context.arc(center.x + 5 - dirctions_dict[dirction][2], center.y - 15 + dirctions_dict[dirction][2], 5, 0, 2 * Math.PI); // circle
-				context.fillStyle = "black"; //color
-				context.fill();
-			}
-		}
-	}
-}
-class User {
-	constructor(username, passward, score) {
-		this.username = username;
-		this.passward = passward;
-		this.score = score;
-	}
-}
-class Shape {
-	constructor(i, j) {
-		this.i = i;
-		this.j = j;
-	}
-}
-class monsterShape extends Shape {
-	constructor(i, j) {
-		super(i,j);
-		this.visited = board;
-	}
-}
-function getRandomInt(min, max) {
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
-  }
-function PositionMove(dirction, Shape){
-	if (dirction == 1) {
-		if (Shape.j > 0 && board[Shape.i][Shape.j - 1] != 4) {
-			Shape.j--;
-			return true;
-		}
-	}
-	if (dirction == 2) {
-		if (Shape.j < 9 && board[Shape.i][Shape.j + 1] != 4) {
-			Shape.j++;
-			return true;
-		}
-	}
-	if (dirction == 3) {
-		if (Shape.i > 0 && board[Shape.i - 1][Shape.j] != 4) {
-			Shape.i--;
-			return true;
-		}
-	}
-	if (dirction == 4) {
-		if (Shape.i < 9 && board[Shape.i + 1][Shape.j] != 4) {
-			Shape.i++;
-			return true;
-		}
-	}
-	else{
-		return false;
-	}
-}
-function sleep(milliseconds) {
-	const date = Date.now();
-	let currentDate = null;
-	do {
-	  currentDate = Date.now();
-	} while (currentDate - date < milliseconds);
-  }
-function monsterWaze(monShape, pacShape, helpAlpha=0){
-	// m = (monShape.i-pacShape.i)/(monShape.j-pacShape.j);
-	// m = Math.abs(monShape.i-pacShape.i)/Math.abs(monShape.j-pacShape.j);
-	alpha =(180*Math.atan2((monShape.j-pacShape.j),(monShape.i-pacShape.i))/Math.PI);
-	// alpha =(180*Math.atan(m)/Math.PI);
-	if (alpha<=0){
-		alpha = 360 + alpha;
-	}
+    canvas.width = canvas.width; //clean board
+    context.fillStyle = "pink"
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    lblScore.value = score;
+    lblTime.value = time_elapsed;
+    for (var i = 0; i < 10; i++) {
+        for (var j = 0; j < 10; j++) {
+            var center = new Object();
+            center.x = i * 60 + 30;
+            center.y = j * 60 + 30;
+            if (board[i][j] == 2) { //pacman
+                DrawFiguere(center, pac_color)
+            } else if (board[i][j] == 1) { //food1
+                DrawFood(center, "black")
+            } else if (board[i][j] == 8) { //food2
+                DrawFood(center, "purple")
+            } else if (board[i][j] == 9) { //food3
+                DrawFood(center, "brown")
+            } else if (board[i][j] == 4) { //wall
+                context.beginPath();
+                context.rect(center.x - 30, center.y - 30, 60, 60);
+                context.fillStyle = "grey";
+                context.fill();
+            } else if (board[i][j] == 3) { //monster
+                DrawFiguere(center, monster1_color)
 
-	if(alpha >= 315 || alpha < 45){//RIGHT
-		return 4;
-	}
-	if(alpha >= 45 && alpha < 135){//DOWN
-		return 2;
-	}
-	if(alpha >= 135 && alpha < 225){//left
-		return 3;
-	}
-	if(alpha >= 225 &&   alpha < 315){//UP
-		return 1;
-	}
+            } else if (board[i][j] == 5) { //monster
+                DrawFiguere(center, monster2_color)
+
+            } else if (board[i][j] == 6) { //monster
+                DrawFiguere(center, monster3_color)
+
+            } else if (board[i][j] == 7) { //monster
+                DrawFiguere(center, monster4_color)
+            }
+        }
+    }
+}
+
+function DrawFood(center, color) {
+    context.beginPath();
+    context.arc(center.x, center.y, 10, 0, 2 * Math.PI); // circle
+    context.fillStyle = color;
+    context.fill();
+}
+
+function DrawFiguere(center, color) {
+    let temp = GetKeyPressed();
+    if (dirction == null && temp == 0) {
+        dirction = 1;
+    }
+    if (temp != 0) {
+        dirction = temp;
+    }
+    context.beginPath();
+    context.arc(center.x, center.y, 30, dirctions_dict[dirction][0] * Math.PI, dirctions_dict[dirction][1] * Math.PI); // half circle
+    context.lineTo(center.x, center.y);
+    context.fillStyle = color; //color
+    context.fill();
+    context.beginPath();
+    context.arc(center.x + 5 - dirctions_dict[dirction][2], center.y - 15 + dirctions_dict[dirction][2], 5, 0, 2 * Math.PI); // circle
+    context.fillStyle = "black"; //color
+    context.fill();
+}
+
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+}
+
+function PositionMove(dirction, Shape) {
+    if (dirction == 1) {
+        if (Shape.j > 0 && board[Shape.i][Shape.j - 1] != 4) {
+            Shape.j--;
+            return true;
+        }
+    }
+    if (dirction == 2) {
+        if (Shape.j < 9 && board[Shape.i][Shape.j + 1] != 4) {
+            Shape.j++;
+            return true;
+        }
+    }
+    if (dirction == 3) {
+        if (Shape.i > 0 && board[Shape.i - 1][Shape.j] != 4) {
+            Shape.i--;
+            return true;
+        }
+    }
+    if (dirction == 4) {
+        if (Shape.i < 9 && board[Shape.i + 1][Shape.j] != 4) {
+            Shape.i++;
+            return true;
+        }
+    } else {
+        return false;
+    }
+}
+
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+        currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+}
+
+function monsterWaze(monShape, pacShape) {
+    // m = (monShape.i-pacShape.i)/(monShape.j-pacShape.j);
+    // m = Math.abs(monShape.i-pacShape.i)/Math.abs(monShape.j-pacShape.j);
+    alpha = (180 * Math.atan2((monShape.j - pacShape.j), (monShape.i - pacShape.i)) / Math.PI);
+    // alpha =(180*Math.atan(m)/Math.PI);
+    if (alpha <= 0) {
+        alpha = 360 + alpha;
+    }
+
+    if (alpha >= 315 || alpha < 45) { //RIGHT
+        return 4;
+    }
+    if (alpha >= 45 && alpha < 135) { //DOWN
+        return 2;
+    }
+    if (alpha >= 135 && alpha < 225) { //left
+        return 3;
+    }
+    if (alpha >= 225 && alpha < 315) { //UP
+        return 1;
+    }
+}
+
+function MoveBack(shape, X) {
+    let revers; //back direction
+    if (X % 2 == 0) {
+        revers = X - 1;
+    } else {
+        revers = X + 1;
+    }
+    PositionMove(revers, shape);
+}
+
+function HandleCollision(shape, x) {
+    for (k = 0; k < figuere_array.length; k++) {
+        s = figuere_array[k];
+        if (shape !== s) {
+            if (board[shape.i][shape.j] == s.number) {
+                if (s.number == 2 || shape.number == 2) {
+                    if (failCounter < 6) {
+                        Start(true);
+                    }
+                    failCounter++;
+                    score = Math.max(score - 10, 0);
+                } else {
+                    MoveBack(shape, x);
+                }
+            }
+        }
+    }
+}
+
+function ClearAfterMonster(oldMonShape, monShape) {
+    if (monShape.hover_food > 0) {
+        board[oldMonShape.i][oldMonShape.j] = monShape.hover_food;
+        monShape.hover_food = 0;
+    } else {
+        board[oldMonShape.i][oldMonShape.j] = 0;
+    }
+    if (board[monShape.i][monShape.j] == 1 || board[monShape.i][monShape.j] == 8 || board[monShape.i][monShape.j] == 9) {
+        monShape.hover_food = board[monShape.i][monShape.j];
+    }
+    board[monShape.i][monShape.j] = monShape.number;
+}
+
+function MoveMonster(oldPacShape, oldMonShape, monShape) {
+    let monX = monsterWaze(oldPacShape, oldMonShape);
+    let moved = PositionMove(monX, monShape);
+    ClearAfterMonster(oldMonShape, monShape);
+    while (!moved) {
+        pssibleDirections.splice(monX - 1, monX - 1);
+        monX = pssibleDirections[Math.floor(Math.random() * pssibleDirections.length)];
+        moved = PositionMove(monX, monShape);
+        ClearAfterMonster(oldMonShape, monShape);
+    }
+    pssibleDirections = [1, 2, 3, 4];
+    HandleCollision(monShape, monX);
+}
+
+function UpdateMonPosition() {
+    oldMonShape1 = new Shape(monShape1.i, monShape1.j, monShape1.color, monShape1.number)
+    oldMonShape2 = new Shape(monShape2.i, monShape2.j, monShape2.color, monShape2.number)
+    oldMonShape3 = new Shape(monShape3.i, monShape3.j, monShape3.color, monShape3.number)
+    oldMonShape4 = new Shape(monShape4.i, monShape4.j, monShape4.color, monShape4.number)
+    MoveMonster(oldPacShape, oldMonShape1, monShape1);
+    MoveMonster(oldPacShape, oldMonShape2, monShape2);
+    MoveMonster(oldPacShape, oldMonShape3, monShape3);
+    MoveMonster(oldPacShape, oldMonShape4, monShape4);
 }
 
 function UpdatePosition() {
-	let helpAlpha = 0;
-	oldPacShape = new Shape(pacShape.i,pacShape.j)
-	oldMonShape = new Shape(monShape.i,monShape.j)
-
-	let x = GetKeyPressed();
-	PositionMove(x,pacShape);
-	// let monX = getRandomInt(1,5);
-	let monX = monsterWaze(pacShape,oldMonShape);
-	let mooved = PositionMove(monX,monShape);
-
-	while(!mooved){
-		pssibleDirections.splice(monX-1,monX-1);
-		monX = pssibleDirections[Math.floor(Math.random() * pssibleDirections.length)];	
-		mooved = PositionMove(monX,monShape);
-	}
-	pssibleDirections = [1,2,3,4];
-
-	helpAlpha = 0;
-	if (board[pacShape.i][pacShape.j] == 1) {
-		score++;
-		ate = true;
-	}
-
-	if (board[monShape.i][monShape.j] == 2) {
-		score= Math.max(score-10, 0);
-		let revers;//back direction
-		if (monX%2==0){
-			revers = monX-1;
-		}
-		else{
-			revers = monX+1;
-		}
-		PositionMove(revers,monShape);
-		failCounter++;
-		if(failCounter<6){
-			monShape.i = 0;			
-			monShape.j = 0;				
-		}
-	}
-	if (board[pacShape.i][pacShape.j] == 3) {
-		score= Math.max(score-10, 0);
-		let revers;//back direction
-		if (x%2==0){
-			revers = x-1;
-		}
-		else{
-			revers = x+1;
-		}
-		PositionMove(revers,pacShape);
-		failCounter++;
-		if(failCounter<6){
-			monShape.i = 0;			
-			monShape.j = 0;			
-		}
-	}
-
-	board[oldPacShape.i][oldPacShape.j] = 0;
-	if(was_food){
-		board[oldMonShape.i][oldMonShape.j] = 1;
-		was_food =false;
-	}
-	else{
-		board[oldMonShape.i][oldMonShape.j] = 0;
-	}
-	if(board[monShape.i][monShape.j]==1){
-		was_food = true;
-	}
-	board[pacShape.i][pacShape.j] = 2;
-	board[monShape.i][monShape.j] = 3;
-	
-
-
-	
-	var currentTime = new Date();
-	time_elapsed = (currentTime - start_time) / 1000;
-	if (score >= 20 && time_elapsed <= 10) {
-		pac_color = "green";
-	}
-	if (score == 50) {
-		currentUser.score = score;
-		window.clearInterval(interval);
-		window.alert("Game completed");
-	} else {
-		Draw();
-	}
+    oldPacShape = new Shape(pacShape.i, pacShape.j)
+    let x = GetKeyPressed();
+    PositionMove(x, pacShape);
+    HandleCollision(pacShape, x);
+    board[oldPacShape.i][oldPacShape.j] = 0;
+    if (board[pacShape.i][pacShape.j] == 1) {
+        score += 5;
+    } else if (board[pacShape.i][pacShape.j] == 8) {
+        score += 15;
+    } else if (board[pacShape.i][pacShape.j] == 9) {
+        score += 25;
+    }
+    board[pacShape.i][pacShape.j] = 2;
+    var currentTime = new Date();
+    time_elapsed = (currentTime - start_time) / 1000;
+    if (score >= 20 && time_elapsed <= 10) {
+        pac_color = "green";
+    }
+    if (failCounter > 5 || time_elapsed > document.getElementById("TotalTime").value) {
+        currentUser.score = score;
+        window.clearInterval(interval);
+        window.clearInterval(intervalMon);
+        window.alert("Game completed");
+    } else {
+        Draw();
+    }
+}
+class User {
+    constructor(username, passward, score) {
+        this.username = username;
+        this.passward = passward;
+        this.score = score;
+    }
+}
+class Shape {
+    constructor(i, j, color, number, start_i, start_j, hover_food = 0) {
+        this.i = i;
+        this.j = j;
+        this.color = color;
+        this.number = number;
+        this.start_i = start_i;
+        this.start_j = start_j;
+        this.hover_food = hover_food;
+    }
 }
