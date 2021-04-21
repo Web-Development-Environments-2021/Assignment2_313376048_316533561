@@ -383,8 +383,9 @@ function setkeysForGame(){
 	keyArrowRight = "ArrowRight";
 	arrowsKeys[0]= 38; // up
 	arrowsKeys[1]= 40; // down
-	arrowsKeys[2]= 39; // left
-	arrowsKeys[3]= 37; // right
+	arrowsKeys[2]= 37; // left
+	arrowsKeys[3]= 39; // right 
+	
 }
 
 function setBallsNmber(){
@@ -677,8 +678,6 @@ function GetKeyPressed() {
     }
 }
 
-
-
 function Draw() {
     canvas.width = canvas.width; //clean board
     context.fillStyle = "pink"
@@ -765,13 +764,13 @@ function PositionMove(dirction, Shape) {
             return true;
         }
     }
-    if (dirction == 3) { //right
+    if (dirction == 3) { //left 
         if (Shape.i > 0 && board[Shape.i - 1][Shape.j] != 4) {
             Shape.i--;
             return true;
         }
     }
-    if (dirction == 4) { //left
+    if (dirction == 4) { //right
         if (Shape.i < 9 && board[Shape.i + 1][Shape.j] != 4) {
             Shape.i++;
             return true;
