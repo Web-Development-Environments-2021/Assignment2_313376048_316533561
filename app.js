@@ -312,8 +312,6 @@ function uniKeyCode(lbl, event) {
 		document.getElementById("right_btn").innerHTML = keyArrowRight;
 		arrowsKeys[3]= event.keyCode;
 	}	
-	
-
 }
 
 function pressX(){
@@ -351,7 +349,9 @@ function switchDives(Div_id){
 	}
 
 	if(Div_id === 'game'){
+		
 		Start();
+		document.getElementById("myAudio").play();
 		DrawSettings();	
 		$('#footer_center').hide();
 		$('#footer_right').show();
@@ -834,11 +834,13 @@ function HandleCollision(shape, x) {
         if (shape !== s) {
             if (board[shape.i][shape.j] == s.number) {
                 if (s.number == 2 || shape.number == 2) {
-                    if (failCounter < 6) {
+                    if (failCounter < 6) { // 
                         Start(true);
+						document.getElementById("lblLIVES").value = document.getElementById("lblLIVES").value - failCounter;
                     }
                     failCounter++;
                     score = Math.max(score - 10, 0);
+					document.getElementById("lblScore").value = score;
                 } else {
                     MoveBack(shape, x);
                 }
