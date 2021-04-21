@@ -692,11 +692,11 @@ function Draw() {
             if (board[i][j] == 2) { //pacman
                 DrawFiguere(center, pac_color)
             } else if (board[i][j] == 1) { //food1 = 5 points
-                DrawFood(center, document.getElementById("food_5").value)
+                DrawFood(center, document.getElementById("food_5").value, '5');
             } else if (board[i][j] == 8) { //food2 = 15 points
-                DrawFood(center, document.getElementById("food_15").value)
+                DrawFood(center, document.getElementById("food_15").value, '15');
             } else if (board[i][j] == 9) { //food3 = 25 points
-                DrawFood(center, document.getElementById("food_25").value)
+                DrawFood(center, document.getElementById("food_25").value, '25');
             } else if (board[i][j] == 4) { //wall
                 context.beginPath();
                 context.rect(center.x - 30, center.y - 30, 60, 60);
@@ -718,11 +718,18 @@ function Draw() {
     }
 }
 
-function DrawFood(center, color) {
+function DrawFood(center, color, points) {
     context.beginPath();
-    context.arc(center.x, center.y, 10, 0, 2 * Math.PI); // circle
+    context.arc(center.x, center.y, 10, 0, 2 * Math.PI); // circle	
     context.fillStyle = color;
     context.fill();
+	context.fillStyle = 'black';
+	if(points === '5'){
+		context.fillText(points, center.x-2, center.y+2);
+	}
+	else{
+		context.fillText(points, center.x-4, center.y+2);
+	}
 }
 
 function DrawFiguere(center, color) {
