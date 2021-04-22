@@ -1,496 +1,492 @@
 var context;
 var shape;
 var board;
-var score =0 ;
+var score = 0;
 var pac_color;
 var start_time;
 var time_elapsed;
 var interval;
 var intervalMon;
 
-var keyArrowUp ;
-var keyArrowDown ;
-var keyArrowLeft ;
-var keyArrowRight ;
-var users_dict = { 'k' : 'k'} // {username : password}
+var keyArrowUp;
+var keyArrowDown;
+var keyArrowLeft;
+var keyArrowRight;
+var users_dict = { 'k': 'k' } // {username : password}
 
 
 var pacShape;
 var monShape1;
 
 var monster1_color;
-var monster2_color;	
-var monster3_color;	
+var monster2_color;
+var monster3_color;
 var monster4_color;
 var time_elapsed;
 let dirction;
 var dirctions_dict = { 1: [-0.35, 1.35, 17], 2: [-1.35, 0.35, 17], 3: [-0.85, 0.85, 0], 4: [0.15, 1.85, 0] }
-var currentUser  = new Object();
-let ate =false;
+var currentUser = new Object();
+let ate = false;
 let failCounter = 0;
 let was_food = false;
-let pssibleDirections = [1,2,3,4]; //1=up 2= down 3= left 4 =right
+let pssibleDirections = [1, 2, 3, 4]; //1=up 2= down 3= left 4 =right
 let arrowsKeys = [-1, -1, -1, -1]; // up, down, left, right
 let userLogedin;
 let figuere_array = [];
 let firstTimeSpecialFoodOccurence = true;
-let lbldict = {'up_btn':0 , 'down_btn': 1, 'left_btn': 2, 'right_btn': 3}
+let lbldict = { 'up_btn': 0, 'down_btn': 1, 'left_btn': 2, 'right_btn': 3 }
 let ghost_img = new Image(3, 3);
 ghost_img.src = "ghost.PNG";
+let avo_img = new Image(6, 6)
+avo_img.src = "avocado.PNG"
+let foodShape;
 
 
 
 
 $(document).ready(function() {
-	context = canvas.getContext("2d");
-	context.fillStyle = "pink";
-	context.fillRect(0, 0, canvas.width, canvas.height);
-	//Start();
+    context = canvas.getContext("2d");
+    context.fillStyle = "pink";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    //Start();
 
 
-	// validate LOGIN form 
-	$("#LOGIN").validate({
-		rules: {
-			usernameLogin: {
-				required: true,
-			},
-			passwordLogin: {
-				required: true,
-				verfieUser: true
-			},			
-		},
-		messages: {			
-			usernameLogin: {
-				required: "Please enter a username",
-			},
-			passwordLogin: {
-				required: "Please provide a password",
-				verfieUser: "User name not exist or incorrect password"
-			},
-		},
-		submitHandler: function() {
-			document.getElementById("usernameLogin").value = null;
-			document.getElementById("passwordLogin").value = null;
-			switchDives('configuration');
-		}
-	});
+    // validate LOGIN form 
+    $("#LOGIN").validate({
+        rules: {
+            usernameLogin: {
+                required: true,
+            },
+            passwordLogin: {
+                required: true,
+                verfieUser: true
+            },
+        },
+        messages: {
+            usernameLogin: {
+                required: "Please enter a username",
+            },
+            passwordLogin: {
+                required: "Please provide a password",
+                verfieUser: "User name not exist or incorrect password"
+            },
+        },
+        submitHandler: function() {
+            document.getElementById("usernameLogin").value = null;
+            document.getElementById("passwordLogin").value = null;
+            switchDives('configuration');
+        }
+    });
 
 
-	// validate SIGNUP form 
-	$("#SIGNUP").validate({
-		rules: {
-			firstname: {
-				required: true,
-				lettersonly: true
-			},
-			lastname: {
-				required: true,
-				lettersonly: true
-			},
-			username: {
-				required: true,
-				minlength: 2,
-				usernameisExist: true,
-			},
-			password: {
-				required: true,
-				strongPassword: true,
-				minlength: 6
-			},
-			confirm_password: {
-				required: true,
-				minlength: 6,
-				equalTo: "#password"
-			},
-			email: {
-				required: true,
-				email: true
-			},
-		},
-		messages: {
-			firstname: {
-				required: "Please enter your firstname",
-				lettersonly: "Please Enter letters only"
-			},
-			lastname: {
-				required: "Please enter your lastname",
-				lettersonly: "Please Enter letters only"
-			},
-			
-			username: {
-				required: "Please enter a username",
-				minlength: "Your username must consist of at least 2 characters",
-				usernameisExist: "These user Name is allready exist please choose other user Name"
+    // validate SIGNUP form 
+    $("#SIGNUP").validate({
+        rules: {
+            firstname: {
+                required: true,
+                lettersonly: true
+            },
+            lastname: {
+                required: true,
+                lettersonly: true
+            },
+            username: {
+                required: true,
+                minlength: 2,
+                usernameisExist: true,
+            },
+            password: {
+                required: true,
+                strongPassword: true,
+                minlength: 6
+            },
+            confirm_password: {
+                required: true,
+                minlength: 6,
+                equalTo: "#password"
+            },
+            email: {
+                required: true,
+                email: true
+            },
+        },
+        messages: {
+            firstname: {
+                required: "Please enter your firstname",
+                lettersonly: "Please Enter letters only"
+            },
+            lastname: {
+                required: "Please enter your lastname",
+                lettersonly: "Please Enter letters only"
+            },
 
-			},
-			password: {
-				required: "Please provide a password",
-				strongPassword: "Password must contain letters and digits",
-				minlength: "Your password must be at least 6 characters long"
-			},
-			confirm_password: {
-				required: "Please provide a password",
-				minlength: "Your password must be at least 6 characters long",
-				equalTo: "Please enter the same password as above"
-			},
-			email: {
-				email:"Please enter a valid email address"
-			},
-		},
-		submitHandler: function() {
-			addUser();
-		}
-	});
+            username: {
+                required: "Please enter a username",
+                minlength: "Your username must consist of at least 2 characters",
+                usernameisExist: "These user Name is allready exist please choose other user Name"
+
+            },
+            password: {
+                required: "Please provide a password",
+                strongPassword: "Password must contain letters and digits",
+                minlength: "Your password must be at least 6 characters long"
+            },
+            confirm_password: {
+                required: "Please provide a password",
+                minlength: "Your password must be at least 6 characters long",
+                equalTo: "Please enter the same password as above"
+            },
+            email: {
+                email: "Please enter a valid email address"
+            },
+        },
+        submitHandler: function() {
+            addUser();
+        }
+    });
 
 
-	// validate configuration form
-	$("#configuration").validate({
-		rules: {
-			inputup_btn: {
-				required: true,
-				notEqual : '#inputdown_btn',
-				notEqual : '#inputleft_btn',
-				notEqual : '#inputright_btn',
-			},
-			inputdown_btn: {
-				required: true,
-				notEqual : '#inputup_btn',
-				notEqual : '#inputleft_btn',
-				notEqual : '#inputright_btn',
-			},
-			inputleft_btn: {
-				required: true,
-				notEqual : '#inputup_btn',
-				notEqual : '#inputdown_btn',
-				notEqual : '#inputright_btn',
-			},
-			inputright_btn: {
-				required: true,
-				notEqual : '#inputup_btn',
-				notEqual : '#inputdown_btn',
-				notEqual : '#inputleft_btn',				
-			},			
-		},
-		messages: {
-			inputup_btn: {
-				required: "Please chosse key",
-				notEqual: "You chose this key allready"				
-			},			
-			inputdown_btn: {
-				required: "Please chosse key",
-				notEqual: "You chose this key allready"			
-			},
-			inputleft_btn: {
-				required: "Please chosse key",
-				notEqual: "You chose this key allready"
-			},
-			inputright_btn: {
-				required: "Please chosse key",
-				notEqual: "You chose this key allready"
-			},
-		},
-		submitHandler: function() {
-			if(fillInKeys() == true)
-				switchDives('game');
-		}
-	});
+    // validate configuration form
+    $("#configuration").validate({
+        rules: {
+            inputup_btn: {
+                required: true,
+                notEqual: '#inputdown_btn',
+                notEqual: '#inputleft_btn',
+                notEqual: '#inputright_btn',
+            },
+            inputdown_btn: {
+                required: true,
+                notEqual: '#inputup_btn',
+                notEqual: '#inputleft_btn',
+                notEqual: '#inputright_btn',
+            },
+            inputleft_btn: {
+                required: true,
+                notEqual: '#inputup_btn',
+                notEqual: '#inputdown_btn',
+                notEqual: '#inputright_btn',
+            },
+            inputright_btn: {
+                required: true,
+                notEqual: '#inputup_btn',
+                notEqual: '#inputdown_btn',
+                notEqual: '#inputleft_btn',
+            },
+        },
+        messages: {
+            inputup_btn: {
+                required: "Please chosse key",
+                notEqual: "You chose this key allready"
+            },
+            inputdown_btn: {
+                required: "Please chosse key",
+                notEqual: "You chose this key allready"
+            },
+            inputleft_btn: {
+                required: "Please chosse key",
+                notEqual: "You chose this key allready"
+            },
+            inputright_btn: {
+                required: "Please chosse key",
+                notEqual: "You chose this key allready"
+            },
+        },
+        submitHandler: function() {
+            if (fillInKeys() == true)
+                switchDives('game');
+        }
+    });
 });
 
-$(function(){
+$(function() {
 
-	// //check if key all ready choosen
-	$.validator.addMethod("notEqual", function(value, param) {
-		return value != $(param).val();
-	});
+    // //check if key all ready choosen
+    $.validator.addMethod("notEqual", function(value, param) {
+        return value != $(param).val();
+    });
 
-	//Password must contain at least 6 digit, number ,char.
-	$.validator.addMethod('strongPassword', function (value, element) {		
-		return this.optional(element) || /\d/.test(value) && /[a-z]/i.test(value);
-	});
+    //Password must contain at least 6 digit, number ,char.
+    $.validator.addMethod('strongPassword', function(value, element) {
+        return this.optional(element) || /\d/.test(value) && /[a-z]/i.test(value);
+    });
 
 
-	//check if username already exists
-	$.validator.addMethod('usernameisExist', function (value, element) {
-		for(var  usernameKey in users_dict){
-			if(usernameKey === value)
-			return false;	
-		}
-		return true;	
-	});
+    //check if username already exists
+    $.validator.addMethod('usernameisExist', function(value, element) {
+        for (var usernameKey in users_dict) {
+            if (usernameKey === value)
+                return false;
+        }
+        return true;
+    });
 
-	//Login
+    //Login
 
-	//check if password match user
-	$.validator.addMethod('verfieUser', function () {
+    //check if password match user
+    $.validator.addMethod('verfieUser', function() {
 
-		var user = document.getElementById("usernameLogin").value;
-		var inputPassword = document.getElementById("passwordLogin").value;
-		var userPassword = users_dict[user];
-		if(inputPassword === userPassword){
-			userLogedin = user;
-			// document.getElementById("usernameLogin").value = null;
-			// document.getElementById("passwordLogin").value = null;
-			return true;
-		}
-		return false;		
-	});
+        var user = document.getElementById("usernameLogin").value;
+        var inputPassword = document.getElementById("passwordLogin").value;
+        var userPassword = users_dict[user];
+        if (inputPassword === userPassword) {
+            userLogedin = user;
+            // document.getElementById("usernameLogin").value = null;
+            // document.getElementById("passwordLogin").value = null;
+            return true;
+        }
+        return false;
+    });
 })
 
 function checkletters(value) {
-	return /[a-z]/.test(value) || /[a-z]/.test(value);
+    return /[a-z]/.test(value) || /[a-z]/.test(value);
 }
 
 function checkdigit(value) {
-	return /[0-9]/.test(value);
+    return /[0-9]/.test(value);
 }
 
-function addUser(){
-	var user = document.getElementById("username").value;
-	var inputPassword = document.getElementById("password").value;
-	users_dict[user]=inputPassword;
-	// empty the input form buffer
-	document.getElementById("firstname").value = null;
-	document.getElementById("lastname").value = null;
-	document.getElementById("username").value = null;
-	document.getElementById("password").value = null;
-	document.getElementById("confirm_password").value = null;
-	document.getElementById("email").value = null;
+function addUser() {
+    var user = document.getElementById("username").value;
+    var inputPassword = document.getElementById("password").value;
+    users_dict[user] = inputPassword;
+    // empty the input form buffer
+    document.getElementById("firstname").value = null;
+    document.getElementById("lastname").value = null;
+    document.getElementById("username").value = null;
+    document.getElementById("password").value = null;
+    document.getElementById("confirm_password").value = null;
+    document.getElementById("email").value = null;
 
-	switchDives('LOGIN');
+    switchDives('LOGIN');
 }
 
-function canlogin(){
-	var user = document.getElementById("usernameLogin").value;
-	var inputPassword = document.getElementById("passwordLogin").value;
-	var userPassword = users_dict[user];
-	if(inputPassword === userPassword){
-		// document.getElementById("usernameLogin").value = null;
-		// document.getElementById("passwordLogin").value = null;
-		switchDives('configuration');
-	}
-	else{
-		//alert("User name not exist or incorrect password");
-		return false;
-	}
+function canlogin() {
+    var user = document.getElementById("usernameLogin").value;
+    var inputPassword = document.getElementById("passwordLogin").value;
+    var userPassword = users_dict[user];
+    if (inputPassword === userPassword) {
+        // document.getElementById("usernameLogin").value = null;
+        // document.getElementById("passwordLogin").value = null;
+        switchDives('configuration');
+    } else {
+        //alert("User name not exist or incorrect password");
+        return false;
+    }
 }
 
-function fillInKeys(){
-	KeysStatus = true;
-	let idx = 0;
-	for(let key in lbldict){
-		if(arrowsKeys[idx] == -1){
-			document.getElementById(key).innerHTML = "<span style='color: red;'>"+
-			" Please chosse key</span>" 
-			KeysStatus = false;
-		}
-		idx++;
-	}
-	return KeysStatus;
+function fillInKeys() {
+    KeysStatus = true;
+    let idx = 0;
+    for (let key in lbldict) {
+        if (arrowsKeys[idx] == -1) {
+            document.getElementById(key).innerHTML = "<span style='color: red;'>" +
+                " Please chosse key</span>"
+            KeysStatus = false;
+        }
+        idx++;
+    }
+    return KeysStatus;
 }
 
 
 function uniKeyCode(lbl, event) {
-	// var key = evevnt.keyCode      colud be we will need this line later in the game
-	
-	let error = document.getElementById(lbl)
-	
-	for (var i = 0; i < arrowsKeys.length; i++) {
-		if(arrowsKeys[i] === event.keyCode){ 
-			if( i != lbldict[lbl]){
-				error.innerHTML = "<span style='color: red;'>"+
-							"You chose this key allready</span>"
-				//document.getElementsById(lbl).error("You chose this key allready")
-				//arrowsKeys[i]=null;
-				return false;
-			}
-			else{
-				break;
-			}
-		}
-		else{
-			error.innerHTML = "";
-		}
-	}
-	if(lbl === 'up_btn'){
-		keyArrowUp = event.key;
-		document.getElementById("up_btn").innerHTML = keyArrowUp;
-		arrowsKeys[0]= event.keyCode;
-	}
-	else if(lbl === 'down_btn'){
-		keyArrowDown = event.key;
-		document.getElementById("down_btn").innerHTML = keyArrowDown;
-		arrowsKeys[1]= event.keyCode;
-	}
-	else if(lbl === 'left_btn'){
-		keyArrowLeft = event.key;
-		document.getElementById("left_btn").innerHTML = keyArrowLeft;
-		arrowsKeys[2]= event.keyCode;
-	}
-	else if(lbl === 'right_btn'){
-		keyArrowRight = event.key;
-		document.getElementById("right_btn").innerHTML = keyArrowRight;
-		arrowsKeys[3]= event.keyCode;
-	}	
+    // var key = evevnt.keyCode      colud be we will need this line later in the game
+
+    let error = document.getElementById(lbl)
+
+    for (var i = 0; i < arrowsKeys.length; i++) {
+        if (arrowsKeys[i] === event.keyCode) {
+            if (i != lbldict[lbl]) {
+                error.innerHTML = "<span style='color: red;'>" +
+                    "You chose this key allready</span>"
+                    //document.getElementsById(lbl).error("You chose this key allready")
+                    //arrowsKeys[i]=null;
+                return false;
+            } else {
+                break;
+            }
+        } else {
+            error.innerHTML = "";
+        }
+    }
+    if (lbl === 'up_btn') {
+        keyArrowUp = event.key;
+        document.getElementById("up_btn").innerHTML = keyArrowUp;
+        arrowsKeys[0] = event.keyCode;
+    } else if (lbl === 'down_btn') {
+        keyArrowDown = event.key;
+        document.getElementById("down_btn").innerHTML = keyArrowDown;
+        arrowsKeys[1] = event.keyCode;
+    } else if (lbl === 'left_btn') {
+        keyArrowLeft = event.key;
+        document.getElementById("left_btn").innerHTML = keyArrowLeft;
+        arrowsKeys[2] = event.keyCode;
+    } else if (lbl === 'right_btn') {
+        keyArrowRight = event.key;
+        document.getElementById("right_btn").innerHTML = keyArrowRight;
+        arrowsKeys[3] = event.keyCode;
+    }
 }
 
-function pressX(){
-	document.getElementById('LOGIN').style.display='none';
-	document.getElementById('SIGNUP').style.display='none';
-	document.getElementById('configuration').style.display='none';
-	$('#centerSignUp').show();
-	$('#centerLogIn').show();
+function pressX() {
+    document.getElementById('LOGIN').style.display = 'none';
+    document.getElementById('SIGNUP').style.display = 'none';
+    document.getElementById('configuration').style.display = 'none';
+    $('#centerSignUp').show();
+    $('#centerLogIn').show();
 }
 
-function switchDives(Div_id){
-	
-	$('#WelcomePage').hide();
-	$('#SIGNUP').hide();
-	$('#footer_left').hide();
-	$('#LOGIN').hide();
-	$('#centerSignUp').hide();
-	$('#centerLogIn').hide();
-	$('#game').hide();
-	$('#configuration').hide();
-	$('#about').hide();
-	$('#config').hide();
-	// document.getElementById("myAudio").pause();
+function switchDives(Div_id) {
+
+    $('#WelcomePage').hide();
+    $('#SIGNUP').hide();
+    $('#footer_left').hide();
+    $('#LOGIN').hide();
+    $('#centerSignUp').hide();
+    $('#centerLogIn').hide();
+    $('#game').hide();
+    $('#configuration').hide();
+    $('#about').hide();
+    $('#config').hide();
+    // document.getElementById("myAudio").pause();
 
 
-	$('#' + Div_id).show();
+    $('#' + Div_id).show();
 
-	// if((Div_id === 'SIGNUP')||(Div_id === 'configuration')
-	// 	||(Div_id === 'centerSignUp'))
-	// $('#footer_center').hide();
-	// $('#footer_right').show();
+    // if((Div_id === 'SIGNUP')||(Div_id === 'configuration')
+    // 	||(Div_id === 'centerSignUp'))
+    // $('#footer_center').hide();
+    // $('#footer_right').show();
 
-	if(!(Div_id === 'game')){
-		$('#footer_center').show ();
-		$('#footer_right').hide();
-	}
+    if (!(Div_id === 'game')) {
+        $('#footer_center').show();
+        $('#footer_right').hide();
+    }
 
-	if(Div_id === 'game'){
-		
-		
-		// document.getElementById("myAudio").play();
-		DrawSettings();	
-		resetDataGame(true);
-		Start();
-		$('#footer_center').hide();
-		$('#footer_right').show();
-	
-	}
-	else if(Div_id === 'Random_game'){
-		// $('#game').show();
-		$('#configuration').show();
-		//$('#settings').show();
+    if (Div_id === 'game') {
 
-		setRandomData();
-		// Start();
-		//DrawSettings();
-	}
+
+        // document.getElementById("myAudio").play();
+        DrawSettings();
+        resetDataGame(true);
+        Start();
+        $('#footer_center').hide();
+        $('#footer_right').show();
+
+    } else if (Div_id === 'Random_game') {
+        // $('#game').show();
+        $('#configuration').show();
+        //$('#settings').show();
+
+        setRandomData();
+        // Start();
+        //DrawSettings();
+    }
 }
 
-function setRandomData(){
-	setkeysForGame();
-	setBallsNmber();
-	setPointsColor();
-	setTotalTime();
-	setNumberOfMonsters();
+function setRandomData() {
+    setkeysForGame();
+    setBallsNmber();
+    setPointsColor();
+    setTotalTime();
+    setNumberOfMonsters();
 }
 
-function setkeysForGame(){
+function setkeysForGame() {
 
-	keyArrowUp = "ArrowUp";
-	keyArrowDown = "ArrowDown";
-	keyArrowLeft = "ArrowLeft";
-	keyArrowRight = "ArrowRight";
+    keyArrowUp = "ArrowUp";
+    keyArrowDown = "ArrowDown";
+    keyArrowLeft = "ArrowLeft";
+    keyArrowRight = "ArrowRight";
 
-	document.getElementById("up_btn").innerHTML = " The default key - " + keyArrowUp;
-	document.getElementById("down_btn").innerHTML = " The default key - " + keyArrowDown;
-	document.getElementById("left_btn").innerHTML = " The default key - " + keyArrowLeft;
-	document.getElementById("right_btn").innerHTML = " The default key - " + keyArrowRight;
+    document.getElementById("up_btn").innerHTML = " The default key - " + keyArrowUp;
+    document.getElementById("down_btn").innerHTML = " The default key - " + keyArrowDown;
+    document.getElementById("left_btn").innerHTML = " The default key - " + keyArrowLeft;
+    document.getElementById("right_btn").innerHTML = " The default key - " + keyArrowRight;
 
-	arrowsKeys[0]= 38; // up
-	arrowsKeys[1]= 40; // down
-	arrowsKeys[2]= 37; // left
-	arrowsKeys[3]= 39; // right 	
+    arrowsKeys[0] = 38; // up
+    arrowsKeys[1] = 40; // down
+    arrowsKeys[2] = 37; // left
+    arrowsKeys[3] = 39; // right 	
 }
 
-function setBallsNmber(){
-	document.getElementById("myRange").value = Math.floor(Math.random() * 90) + 50;
-	document.getElementById("balls_val").innerHTML = document.getElementById("myRange").value;
+function setBallsNmber() {
+    document.getElementById("myRange").value = Math.floor(Math.random() * 90) + 50;
+    document.getElementById("balls_val").innerHTML = document.getElementById("myRange").value;
 }
 
 function getRandomColor() {
-	var letters = '0123456789ABCDEF';
-	var color = '#';
-	for (var i = 0; i < 6; i++) {
-	  color += letters[Math.floor(Math.random() * 16)];
-	}
-	return color;
-  }
-
-function setPointsColor(){
-	 document.getElementById("five_point_color_id").value = getRandomColor();
-	 document.getElementById("fifteen_point_color_id").value = getRandomColor();
-	 document.getElementById("twenty_five_point_color_id").value = getRandomColor();
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
 }
 
-function setTotalTime(){
-	document.getElementById("TotalTime").value = Math.floor(Math.random() * 360) + 60;
+function setPointsColor() {
+    document.getElementById("five_point_color_id").value = getRandomColor();
+    document.getElementById("fifteen_point_color_id").value = getRandomColor();
+    document.getElementById("twenty_five_point_color_id").value = getRandomColor();
 }
 
-function setNumberOfMonsters(){
-	
-	var index = Math.floor(Math.random() * 4) + 1;  // returns a random integer from 1 to 4
-	
-	document.getElementsByName('monster')[index-1].value = index;
-	document.getElementsByName('monster')[index-1].checked = true;
+function setTotalTime() {
+    document.getElementById("TotalTime").value = Math.floor(Math.random() * 360) + 60;
 }
 
-function DrawSettings(){
-	$('#config').show();
-	// buttons
-	document.getElementById("up_btn_display").value = keyArrowUp;
-	document.getElementById("down_btn_display").value = keyArrowDown;
-	document.getElementById("left_btn_display").value = keyArrowLeft;
-	document.getElementById("right_btn_display").value = keyArrowRight;
+function setNumberOfMonsters() {
 
-	//balls
-	document.getElementById("nBalls").value = document.getElementById("myRange").value;
+    var index = Math.floor(Math.random() * 4) + 1; // returns a random integer from 1 to 4
 
-	// points color per food
-	document.getElementById("food_5").value = document.getElementById("five_point_color_id").value;
-	document.getElementById("food_5").disabled = true;
-	document.getElementById("food_15").value = document.getElementById("fifteen_point_color_id").value;
-	document.getElementById("food_15").disabled = true;
-	document.getElementById("food_25").value = document.getElementById("twenty_five_point_color_id").value;
-	document.getElementById("food_25").disabled = true;
+    document.getElementsByName('monster')[index - 1].value = index;
+    document.getElementsByName('monster')[index - 1].checked = true;
+}
 
-	// time
-	document.getElementById("time_display").value = document.getElementById("TotalTime").value;
+function DrawSettings() {
+    $('#config').show();
+    // buttons
+    document.getElementById("up_btn_display").value = keyArrowUp;
+    document.getElementById("down_btn_display").value = keyArrowDown;
+    document.getElementById("left_btn_display").value = keyArrowLeft;
+    document.getElementById("right_btn_display").value = keyArrowRight;
 
-	// number of monsters
-	document.getElementById("monster_display").value = displayRadioValue();
+    //balls
+    document.getElementById("nBalls").value = document.getElementById("myRange").value;
+
+    // points color per food
+    document.getElementById("food_5").value = document.getElementById("five_point_color_id").value;
+    document.getElementById("food_5").disabled = true;
+    document.getElementById("food_15").value = document.getElementById("fifteen_point_color_id").value;
+    document.getElementById("food_15").disabled = true;
+    document.getElementById("food_25").value = document.getElementById("twenty_five_point_color_id").value;
+    document.getElementById("food_25").disabled = true;
+
+    // time
+    document.getElementById("time_display").value = document.getElementById("TotalTime").value;
+
+    // number of monsters
+    document.getElementById("monster_display").value = displayRadioValue();
 
 }
 
 function displayRadioValue() {
-	var ele = document.getElementsByName('monster');
-	  
-	for(i = 0; i < ele.length; i++) {
-		if(ele[i].checked)
-			return ele[i].value;
-	}
+    var ele = document.getElementsByName('monster');
+
+    for (i = 0; i < ele.length; i++) {
+        if (ele[i].checked)
+            return ele[i].value;
+    }
 }
 
 
-function openDialog() { 
-	document.getElementById("myDialog").showModal(); 
-} 
+function openDialog() {
+    document.getElementById("myDialog").showModal();
+}
 
-function closeDialog() { 
-	document.getElementById("myDialog").close(); 
+function closeDialog() {
+    document.getElementById("myDialog").close();
 }
 
 
@@ -581,34 +577,34 @@ function Start(over = false) {
                 }
                 continue;
             }
-            if ((i == 2 && j == 8) ||  (i == 1 && j == 16) ||
-                (i == 3 && j == 2) ||  (i == 2 && j == 12) ||
-                (i == 3 && j == 6) ||  (i == 2 && j == 13) ||
-                (i == 3 && j == 8) ||  (i == 2 && j == 14) ||
-                (i == 4 && j == 2) ||  (i == 2 && j == 16) ||
-                (i == 4 && j == 4) ||  (i == 2 && j == 18) ||
-                (i == 4 && j == 6) ||  (i == 3 && j == 12) ||
-                (i == 4 && j == 8) ||  (i == 3 && j == 16) ||
-                (i == 4 && j == 9) ||  (i == 3 && j == 18) ||
-                (i == 5 && j == 4) ||  (i == 4 && j == 12) ||
-                (i == 6 && j == 2) ||  (i == 4 && j == 14) ||
-                (i == 6 && j == 3) ||  (i == 4 && j == 16) ||
-                (i == 6 && j == 4) ||  (i == 4 && j == 18) ||
-                (i == 6 && j == 5) ||  (i == 4 && j == 19) ||
-                (i == 6 && j == 7) ||  (i == 5 && j == 14) ||
-                (i == 6 && j == 8) ||  (i == 6 && j == 12) ||
-                (i == 6 && j == 9) ||  (i == 6 && j == 13) ||
-                (i == 7 && j == 5) ||  (i == 6 && j == 14) ||
-                (i == 8 && j == 1) ||  (i == 6 && j == 15) ||
-                (i == 8 && j == 2) ||  (i == 6 && j == 17) ||
-                (i == 8 && j == 7) ||  (i == 6 && j == 18) ||
-                (i == 8 && j == 8) ||  (i == 6 && j == 19) ||
-                (i == 9 && j == 5) ||  (i == 7 && j == 15) ||
-                (i == 2 && j == 6) ||  (i == 8 && j == 11) ||
-                (i == 1 && j == 6) ||  (i == 8 && j == 12) ||
-                (i == 2 && j == 2) ||  (i == 8 && j == 17) ||
-                (i == 2 && j == 3) ||  (i == 8 && j == 18) ||
-                (i == 2 && j == 4) ||  (i == 9 && j == 15) ||
+            if ((i == 2 && j == 8) || (i == 1 && j == 16) ||
+                (i == 3 && j == 2) || (i == 2 && j == 12) ||
+                (i == 3 && j == 6) || (i == 2 && j == 13) ||
+                (i == 3 && j == 8) || (i == 2 && j == 14) ||
+                (i == 4 && j == 2) || (i == 2 && j == 16) ||
+                (i == 4 && j == 4) || (i == 2 && j == 18) ||
+                (i == 4 && j == 6) || (i == 3 && j == 12) ||
+                (i == 4 && j == 8) || (i == 3 && j == 16) ||
+                (i == 4 && j == 9) || (i == 3 && j == 18) ||
+                (i == 5 && j == 4) || (i == 4 && j == 12) ||
+                (i == 6 && j == 2) || (i == 4 && j == 14) ||
+                (i == 6 && j == 3) || (i == 4 && j == 16) ||
+                (i == 6 && j == 4) || (i == 4 && j == 18) ||
+                (i == 6 && j == 5) || (i == 4 && j == 19) ||
+                (i == 6 && j == 7) || (i == 5 && j == 14) ||
+                (i == 6 && j == 8) || (i == 6 && j == 12) ||
+                (i == 6 && j == 9) || (i == 6 && j == 13) ||
+                (i == 7 && j == 5) || (i == 6 && j == 14) ||
+                (i == 8 && j == 1) || (i == 6 && j == 15) ||
+                (i == 8 && j == 2) || (i == 6 && j == 17) ||
+                (i == 8 && j == 7) || (i == 6 && j == 18) ||
+                (i == 8 && j == 8) || (i == 6 && j == 19) ||
+                (i == 9 && j == 5) || (i == 7 && j == 15) ||
+                (i == 2 && j == 6) || (i == 8 && j == 11) ||
+                (i == 1 && j == 6) || (i == 8 && j == 12) ||
+                (i == 2 && j == 2) || (i == 8 && j == 17) ||
+                (i == 2 && j == 3) || (i == 8 && j == 18) ||
+                (i == 2 && j == 4) || (i == 9 && j == 15) ||
                 (i == 12 && j == 8) ||
                 (i == 13 && j == 2) ||
                 (i == 13 && j == 6) ||
@@ -664,7 +660,7 @@ function Start(over = false) {
                 (i == 18 && j == 17) ||
                 (i == 18 && j == 18) ||
                 (i == 19 && j == 15) ||
-               
+
                 (i == 0) || (j == 0) || (i == 19) || (j == 19)
             ) {
                 board[i][j] = 4;
@@ -685,7 +681,11 @@ function Start(over = false) {
 
                         board[i][j] = 0;
                     }
-
+                } else if (randomNum < (1.0 * (points_remain + food_remain)) / cnt) {
+                    foodShape = new Shape(i, j, "gray", 10, i, j);
+                    figuere_array.push(foodShape);
+                    points_remain--;
+                    board[i][j] = 10;
                 } else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) {
                     pacShape = new Shape(i, j, pac_color, 2, i, j);
                     figuere_array.push(pacShape);
@@ -728,6 +728,13 @@ function Start(over = false) {
             pacShape = new Shape(emptyCell[0], emptyCell[1], pac_color, 2, emptyCell[0], emptyCell[1]);
             figuere_array.push(pacShape);
             pacman_remain--;
+        }
+        if (points_remain == 1) {
+            var emptyCell = findRandomEmptyCell(board);
+            board[emptyCell[0]][emptyCell[1]] = 2;
+            foodShape = new Shape(emptyCell[0], emptyCell[1], "gray", 2, emptyCell[0], emptyCell[1]);
+            figuere_array.push(foodShape);
+            points_remain--;
         }
         while (cells > 0) {
             var emptyCell = findRandomEmptyCell(board);
@@ -809,17 +816,20 @@ function Draw() {
                 context.strokeStyle = "grey";
                 context.stroke();
             } else if ((board[i][j] == 3) && (monsterArray[0])) { //monster
-				context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 30, 30)			
-                
+                context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 30, 30)
+
             } else if ((board[i][j] == 5) && (monsterArray[1])) { //monster
-				context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 30, 30)
+                context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 30, 30)
 
             } else if ((board[i][j] == 6) && (monsterArray[2])) { //monster
-				context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 30, 30)
+                context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 30, 30)
 
             } else if ((board[i][j] == 7) && (monsterArray[3])) { //monster
-				context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 30, 30)         
-			}
+                context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 30, 30)
+            } else if ((board[i][j] == 10)) { //points
+                context.drawImage(avo_img, center.x - 20, center.y - 25, 30, 30)
+
+            }
         }
     }
 }
@@ -963,14 +973,18 @@ function HandleCollision(shape) {
     //         resetDataGame();
     //     }
     // }
+    if (shape.number == 10) {
+        scor += 50;
+        board[shape.i, shape.j] = 0;
+    }
     failCounter++;
     document.getElementById("lblLIVES").value = document.getElementById("lblLIVES").value - 1;
     // if (document.getElementById("lblLIVES").value <= 0) {
     //     resetDataGame();
     // }
     score = Math.max(score - 10, 0);
-	if( score >=0)
-    	document.getElementById("lblScore").value = score;
+    if (score >= 0)
+        document.getElementById("lblScore").value = score;
     Start(true);
 
 }
@@ -1007,6 +1021,18 @@ function MoveMonster(oldPacShape, oldMonShape, monShape) {
 
 }
 
+function MovePoints(oldFoodShape, foodShape) {
+    monX = pssibleDirections[Math.floor(Math.random() * pssibleDirections.length)];
+    let moved = PositionMove(monX, foodShape);
+    while (!moved) {
+        pssibleDirections.splice(monX - 1, monX - 1);
+        monX = pssibleDirections[Math.floor(Math.random() * pssibleDirections.length)];
+        moved = PositionMove(monX, monShape);
+    }
+    ClearAfterMonster(oldFoodShape, foodShape);
+    pssibleDirections = [1, 2, 3, 4];
+}
+
 function UpdateMonPosition() {
     if (monsterArray[0]) { //monster
         oldMonShape1 = new Shape(monShape1.i, monShape1.j, monShape1.color, monShape1.number);
@@ -1027,6 +1053,8 @@ function UpdateMonPosition() {
         oldMonShape4 = new Shape(monShape4.i, monShape4.j, monShape4.color, monShape4.number);
         MoveMonster(oldPacShape, oldMonShape4, monShape4);
     }
+    MovePoints(oldFoodShape, foodShape);
+
 }
 
 function UpdatePosition() {
@@ -1043,6 +1071,9 @@ function UpdatePosition() {
         //     alert("Game completed");
         // }
         // return;
+    }
+    if (board[oldPacShape.i][oldPacShape.j] == 10) {
+        score += 50;
     }
     board[oldPacShape.i][oldPacShape.j] = 0;
     if (board[pacShape.i][pacShape.j] == 1) {
@@ -1063,20 +1094,20 @@ function UpdatePosition() {
 }
 
 function resetDataGame(startNewGame) {
-	window.clearInterval(interval);
+    window.clearInterval(interval);
     window.clearInterval(intervalMon);
-	if(startNewGame == false){
-		if (5 - failCounter <= 0) {
-			alert("Loser!");
-		} else {
-			if (score >= 100) {
-				alert("You are better than" + score + "points!");
-			} else {
-				alert("Winner!!!");
-			}
-		}
-	}
-	lastscore = score;
+    if (startNewGame == false) {
+        if (5 - failCounter <= 0) {
+            alert("Loser!");
+        } else {
+            if (score >= 100) {
+                alert("You are better than" + score + "points!");
+            } else {
+                alert("Winner!!!");
+            }
+        }
+    }
+    lastscore = score;
     score = 0;
     time_elapsed = 0;
     failCounter = 0;
