@@ -118,29 +118,29 @@
 					<br><br>
 					<label><b>Move UP:</b></label>
 					<input type="text" id="inputup_btn" size="15" onkeydown="uniKeyCode('up_btn',event)"
-						placeholder="Click in here and please press a key" autocomplete="off">
+						placeholder="Click in here and please press a key" autocomplete="off" >
 	
-					<p>You press:<span id="up_btn"></span></p>
+					<p>You choosed:<span id="up_btn"></span></p>
 	
 					<label><b>Move DOWN:</b></label>
 					<input type="text" id="inputdown_btn" size="15" onkeydown="uniKeyCode('down_btn',event)"
-						placeholder="Click in here and please press a key" autocomplete="off">
+						placeholder="Click in here and please press a key" autocomplete="off" >
 	
-					<p>You press:<span id="down_btn"></span></p>
+					<p>You choosed:<span id="down_btn"></span></p>
 	
 					<label><b>Move LEFT:</b></label>
 					<input type="text" id="inputleft_btn" size="15" onkeydown="uniKeyCode('left_btn',event)"
-						placeholder="Click in here and please press a key" autocomplete="off">
+						placeholder="Click in here and please press a key" autocomplete="off" >
 	
-					<p>You press:<span id="left_btn"></span></p>
+					<p>You choosed:<span id="left_btn"></span></p>
 	
 					<label><b>Move RIGHT:</b></label>
 	
 					<input type="text" id="inputright_btn" size="15" onkeydown="uniKeyCode('right_btn',event)"
 						placeholder="Click in here and please press a key" autocomplete="off">
 	
-					<p>You press:<span id="right_btn"></span></p>
-	
+					<p>You choosed:<span id="right_btn"></span></p>
+					<br>
 					<div class="slidecontainer">
 						<b>How many balls do you want?</b>
 						<br />
@@ -167,13 +167,14 @@
 	
 					<br><br>
 	
-					<legend>How many monsters do you want?</legend>
-					<input type="radio" name="monster" id="m1" value="1">1
-					<input type="radio" name="monster" id="m2" value="2">2
-					<input type="radio" name="monster" id="m3" value="3">3
-					<input type="radio" name="monster" id="m4" value="4">4<br>
-	
-					<input type="submit" onclick="switchDives('Random_game')" value="choose random"></input>
+					<legend>How many monsters do you want?
+						<input type="radio" name="monster" id="m1" value="1" checked>1
+						<input type="radio" name="monster" id="m2" value="2">2
+						<input type="radio" name="monster" id="m3" value="3">3
+						<input type="radio" name="monster" id="m4" value="4">4
+					</legend>
+					<br>
+					<input type="button" onclick="switchDives('Random_game')" value="choose random" style="background-color: yellow;"></input>
 	
 					<input type="submit" id="config_btn" value="Start Game"></input>
 					<br><br>
@@ -186,7 +187,7 @@
 
 		<div id="game">
 			<br/><br/>
-			<audio src="music1.mp3" type="audio/mpeg" autoplay id="myAudio"></audio>
+			<!-- <audio src="music1.mp3" type="audio/mpeg" autoplay id="myAudio"></audio> -->
 			<b>   Welcome: <span id="playerName"></span></b>
 			<br/><br/>
 			<label id="lblScore_text" for="lblScore">SCORE: </label>
@@ -205,6 +206,7 @@
 		
 		<div id="config">
 			<br/>
+			<b><u>Instructions</u>:</b>
 			<br/>
 			<b for="up_btn_display">To go up press:  </b>
 			<input id="up_btn_display" type="text" size="5" style="width: 25%;" readonly/> </input>
