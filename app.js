@@ -12,11 +12,11 @@ var keyArrowUp;
 var keyArrowDown;
 var keyArrowLeft;
 var keyArrowRight;
-var users_dict = { 'k': 'k', 'kkk': 'kkk' } // {username : password}
-let arrowsKeys = []
+var users_dict = { 'k': 'k' } // {username : password}
 
-var pacShape;;
-var monShape1;;
+
+var pacShape;
+var monShape1;
 
 var monster1_color;
 var monster2_color;
@@ -30,6 +30,8 @@ let ate = false;
 let failCounter = 0;
 let was_food = false;
 let pssibleDirections = [1, 2, 3, 4]; //1=up 2= down 3= left 4 =right
+let arrowsKeys = [-1, -1, -1, -1]; // up, down, left, right
+let userLogedin;
 let figuere_array = [];
 
 
@@ -126,7 +128,9 @@ $(document).ready(function() {
                 minlength: "Your password must be at least 6 characters long",
                 equalTo: "Please enter the same password as above"
             },
-            email: "Please enter a valid email address",
+            email: {
+                email: "Please enter a valid email address"
+            },
         },
         submitHandler: function() {
             addUser();
@@ -137,45 +141,45 @@ $(document).ready(function() {
     // validate signup form on keyup and submit
     $("#configuration").validate({
         rules: {
-            up_btn: {
+            inputup_btn: {
                 required: true,
-                notEqual: down_btn,
-                notEqual: left_btn,
-                notEqual: right_btn,
+                notEqual: '#inputdown_btn',
+                notEqual: '#inputleft_btn',
+                notEqual: '#inputright_btn',
             },
-            down_btn: {
+            inputdown_btn: {
                 required: true,
-                notEqual: up_btn,
-                notEqual: left_btn,
-                notEqual: right_btn,
+                notEqual: '#inputup_btn',
+                notEqual: '#inputleft_btn',
+                notEqual: '#inputright_btn',
             },
-            left_btn: {
+            inputleft_btn: {
                 required: true,
-                notEqual: up_btn,
-                notEqual: down_btn,
-                notEqual: right_btn,
+                notEqual: '#inputup_btn',
+                notEqual: '#inputdown_btn',
+                notEqual: '#inputright_btn',
             },
-            right_btn: {
+            inputright_btn: {
                 required: true,
-                notEqual: up_btn,
-                notEqual: down_btn,
-                notEqual: left_btn,
+                notEqual: '#inputup_btn',
+                notEqual: '#inputdown_btn',
+                notEqual: '#inputleft_btn',
             },
         },
         messages: {
-            up_btn: {
+            inputup_btn: {
                 required: "Please chosse key",
                 notEqual: "You chose this key allready"
             },
-            down_btn: {
+            inputdown_btn: {
                 required: "Please chosse key",
                 notEqual: "You chose this key allready"
             },
-            left_btn: {
+            inputleft_btn: {
                 required: "Please chosse key",
                 notEqual: "You chose this key allready"
             },
-            right_btn: {
+            inputright_btn: {
                 required: "Please chosse key",
                 notEqual: "You chose this key allready"
             },
@@ -189,14 +193,9 @@ $(document).ready(function() {
 $(function() {
 
     // //check if key all ready choosen
-    // $.validator.addMethod('keysHasChosse', function () {		
-    // 	if(keyArrowUp ===  keyArrowDown)
-
-    // 	keyArrowUp = "ArrowUp";
-    // 	keyArrowDown = "ArrowDown";
-    // 	keyArrowLeft = "ArrowLeft";
-    // 	keyArrowRight = "ArrowRight";
-    // });
+    $.validator.addMethod("notEqual", function(value, param) {
+        return value != $(param).val();
+    });
 
     //Password must contain at least 6 digit, number ,char.
     $.validator.addMethod('strongPassword', function(value, element) {
@@ -222,6 +221,7 @@ $(function() {
         var inputPassword = document.getElementById("passwordLogin").value;
         var userPassword = users_dict[user];
         if (inputPassword === userPassword) {
+            userLogedin = user;
             // document.getElementById("usernameLogin").value = null;
             // document.getElementById("passwordLogin").value = null;
             return true;
@@ -229,6 +229,8 @@ $(function() {
         return false;
     });
 })
+
+
 
 function checkletters(value) {
     return /[a-z]/.test(value) || /[a-z]/.test(value);
@@ -275,24 +277,37 @@ function canlogin() {
 
 function uniKeyCode(lbl, event) {
     // var key = evevnt.keyCode      colud be we will need this line later in the game
+    var error = document.getElementById(lbl)
+    for (var i = 0; i < arrowsKeys.length; i++) {
+        if (arrowsKeys[i] === event.keyCode) {
+            error.innerHTML = "<span style='color: red;'>" +
+                "You chose this key allready</span>"
+                //document.getElementsById(lbl).error("You chose this key allready")
+                //arrowsKeys[i]=null;
+            return false;
+        } else {
+            error.innerHTML = "";
+        }
+    }
     if (lbl === 'up_btn') {
         keyArrowUp = event.key;
         document.getElementById("up_btn").innerHTML = keyArrowUp;
+        arrowsKeys[0] = event.keyCode;
     } else if (lbl === 'down_btn') {
         keyArrowDown = event.key;
         document.getElementById("down_btn").innerHTML = keyArrowDown;
+        arrowsKeys[1] = event.keyCode;
     } else if (lbl === 'left_btn') {
         keyArrowLeft = event.key;
         document.getElementById("left_btn").innerHTML = keyArrowLeft;
+        arrowsKeys[2] = event.keyCode;
 
     } else if (lbl === 'right_btn') {
         keyArrowRight = event.key;
         document.getElementById("right_btn").innerHTML = keyArrowRight;
+        arrowsKeys[3] = event.keyCode;
     }
-    arrowsKeys.push(event.keyCode)
 }
-
-
 
 function pressX() {
     document.getElementById('LOGIN').style.display = 'none';
@@ -306,6 +321,7 @@ function switchDives(Div_id) {
 
     $('#WelcomePage').hide();
     $('#SIGNUP').hide();
+    $('#footer_left').hide();
     $('#LOGIN').hide();
     $('#centerSignUp').hide();
     $('#centerLogIn').hide();
@@ -317,15 +333,30 @@ function switchDives(Div_id) {
 
     $('#' + Div_id).show();
 
+    // if((Div_id === 'SIGNUP')||(Div_id === 'configuration')
+    // 	||(Div_id === 'centerSignUp'))
+    // $('#footer_center').hide();
+    // $('#footer_right').show();
+
+    if (!(Div_id === 'game')) {
+        $('#footer_center').show();
+        $('#footer_right').hide();
+    }
+
     if (Div_id === 'game') {
+
         Start();
+        document.getElementById("myAudio").play();
         DrawSettings();
+        $('#footer_center').hide();
+        $('#footer_right').show();
+
     } else if (Div_id === 'Random_game') {
         $('#game').show();
         //$('#settings').show();
 
         setRandomData();
-        Start();
+        // Start();
         DrawSettings();
     }
 }
@@ -344,7 +375,11 @@ function setkeysForGame() {
     keyArrowDown = "ArrowDown";
     keyArrowLeft = "ArrowLeft";
     keyArrowRight = "ArrowRight";
-    arrowsKeys = [38, 40, 37, 39]
+    arrowsKeys[0] = 38; // up
+    arrowsKeys[1] = 40; // down
+    arrowsKeys[2] = 37; // left
+    arrowsKeys[3] = 39; // right 
+
 }
 
 function setBallsNmber() {
@@ -383,17 +418,28 @@ function setNumberOfMonsters() {
 
 function DrawSettings() {
     $('#config').show();
-    document.getElementById("config").innerHTML =
-        "<br />" + " To go up press: " + keyArrowUp +
-        "<br />" + " To go down press: " + keyArrowDown +
-        "<br />" + " To go left press: " + keyArrowLeft +
-        "<br />" + " To go right press: " + keyArrowRight +
-        "<br />" + " number of balls: " + document.getElementById("myRange").value +
-        "<br />" + " 5 point food color: " + document.getElementById("five_point_color_id").value +
-        "<br />" + " 15 point food color: " + document.getElementById("fifteen_point_color_id").value +
-        "<br />" + " 25 point food color: " + document.getElementById("twenty_five_point_color_id").value +
-        "<br />" + " total time: " + document.getElementById("TotalTime").value +
-        "<br />" + " number of monsters: " + displayRadioValue();
+    // buttons
+    document.getElementById("up_btn_display").value = keyArrowUp;
+    document.getElementById("down_btn_display").value = keyArrowDown;
+    document.getElementById("left_btn_display").value = keyArrowLeft;
+    document.getElementById("right_btn_display").value = keyArrowRight;
+
+    //balls
+    document.getElementById("nBalls").value = document.getElementById("myRange").value;
+
+    // points color per food
+    document.getElementById("food_5").value = document.getElementById("five_point_color_id").value;
+    document.getElementById("food_5").disabled = true;
+    document.getElementById("food_15").value = document.getElementById("fifteen_point_color_id").value;
+    document.getElementById("food_15").disabled = true;
+    document.getElementById("food_25").value = document.getElementById("twenty_five_point_color_id").value;
+    document.getElementById("food_25").disabled = true;
+
+    // time
+    document.getElementById("time_display").value = document.getElementById("TotalTime").value;
+
+    // number of monsters
+    document.getElementById("monster_display").value = displayRadioValue();
 
 }
 
@@ -434,6 +480,12 @@ function Start(over = false) {
     monster3_color = "black";
     monster4_color = "gray";
     mon_color_array = [monster1_color, monster2_color, monster3_color, monster4_color];
+    monsterNumber = displayRadioValue(); // get monster number from radio buttons
+    monsterArray = [0, 0, 0, 0];
+    for (var i = 0; i < monsterNumber; i++) {
+        monsterArray[i] = 1;
+    }
+
     var pacman_remain = 1;
     for (var i = 0; i < 10; i++) {
         if (!over) {
@@ -441,7 +493,7 @@ function Start(over = false) {
         }
         //put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
         for (var j = 0; j < 10; j++) {
-            if (i == 0 && j == 0) {
+            if ((i == 0 && j == 0) && (monsterArray[0] == 1)) {
                 if (over) {
                     oldMonShape1 = new Shape(monShape1.i, monShape1.j, monShape1.color, monShape1.number)
                     monShape1.i = i;
@@ -449,11 +501,13 @@ function Start(over = false) {
                     ClearAfterMonster(oldMonShape1, monShape1);
                 } else {
                     monShape1 = new Shape(i, j, monster1_color, 3, 0, 0);
+                    board[i][j] = 3;
+                    figuere_array.push(monShape1);
                 }
-                board[i][j] = 3;
+
                 continue;
             }
-            if (i == 0 && j == 9) {
+            if ((i == 0 && j == 9) && (monsterArray[1] == 1)) {
                 if (over) {
                     oldMonShape2 = new Shape(monShape2.i, monShape2.j, monShape2.color, monShape2.number)
                     monShape2.i = i;
@@ -462,10 +516,11 @@ function Start(over = false) {
                 } else {
                     monShape2 = new Shape(i, j, monster2_color, 5, 0, 9);
                     board[i][j] = 5;
+                    figuere_array.push(monShape2);
                 }
                 continue;
             }
-            if (i == 9 && j == 0) {
+            if ((i == 9 && j == 0) && (monsterArray[2] == 1)) {
                 if (over) {
                     oldMonShape3 = new Shape(monShape3.i, monShape3.j, monShape3.color, monShape3.number)
                     monShape3.i = i;
@@ -474,10 +529,11 @@ function Start(over = false) {
                 } else {
                     monShape3 = new Shape(i, j, monster3_color, 6, 9, 0);
                     board[i][j] = 6;
+                    figuere_array.push(monShape3);
                 }
                 continue;
             }
-            if (i == 9 && j == 9) {
+            if ((i == 9 && j == 9) && (monsterArray[3] == 1)) {
                 if (over) {
                     oldMonShape4 = new Shape(monShape4.i, monShape4.j, monShape4.color, monShape4.number)
                     monShape4.i = i;
@@ -486,6 +542,7 @@ function Start(over = false) {
                 } else {
                     monShape4 = new Shape(i, j, monster4_color, 7, 9, 9);
                     board[i][j] = 7;
+                    figuere_array.push(monShape4);
                 }
                 continue;
             }
@@ -536,6 +593,7 @@ function Start(over = false) {
                     }
                 } else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) {
                     pacShape = new Shape(i, j, pac_color, 2, i, j);
+                    figuere_array.push(pacShape);
                     pacman_remain--;
                     board[i][j] = 2;
                 } else {
@@ -547,24 +605,24 @@ function Start(over = false) {
             }
         }
     }
-    figuere_array = [pacShape, monShape1, monShape2, monShape3, monShape4];
+    // figuere_array = [pacShape, monShape1, monShape2, monShape3, monShape4];
     if (!over) {
         while (food1_remain > 0) {
             var emptyCell = findRandomEmptyCell(board);
             board[emptyCell[0]][emptyCell[1]] = 1;
-            food1_remain--;
+            food_remain--;
             food1_remain--;
         }
         while (food2_remain > 0) {
             var emptyCell = findRandomEmptyCell(board);
             board[emptyCell[0]][emptyCell[1]] = 8;
-            food2_remain--;
+            food_remain--;
             food2_remain--;
         }
         while (food3_remain > 0) {
             var emptyCell = findRandomEmptyCell(board);
             board[emptyCell[0]][emptyCell[1]] = 9;
-            food3_remain--;
+            food_remain--;
             food3_remain--;
         }
         keysDown = {};
@@ -614,8 +672,6 @@ function GetKeyPressed() {
     }
 }
 
-
-
 function Draw() {
     canvas.width = canvas.width; //clean board
     context.fillStyle = "pink"
@@ -629,38 +685,44 @@ function Draw() {
             center.y = j * 60 + 30;
             if (board[i][j] == 2) { //pacman
                 DrawFiguere(center, pac_color)
-            } else if (board[i][j] == 1) { //food1
-                DrawFood(center, "black")
-            } else if (board[i][j] == 8) { //food2
-                DrawFood(center, "purple")
-            } else if (board[i][j] == 9) { //food3
-                DrawFood(center, "brown")
+            } else if (board[i][j] == 1) { //food1 = 5 points
+                DrawFood(center, document.getElementById("food_5").value, '5');
+            } else if (board[i][j] == 8) { //food2 = 15 points
+                DrawFood(center, document.getElementById("food_15").value, '15');
+            } else if (board[i][j] == 9) { //food3 = 25 points
+                DrawFood(center, document.getElementById("food_25").value, '25');
             } else if (board[i][j] == 4) { //wall
                 context.beginPath();
                 context.rect(center.x - 30, center.y - 30, 60, 60);
                 context.fillStyle = "grey";
                 context.fill();
-            } else if (board[i][j] == 3) { //monster
+            } else if ((board[i][j] == 3) && (monsterArray[0])) { //monster
                 DrawFiguere(center, monster1_color)
 
-            } else if (board[i][j] == 5) { //monster
+            } else if ((board[i][j] == 5) && (monsterArray[1])) { //monster
                 DrawFiguere(center, monster2_color)
 
-            } else if (board[i][j] == 6) { //monster
+            } else if ((board[i][j] == 6) && (monsterArray[2])) { //monster
                 DrawFiguere(center, monster3_color)
 
-            } else if (board[i][j] == 7) { //monster
+            } else if ((board[i][j] == 7) && (monsterArray[3])) { //monster
                 DrawFiguere(center, monster4_color)
             }
         }
     }
 }
 
-function DrawFood(center, color) {
+function DrawFood(center, color, points) {
     context.beginPath();
-    context.arc(center.x, center.y, 10, 0, 2 * Math.PI); // circle
+    context.arc(center.x, center.y, 10, 0, 2 * Math.PI); // circle	
     context.fillStyle = color;
     context.fill();
+    context.fillStyle = 'black';
+    if (points === '5') {
+        context.fillText(points, center.x - 2, center.y + 2);
+    } else {
+        context.fillText(points, center.x - 4, center.y + 2);
+    }
 }
 
 function DrawFiguere(center, color) {
@@ -690,25 +752,25 @@ function getRandomInt(min, max) {
 }
 
 function PositionMove(dirction, Shape) {
-    if (dirction == 1) {
+    if (dirction == 1) { //up
         if (Shape.j > 0 && board[Shape.i][Shape.j - 1] != 4) {
             Shape.j--;
             return true;
         }
     }
-    if (dirction == 2) {
+    if (dirction == 2) { //down
         if (Shape.j < 9 && board[Shape.i][Shape.j + 1] != 4) {
             Shape.j++;
             return true;
         }
     }
-    if (dirction == 3) {
+    if (dirction == 3) { //left 
         if (Shape.i > 0 && board[Shape.i - 1][Shape.j] != 4) {
             Shape.i--;
             return true;
         }
     }
-    if (dirction == 4) {
+    if (dirction == 4) { //right
         if (Shape.i < 9 && board[Shape.i + 1][Shape.j] != 4) {
             Shape.i++;
             return true;
@@ -765,11 +827,13 @@ function HandleCollision(shape, x) {
         if (shape !== s) {
             if (board[shape.i][shape.j] == s.number) {
                 if (s.number == 2 || shape.number == 2) {
-                    if (failCounter < 6) {
+                    if (failCounter < 6) { // 
                         Start(true);
+                        document.getElementById("lblLIVES").value = document.getElementById("lblLIVES").value - failCounter;
                     }
                     failCounter++;
                     score = Math.max(score - 10, 0);
+                    document.getElementById("lblScore").value = score;
                 } else {
                     MoveBack(shape, x);
                 }
@@ -806,14 +870,25 @@ function MoveMonster(oldPacShape, oldMonShape, monShape) {
 }
 
 function UpdateMonPosition() {
-    oldMonShape1 = new Shape(monShape1.i, monShape1.j, monShape1.color, monShape1.number)
-    oldMonShape2 = new Shape(monShape2.i, monShape2.j, monShape2.color, monShape2.number)
-    oldMonShape3 = new Shape(monShape3.i, monShape3.j, monShape3.color, monShape3.number)
-    oldMonShape4 = new Shape(monShape4.i, monShape4.j, monShape4.color, monShape4.number)
-    MoveMonster(oldPacShape, oldMonShape1, monShape1);
-    MoveMonster(oldPacShape, oldMonShape2, monShape2);
-    MoveMonster(oldPacShape, oldMonShape3, monShape3);
-    MoveMonster(oldPacShape, oldMonShape4, monShape4);
+    if (monsterArray[0]) { //monster
+        oldMonShape1 = new Shape(monShape1.i, monShape1.j, monShape1.color, monShape1.number);
+        MoveMonster(oldPacShape, oldMonShape1, monShape1);
+    }
+
+    if (monsterArray[1]) { //monster
+        oldMonShape2 = new Shape(monShape2.i, monShape2.j, monShape2.color, monShape2.number);
+        MoveMonster(oldPacShape, oldMonShape2, monShape2);
+    }
+
+    if (monsterArray[2]) { //monster
+        oldMonShape3 = new Shape(monShape3.i, monShape3.j, monShape3.color, monShape3.number);
+        MoveMonster(oldPacShape, oldMonShape3, monShape3);
+    }
+
+    if (monsterArray[3]) { //monster
+        oldMonShape4 = new Shape(monShape4.i, monShape4.j, monShape4.color, monShape4.number);
+        MoveMonster(oldPacShape, oldMonShape4, monShape4);
+    }
 }
 
 function UpdatePosition() {
@@ -839,9 +914,7 @@ function UpdatePosition() {
         currentUser.score = score;
         window.clearInterval(interval);
         window.clearInterval(intervalMon);
-        window.alert("Game completed");
-
-
+        alert("Game completed");
     } else {
         Draw();
     }

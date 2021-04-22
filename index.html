@@ -3,206 +3,276 @@
 
 <head>
 
-	<script src="./jquery-3.4.1.slim.min.js"></script>
-	<script type="text/javascript" src="./app.js"></script>
-	<link rel="stylesheet" type="text/css" href="style.css" />
-	<link rel="stylesheet" type="text/css" href="Configurations.css" />
-
-	<script src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/additional-methods.js"></script>
+    <script src="./jquery-3.4.1.slim.min.js"></script>
+    <script type="text/javascript" src="./app.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="Configurations.css" />
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/additional-methods.js"></script>
 
 
 </head>
 
-<body >
-	<div >
-		<!-- Navbar -->
-		<div id="topnav">
-			<div class="topnav">
-				<div class="topnav-left">
-					<a id="Nabar_welcome">Packman</a>
-					<a id="Nabar_login" onclick="switchDives('LOGIN')">Log In</a>
-					<a id="Nabar_register" onclick="switchDives('SIGNUP')">Sign Up</a>
-					<a id="Nabar_about" onclick="openDialog()">About</a>
-				</div>
-			</div>
-		</div>
-
-		<!-- WelcomePage -->
-		</div id="WelcomePage">
-			<button type="button" id="centerSignUp" onclick="document.getElementById('LOGIN').style.display='block'"
-				class="btn btn-outline-primary" style="width: 20%;">LOG IN</button>
-			<button type="button" id="centerLogIn" onclick="document.getElementById('SIGNUP').style.display='block'"
-				class="btn btn-outline-primary" style="width: 20%;">SIGN UP</button>
-		</div>
-
-
-		<!-- LOG_IN -->
-		<form class="cmxform animate" id="LOGIN">
-			<!-- onsubmit="return canlogin()"-->
-			<!-- <span onclick="pressX()" class="close" title="Close Modal">&times;</span> -->
-			<fieldset>
-				<div class="imgcontainer">
-					<span onclick="pressX()" class="close" title="Close Modal">&times;</span>
-				</div>
-				<h1>Log In</h1>
-				<p>Please fill in this form to connect to your account.</p>
-
-				<p>
-					<label for="usernameLogin">Username</label>
-					<input id="usernameLogin" name="usernameLogin" type="text">
-				</p>
-				<p>
-					<label for="passwordLogin">Password</label>
-					<input id="passwordLogin" name="passwordLogin" type="password">
-				</p>
-				<p>
-					<input class="submit" type="submit" value="Submit">
-				</p>
-			</fieldset>
-		</form>
-
-		<dialog id="myDialog">
-			<h3>This is a dialog window!</h3>
-			<br>
-			<button onclick="closeDialog()">Close dialog</button>
-		</dialog>
-
-		<!-- SIGN_UP -->
-		<form class="cmxform animate" id="SIGNUP">	<!-- onsubmit="return addUser()"-->
-			<fieldset>
-				<div class="imgcontainer">
-					<span onclick="pressX()" class="close" title="Close Modal">&times;</span>
-				</div>
-				<h1>Sign Up</h1>
-				<p>Please fill in this form to create an account.</p>
-				<p>
-					<label for="firstname">Firstname</label>
-					<input id="firstname" name="firstname" type="text">
-				</p>
-				<p>
-					<label for="lastname">Lastname</label>
-					<input id="lastname" name="lastname" type="text">
-				</p>
-				<p>
-					<label for="username">Username</label>
-					<input id="username" name="username" type="text">
-				</p>
-				<p>
-					<label for="password">Password</label>
-					<input id="password" name="password" type="password">
-				</p>
-				<p>
-					<label for="confirm_password">Confirm password</label>
-					<input id="confirm_password" name="confirm_password" type="password">
-				</p>
-				<p>
-					<label for="email">Email</label>
-					<input id="email" name="email" type="email">
-				</p>
-				<p>
-					<input class="submit" type="submit" value="Submit">
-				</p>
-			</fieldset>
-		</form>
-
-		<!-- Configuration -->
-		<form class="cmxform animate" id="configuration">	<!-- onsubmit="return addUser()"-->
-			<fieldset>
-				<div class="imgcontainer">
-					<span onclick="pressX()" class="close" title="Close Modal">&times;</span>
-				</div>
-				<h1>Configuration settinges</h1>
-				<p>Please fill in this form to start the game.</p>
-				<p>You can choose random to complete the fildes automaticly.</p>
-				<div class="container">
-					<b>Choose your keys to play with:</b>
-					<br><br>
-					<label><b>Move UP:</b></label>
-					<input type="text" size="15" onkeydown="uniKeyCode('up_btn',event)"
-						placeholder="Click in here and please press a key">
-	
-					<p>You press:<span id="up_btn"></span></p>
-	
-					<label><b>Move DOWN:</b></label>
-					<input type="text" size="15" onkeydown="uniKeyCode('down_btn',event)"
-						placeholder="Click in here and please press a key">
-	
-					<p>You press:<span id="down_btn"></span></p>
-	
-					<label><b>Move LEFT:</b></label>
-					<input type="text" size="15" onkeydown="uniKeyCode('left_btn',event)"
-						placeholder="Click in here and please press a key">
-	
-					<p>You press:<span id="left_btn"></span></p>
-	
-					<label><b>Move RIGHT:</b></label>
-	
-					<input type="text" size="15" onkeydown="uniKeyCode('right_btn',event)"
-						placeholder="Click in here and please press a key">
-	
-					<p>You press:<span id="right_btn"></span></p>
-	
-					<div class="slidecontainer">
-						<b>How many balls do you want?</b>
-						<br />
-						<input type="range" min="50" max="90" value="70" class="slider" id="myRange">
-						<p>Value: <span id="balls_val"></span></p>
-					</div>
-	
-					<b>points for the balls:</b>
-					<br><br>
-					<b>blue food - 5 points</b>
-					<input type="color" size="30px" value="#ff0000" id="five_point_color_id">
-					<br><br>
-					<b>yellow food - 15 points</b>
-					<input type="color" size="30px" value="#ffffff" id="fifteen_point_color_id">
-					<br><br>
-					<b>orange food - 25 points</b>
-					<input type="color" size="30px" value="#0000ff" id="twenty_five_point_color_id">
-					<br><br>
-					<b>Set Time to your game:</b>
-					<br>
-	
-					<i style="color:slategray;">min: 60 sec max: as your laptop can could :)</i><br>
-					<input type="number" id="TotalTime" placeholder="Only Digits" min="60" value="90">
-	
-					<br><br>
-	
-					<legend>How many monsters do you want?</legend>
-					<input type="radio" name="monster" id="m1" value="1">1<br>
-					<input type="radio" name="monster" id="m2" value="2">2<br>
-					<input type="radio" name="monster" id="m3" value="3">3<br>
-					<input type="radio" name="monster" id="m4" value="4">4<br>
-	
-					<input type="submit" onclick="switchDives('Random_game')" value="choose random"></input>
-	
-					<input type="submit" id="config_btn" value="Start Game"></input>
-	
-				</div>
-			</fieldset>
-		</form>
+<body>
+    <div id="myModal">
+        <!-- Navbar -->
+        <div id="topnav">
+            <div class="topnav">
+                <div class="topnav-left">
+                    <img src="logo.png" alt="packman" id="logo">
+                    <a id="Navbar_welcome">Packman</a>
+                    <a id="Navbar_login" onclick="switchDives('LOGIN')">Log In</a>
+                    <a id="Navbar_register" onclick="switchDives('SIGNUP')">Sign Up</a>
+                    <a id="Nabvar_about" onclick="openDialog()">About</a>
+                </div>
+            </div>
+        </div>
+        Navbar_register centerSignUp centerLogIn
+        <!-- WelcomePage -->
+    </div id="WelcomePage">
+    <button type="button" id="centerLogIn" onclick="switchDives('LOGIN')" class="btn btn-outline-primary" style="width: 20%;">LOG IN</button>
+    <button type="button" id="centerSignUp" onclick="switchDives('SIGNUP')" class="btn btn-outline-primary" style="width: 20%;">SIGN UP</button>
+    </div>
 
 
-		<div id="game">
-			<div id="score">
-				<label for="lblScore">SCORE:</label>
-				<input id="lblScore" type="text" size="5"/>
-			</div>
-			<div id="time">
-				<label for="lblTime">TIME:</label>
-				<input id="lblTime" type="text" size="30" />
-			</div>
-			<canvas id="canvas" height="600" width="600"></canvas>
+    <!-- LOG_IN -->
+    <form class="cmxform animate" id="LOGIN">
+        <!-- onsubmit="return canlogin()"-->
+        <!-- <span onclick="pressX()" class="close" title="Close Modal">&times;</span> -->
+        <fieldset>
+            <div class="imgcontainer">
+                <span onclick="pressX()" class="close" title="Close Modal">&times;</span>
+            </div>
+            <h1>Log In</h1>
+            <p>Please fill in this form to connect to your account.</p>
 
-			<div id="config">
-			</div>
-		</div>
+            <p>
+                <label for="usernameLogin">Username</label>
+                <input id="usernameLogin" name="usernameLogin" type="text">
+            </p>
+            <p>
+                <label for="passwordLogin">Password</label>
+                <input id="passwordLogin" name="passwordLogin" type="password">
+            </p>
+            <p>
+                <input class="submit" type="submit" value="Submit">
+            </p>
+        </fieldset>
+    </form>
+    <!-- SIGN_UP -->
+    <form class="cmxform animate" id="SIGNUP">
+        <!-- onsubmit="return addUser()"-->
+        <fieldset>
+            <div class="imgcontainer">
+                <span onclick="pressX()" class="close" title="Close Modal">&times;</span>
+            </div>
+            <h1>Sign Up</h1>
+            <p>Please fill in this form to create an account.</p>
+            <p>
+                <label for="firstname">Firstname</label>
+                <input id="firstname" name="firstname" type="text">
+            </p>
+            <p>
+                <label for="lastname">Lastname</label>
+                <input id="lastname" name="lastname" type="text">
+            </p>
+            <p>
+                <label for="username">Username</label>
+                <input id="username" name="username" type="text">
+            </p>
+            <p>
+                <label for="dob" class="formlabel">Date of Birth</label>
+                <input type="date" id="dob" name="dob" required>
+            </p>
+            <p>
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password">
+            </p>
+            <p>
+                <label for="confirm_password">Confirm password</label>
+                <input id="confirm_password" name="confirm_password" type="password">
+            </p>
+            <p>
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email">
+            </p>
+            <p>
+                <input class="submit" type="submit" value="Submit">
+            </p>
+            <br><br>
+        </fieldset>
+    </form>
 
-		<script>
+    <!-- Configuration -->
+    <form class="cmxform animate" id="configuration">
+        <!-- onsubmit="return addUser()"-->
+        <fieldset>
+            <div class="imgcontainer">
+                <span onclick="pressX()" class="close" title="Close Modal">&times;</span>
+            </div>
+            <h1>Configuration settinges</h1>
+            <p>Please fill in this form to start the game. <br/> You can choose random to complete the fildes automaticly.</p>
+            <div class="container">
+                <b>Choose your keys to play with:</b>
+                <br><br>
+                <label><b>Move UP:</b></label>
+                <input type="text" id="inputup_btn" size="15" onkeydown="uniKeyCode('up_btn',event)" placeholder="Click in here and please press a key" autocomplete="off">
+
+                <p>You press:<span id="up_btn"></span></p>
+
+                <label><b>Move DOWN:</b></label>
+                <input type="text" id="inputdown_btn" size="15" onkeydown="uniKeyCode('down_btn',event)" placeholder="Click in here and please press a key" autocomplete="off">
+
+                <p>You press:<span id="down_btn"></span></p>
+
+                <label><b>Move LEFT:</b></label>
+                <input type="text" id="inputleft_btn" size="15" onkeydown="uniKeyCode('left_btn',event)" placeholder="Click in here and please press a key" autocomplete="off">
+
+                <p>You press:<span id="left_btn"></span></p>
+
+                <label><b>Move RIGHT:</b></label>
+
+                <input type="text" id="inputright_btn" size="15" onkeydown="uniKeyCode('right_btn',event)" placeholder="Click in here and please press a key" autocomplete="off">
+
+                <p>You press:<span id="right_btn"></span></p>
+
+                <div class="slidecontainer">
+                    <b>How many balls do you want?</b>
+                    <br />
+                    <input type="range" min="50" max="90" value="70" class="slider" id="myRange">
+                    <p>Value: <span id="balls_val"></span></p>
+                </div>
+
+                <b>points for the balls:</b>
+                <br><br>
+                <b>blue food - 5 points</b>
+                <input type="color" size="30px" value="#ff0000" id="five_point_color_id">
+                <br><br>
+                <b>yellow food - 15 points</b>
+                <input type="color" size="30px" value="#ffffff" id="fifteen_point_color_id">
+                <br><br>
+                <b>orange food - 25 points</b>
+                <input type="color" size="30px" value="#0000ff" id="twenty_five_point_color_id">
+                <br><br>
+                <b>Set Time to your game:</b>
+                <br>
+
+                <i style="color:slategray;">min: 60 sec max: as your laptop can could :)</i><br>
+                <input type="number" id="TotalTime" placeholder="Only Digits" min="60" value="90">
+
+                <br><br>
+
+                <legend>How many monsters do you want?</legend>
+                <input type="radio" name="monster" id="m1" value="1">1
+                <input type="radio" name="monster" id="m2" value="2">2
+                <input type="radio" name="monster" id="m3" value="3">3
+                <input type="radio" name="monster" id="m4" value="4">4<br>
+
+                <input type="submit" onclick="switchDives('Random_game')" value="choose random"></input>
+
+                <input type="submit" id="config_btn" value="Start Game"></input>
+                <br><br>
+                <br><br>
+
+            </div>
+        </fieldset>
+    </form>
+
+
+    <div id="game">
+        <br/><br/>
+        <audio src="music1.mp3" type="audio/mpeg" autoplay id="myAudio"></audio>
+        <b>   Welcome: <span id="playerName"></span></b>
+        <br/><br/>
+        <label id="lblScore_text" for="lblScore">SCORE: </label>
+        <input id="lblScore" type="text" size="5" style="width: 10%" readonly/>
+        <label id="lblTime_text" for="lblTime">TIME REM: </label>
+        <input id="lblTime" type="text" size="5" style="width: 10%" readonly/>
+        <label id="lblLIVES_text" for="lblLIVES">LIVES: </label>
+        <input id="lblLIVES" type="text" size="5" style="width: 10%" value="5" readonly/>
+        <br/><br/>
+
+        <button type="submit" id="newGame_btn" onclick="switchDives('configuration')">Start New Game</button>
+        <canvas id="canvas" height="600" width="600"></canvas>
+
+
+    </div>
+
+    <div id="config">
+        <br/>
+        <br/>
+        <b for="up_btn_display">To go up press:  </b>
+        <input id="up_btn_display" type="text" size="5" style="width: 25%;" readonly/> </input>
+        <br/>
+        <b for="down_btn_display">To go down press:  </b>
+        <input id="down_btn_display" type="text" size="5" style="width: 25%;" readonly/>
+        <br/>
+        <b for="left_btn_display">To go left press:  </b>
+        <input id="left_btn_display" type="text" size="5" style="width: 25%;" readonly/>
+        <br/>
+        <b for="right_btn_display">To go right press:  </b>
+        <input id="right_btn_display" type="text" size="5" style="width: 25%;" readonly/>
+        <br/>
+        <b for="monster_display">Number of monsters:  </b>
+        <input id="monster_display" type="number" size="5" style="width: 10%;" readonly/>
+        <br/>
+        <b for="food_25">25 point food color:  </b>
+        <input id="food_25" type="color" size="5" style="width: 10%;" readonly/>
+        <br/>
+        <b for="food_15">15 point food color:  </b>
+        <input id="food_15" type="color" size="5" style="width: 10%;" readonly/>
+        <br/>
+        <b for="food_5">5 point food color:  </b>
+        <input id="food_5" type="color" size="5" style="width: 10%;" readonly/>
+        <br/>
+        <b for="nBalls">Number of balls:  </b>
+        <input id="nBalls" type="number" size="5" style="width: 10%;" readonly/>
+        <br/>
+        <b for="time_display">Total time:  </b>
+        <input id="time_display" type="number" size="5" style="width: 10%;" readonly/>
+
+    </div>
+
+
+    <dialog id="myDialog" style="border-radius: 20px 20px 20px 20px;">
+
+        <span class="close " onclick="closeDialog()">&times;</span>
+        <h2> This game was developed by Shimon Shouei and Shai Shimon Levi</h2>
+        <br>
+        <h2> We use the jquery validate plug-in and date picker plugin</h2>
+        <br>
+        <h2>The main difficulty in creating the game is to understand the concept of replacing screens(divs) and understanding the use of jquery's validate plug in </h2>
+        <button onclick="closeDialog()">Close dialog</button>
+    </dialog>
+
+
+
+    <script>
+        var myModal = $("#myModal")
+
+        $(document.body).click(function(e) {
+            var $target = $(e.target);
+            if (!$target.is($("#Nabvar_about"))) {
+                closeDialog();
+            }
+            /*if(!$target.is($("#Navbar_login")) || ($target.is($("#centerLogIn")))){
+            	pressX();
+            }
+            if($target.is($("#Navbar_login")) || (!$target.is($("#centerLogIn")))){
+            	pressX();
+            }
+            if(!$target.is($("#Navbar_register")) || ($target.is($("#centerSignUp")))){
+            	pressX();
+            }
+            if($target.is($("#Navbar_register")) || (!$target.is($("#centerSignUp")))){
+            	pressX();
+            }*/
+        });
+    </script>
+
+    <!-- <script>
 			// Get the modal
 			var modal = document.getElementById('SIGNUP');
-
 			// When the user clicks anywhere outside of the modal, close it
 			window.onclick = function (event) {
 				if (event.target == modal) {
@@ -211,32 +281,45 @@
 					$('#centerLogIn').show();
 				}
 			}
-		</script>
+		</script> -->
 
-		<script>
-			// Get the modal
-			var modal2 = document.getElementById('bodyPage');
+    <script>
+        // Get the modal
+        var modal2 = document.getElementById('bodyPage');
 
-			// When the user clicks anywhere outside of the modal, close it
-			window.onclick = function (event) {
-				if (event.target == modal2) {
-					modal2.style.display = "none";
-					$('#centerSignUp').show();
-					$('#centerLogIn').show();
-				}
-			}
-		</script>
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal2) {
+                modal2.style.display = "none";
+                $('#centerSignUp').show();
+                $('#centerLogIn').show();
+            }
+        }
+    </script>
 
-		<script>
-			var slider = document.getElementById("myRange");
-			var output = document.getElementById("balls_val");
-			output.innerHTML = slider.value;
+    <script>
+        var slider = document.getElementById("myRange");
+        var output = document.getElementById("balls_val");
+        output.innerHTML = slider.value;
 
-			slider.oninput = function () {
-				output.innerHTML = this.value;
-			}
-		</script>
-	</div>
+        slider.oninput = function() {
+            output.innerHTML = this.value;
+        }
+    </script>
+    </div>
+
+    <footer id="footer_center">
+        <p>Author: Shimon Shoei and Shai Shimon Levi<br>
+            <a href="mailto:shouei@post.bgu.ac.il">shouei@post.bgu.ac.il</a> <span>  </span>
+            <a href="mailto:shouei@post.bgu.ac.il">shai1@post.bgu.ac.il</a></p>
+    </footer>
+
+    <footer id="footer_right" style="display: none;">
+        <p>Author: Shimon Shoei and Shai Shimon Levi<br>
+            <a href="mailto:shouei@post.bgu.ac.il">shouei@post.bgu.ac.il</a> <span>  </span>
+            <a href="mailto:shouei@post.bgu.ac.il">shai1@post.bgu.ac.il</a></p>
+    </footer>
+
 </body>
 
 </html>
