@@ -48,7 +48,7 @@ $(document).ready(function() {
 	//Start();
 
 
-	// validate signup form on keyup and submit
+	// validate LOGIN form 
 	$("#LOGIN").validate({
 		rules: {
 			usernameLogin: {
@@ -76,7 +76,7 @@ $(document).ready(function() {
 	});
 
 
-	// validate signup form on keyup and submit
+	// validate SIGNUP form 
 	$("#SIGNUP").validate({
 		rules: {
 			firstname: {
@@ -143,7 +143,7 @@ $(document).ready(function() {
 	});
 
 
-	// validate signup form on keyup and submit
+	// validate configuration form
 	$("#configuration").validate({
 		rules: {
 			inputup_btn: {

@@ -338,8 +338,8 @@ font-weight: bold;
 
 .close:hover,
 .close:focus {
-color: red;
-cursor: pointer;
+	color: red;
+	cursor: pointer;
 }
 
 /* Add Zoom Animation */
