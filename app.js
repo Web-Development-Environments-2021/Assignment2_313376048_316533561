@@ -32,7 +32,11 @@ let pssibleDirections = [1, 2, 3, 4]; //1=up 2= down 3= left 4 =right
 let arrowsKeys = [-1, -1, -1, -1]; // up, down, left, right
 let userLogedin;
 let figuere_array = [];
-
+let ghost_img = new Image(6, 6)
+ghost_img.src = "ghost.PNG"
+let avo_img = new Image(6, 6)
+avo_img.src = "avocado.PNG"
+let foodShape;
 
 
 $(document).ready(function() {
@@ -472,6 +476,7 @@ function Start(over = false) {
         var food2_remain = Math.floor(0.3 * food_remain);
         var food3_remain = Math.floor(0.1 * food_remain);
         var pacman_remain = 1;
+        var points_remain = 1;
         start_time = new Date();
     }
     pac_color = "yellow";
@@ -679,7 +684,11 @@ function Start(over = false) {
 
                         board[i][j] = 0;
                     }
-
+                } else if (randomNum < (1.0 * (points_remain + food_remain)) / cnt) {
+                    foodShape = new Shape(i, j, "gray", 10, i, j);
+                    figuere_array.push(foodShape);
+                    points_remain--;
+                    board[i][j] = 10;
                 } else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) {
                     pacShape = new Shape(i, j, pac_color, 2, i, j);
                     figuere_array.push(pacShape);
@@ -722,6 +731,13 @@ function Start(over = false) {
             pacShape = new Shape(emptyCell[0], emptyCell[1], pac_color, 2, emptyCell[0], emptyCell[1]);
             figuere_array.push(pacShape);
             pacman_remain--;
+        }
+        if (points_remain == 1) {
+            var emptyCell = findRandomEmptyCell(board);
+            board[emptyCell[0]][emptyCell[1]] = 2;
+            foodShape = new Shape(emptyCell[0], emptyCell[1], "gray", 2, emptyCell[0], emptyCell[1]);
+            figuere_array.push(foodShape);
+            points_remain--;
         }
         while (cells > 0) {
             var emptyCell = findRandomEmptyCell(board);
@@ -787,8 +803,8 @@ function Draw() {
     for (var i = 0; i < 20; i++) {
         for (var j = 0; j < 20; j++) {
             var center = new Object();
-            center.x = i * 60 + 30;
-            center.y = j * 60 + 30;
+            center.x = i * 30 + 15;
+            center.y = j * 30 + 15;
             if (board[i][j] == 2) { //pacman
                 DrawFiguere(center, pac_color)
             } else if (board[i][j] == 1) { //food1 = 5 points
@@ -799,20 +815,30 @@ function Draw() {
                 DrawFood(center, document.getElementById("food_25").value, '25');
             } else if (board[i][j] == 4) { //wall
                 context.beginPath();
-                context.rect(center.x - 30, center.y - 30, 60, 60);
+                context.rect(center.x - 15, center.y - 15, 20, 20);
                 context.strokeStyle = "grey";
                 context.stroke();
             } else if ((board[i][j] == 3) && (monsterArray[0])) { //monster
-                DrawFiguere(center, monster1_color)
+                // DrawFiguere(center, monster1_color)
+                context.drawImage(ghost_img, center.x - 20, center.y - 25, 60, 60)
 
             } else if ((board[i][j] == 5) && (monsterArray[1])) { //monster
-                DrawFiguere(center, monster2_color)
+                // DrawFiguere(center, monster2_color)
+                context.drawImage(ghost_img, center.x - 20, center.y - 25, 60, 60)
+
 
             } else if ((board[i][j] == 6) && (monsterArray[2])) { //monster
-                DrawFiguere(center, monster3_color)
+                // DrawFiguere(center, monster3_color)
+                context.drawImage(ghost_img, center.x - 20, center.y - 25, 60, 60)
+
 
             } else if ((board[i][j] == 7) && (monsterArray[3])) { //monster
-                DrawFiguere(center, monster4_color)
+                // DrawFiguere(center, monster4_color)
+                context.drawImage(ghost_img, center.x - 20, center.y - 25, 30, 30)
+
+            } else if ((board[i][j] == 10)) { //points
+                context.drawImage(avo_img, center.x - 20, center.y - 25, 30, 30)
+
             }
         }
     }
@@ -950,23 +976,19 @@ function MoveBack(shape, X) {
 }
 
 function HandleCollision(shape) {
-    // if(shape.color === 'yellow'){
-    //     failCounter++;
-    //     document.getElementById("lblLIVES").value = document.getElementById("lblLIVES").value - 1;
-    //     if(document.getElementById("lblLIVES").value <= 0){
-    //         resetDataGame();
-    //     }
-    // }
+    if (shape.number == 10) {
+        scor += 50;
+        board[shape.i, shape.j] = 0;
+    }
     failCounter++;
     document.getElementById("lblLIVES").value = document.getElementById("lblLIVES").value - 1;
-    // if (document.getElementById("lblLIVES").value <= 0) {
-    //     resetDataGame();
-    // }
+
     score = Math.max(score - 10, 0);
     document.getElementById("lblScore").value = score;
     Start(true);
 
 }
+
 
 function ClearAfterMonster(oldMonShape, monShape) {
     if (board[oldMonShape.i][oldMonShape.j] == 2) {
@@ -1000,6 +1022,18 @@ function MoveMonster(oldPacShape, oldMonShape, monShape) {
 
 }
 
+function MovePoints(oldFoodShape, foodShape) {
+    monX = pssibleDirections[Math.floor(Math.random() * pssibleDirections.length)];
+    let moved = PositionMove(monX, foodShape);
+    while (!moved) {
+        pssibleDirections.splice(monX - 1, monX - 1);
+        monX = pssibleDirections[Math.floor(Math.random() * pssibleDirections.length)];
+        moved = PositionMove(monX, monShape);
+    }
+    ClearAfterMonster(oldFoodShape, foodShape);
+    pssibleDirections = [1, 2, 3, 4];
+}
+
 function UpdateMonPosition() {
     if (monsterArray[0]) { //monster
         oldMonShape1 = new Shape(monShape1.i, monShape1.j, monShape1.color, monShape1.number);
@@ -1020,22 +1054,18 @@ function UpdateMonPosition() {
         oldMonShape4 = new Shape(monShape4.i, monShape4.j, monShape4.color, monShape4.number);
         MoveMonster(oldPacShape, oldMonShape4, monShape4);
     }
+    MovePoints(oldFoodShape, foodShape);
 }
 
 function UpdatePosition() {
-
     oldPacShape = new Shape(pacShape.i, pacShape.j)
     let x = GetKeyPressed();
     collision = PositionMove(x, pacShape);
     if (collision && oldPacShape.i == pacShape.i && oldPacShape.j == pacShape.j) {
         HandleCollision(pacShape);
-        // if (failCounter > 5) {
-        //     currentUser.score = score;
-        //     window.clearInterval(interval);
-        //     window.clearInterval(intervalMon);
-        //     alert("Game completed");
-        // }
-        // return;
+    }
+    if (board[oldPacShape.i][oldPacShape.j] == 10) {
+        score += 50;
     }
     board[oldPacShape.i][oldPacShape.j] = 0;
     if (board[pacShape.i][pacShape.j] == 1) {
