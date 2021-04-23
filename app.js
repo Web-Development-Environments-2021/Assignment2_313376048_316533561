@@ -43,7 +43,7 @@ let foodShape;
 let timer_img = new Image(3, 3)
 timer_img.src = "timer.PNG"
 let timerShape;
-
+let oldPacShape;
 
 
 
@@ -505,6 +505,7 @@ function Start(over = false) {
         var food3_remain = Math.floor(0.1 * food_remain);
         var pacman_remain = 1;
         var points_remain = 1;
+        var timerShape_remain = 1;
         start_time = new Date();
     }
     pac_color = "yellow";
@@ -690,14 +691,19 @@ function Start(over = false) {
                     figuere_array.push(foodShape);
                     points_remain--;
                     board[i][j] = 10;
+                } else if (randomNum < (1.0 * (timerShape_remain + food_remain)) / cnt) {
+                    timerShape = new Shape(i, j, "gray", 11, i, j);
+                    figuere_array.push(timerShape);
+                    timerShape_remain--;
+                    board[i][j] = 11;
                 } else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) {
                     pacShape = new Shape(i, j, pac_color, 2, i, j);
+                    oldPacShape = new Shape(i, j, pac_color, 2, i, j);
                     figuere_array.push(pacShape);
                     pacman_remain--;
                     board[i][j] = 2;
                 } else {
                     if (!over) {
-
                         board[i][j] = 0;
                     }
                 }
@@ -730,15 +736,23 @@ function Start(over = false) {
             var emptyCell = findRandomEmptyCell(board);
             board[emptyCell[0]][emptyCell[1]] = 2;
             pacShape = new Shape(emptyCell[0], emptyCell[1], pac_color, 2, emptyCell[0], emptyCell[1]);
+            oldPacShape = new Shape(emptyCell[0], emptyCell[1], pac_color, 2, emptyCell[0], emptyCell[1]);
             figuere_array.push(pacShape);
             pacman_remain--;
         }
         if (points_remain == 1) {
             var emptyCell = findRandomEmptyCell(board);
-            board[emptyCell[0]][emptyCell[1]] = 2;
+            board[emptyCell[0]][emptyCell[1]] = 10;
             foodShape = new Shape(emptyCell[0], emptyCell[1], "gray", 10, emptyCell[0], emptyCell[1]);
             figuere_array.push(foodShape);
             points_remain--;
+        }
+        if (timerShape_remain == 1) {
+            var emptyCell = findRandomEmptyCell(board);
+            board[emptyCell[0]][emptyCell[1]] = 11;
+            timerShape = new Shape(emptyCell[0], emptyCell[1], "gray", 11, emptyCell[0], emptyCell[1]);
+            figuere_array.push(timerShape);
+            timerShape_remain--;
         }
         while (cells > 0) {
             var emptyCell = findRandomEmptyCell(board);
@@ -820,18 +834,21 @@ function Draw() {
                 context.strokeStyle = "black";
                 context.stroke();
             } else if ((board[i][j] == 3) && (monsterArray[0])) { //monster
-                context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 30, 30)
+                context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 28, 28)
 
             } else if ((board[i][j] == 5) && (monsterArray[1])) { //monster
-                context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 30, 30)
+                context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 28, 28)
 
             } else if ((board[i][j] == 6) && (monsterArray[2])) { //monster
-                context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 30, 30)
+                context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 28, 28)
 
             } else if ((board[i][j] == 7) && (monsterArray[3])) { //monster
-                context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 30, 30)
+                context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 28, 28)
             } else if ((board[i][j] == 10)) { //points
-                context.drawImage(avo_img, center.x - 10, center.y - 12.5, 30, 30)
+                context.drawImage(avo_img, center.x - 10, center.y - 10, 28, 28)
+
+            } else if ((board[i][j] == 11)) { //timer
+                context.drawImage(timer_img, center.x - 10, center.y - 12.5, 30, 30)
 
             }
         }
@@ -878,12 +895,10 @@ function getRandomInt(min, max) {
 }
 
 function PositionMove(dirction, Shape) {
-
-
     if (dirction == 1) { //up
         if (Shape.number == 2 &&
-            (board[Shape.i][Shape.j - 1] == 3 || board[Shape.i][Shape.j - 1] == 5 || board[Shape.i][Shape.j - 1] == 6 || board[Shape.i][Shape.j - 1] == 7 || board[Shape.i][Shape.j - 1] == 10)) {
-            if (board[Shape.i][Shape.j - 1] == 10) {
+            (board[Shape.i][Shape.j - 1] == 3 || board[Shape.i][Shape.j - 1] == 5 || board[Shape.i][Shape.j - 1] == 6 || board[Shape.i][Shape.j - 1] == 7 || board[Shape.i][Shape.j - 1] == 10 || board[Shape.i][Shape.j - 1] == 11)) {
+            if (board[Shape.i][Shape.j - 1] == 10 || board[Shape.i][Shape.j - 1] == 11) {
                 Shape.j--;
             }
             return true;
@@ -896,8 +911,8 @@ function PositionMove(dirction, Shape) {
     }
     if (dirction == 2) { //down
         if (Shape.number == 2 &&
-            (board[Shape.i][Shape.j + 1] == 3 || board[Shape.i][Shape.j + 1] == 5 || board[Shape.i][Shape.j + 1] == 6 || board[Shape.i][Shape.j + 1] == 7 || board[Shape.i][Shape.j + 1] == 10)) {
-            if (board[Shape.i][Shape.j + 1] == 10) {
+            (board[Shape.i][Shape.j + 1] == 3 || board[Shape.i][Shape.j + 1] == 5 || board[Shape.i][Shape.j + 1] == 6 || board[Shape.i][Shape.j + 1] == 7 || board[Shape.i][Shape.j + 1] == 10 || board[Shape.i][Shape.j + 1] == 11)) {
+            if (board[Shape.i][Shape.j + 1] == 10 || board[Shape.i][Shape.j + 1] == 11) {
                 Shape.j++;
             }
             return true;
@@ -910,8 +925,8 @@ function PositionMove(dirction, Shape) {
     }
     if (dirction == 3) { //left
         if (Shape.number == 2 &&
-            (board[Shape.i - 1][Shape.j] == 3 || board[Shape.i - 1][Shape.j] == 5 || board[Shape.i - 1][Shape.j] == 6 || board[Shape.i - 1][Shape.j] == 7 || board[Shape.i - 1][Shape.j] == 10)) {
-            if (board[Shape.i - 1][Shape.j] == 10) {
+            (board[Shape.i - 1][Shape.j] == 3 || board[Shape.i - 1][Shape.j] == 5 || board[Shape.i - 1][Shape.j] == 6 || board[Shape.i - 1][Shape.j] == 7 || board[Shape.i - 1][Shape.j] == 10 || board[Shape.i - 1][Shape.j] == 11)) {
+            if (board[Shape.i - 1][Shape.j] == 10 || board[Shape.i - 1][Shape.j] == 11) {
                 Shape.i--;
             }
             return true;
@@ -924,8 +939,8 @@ function PositionMove(dirction, Shape) {
     }
     if (dirction == 4) { //right
         if (Shape.number == 2 &&
-            (board[Shape.i + 1][Shape.j] == 3 || board[Shape.i + 1][Shape.j] == 5 || board[Shape.i + 1][Shape.j] == 6 || board[Shape.i + 1][Shape.j] == 7 || board[Shape.i + 1][Shape.j] == 10)) {
-            if (board[Shape.i + 1][Shape.j] == 10) {
+            (board[Shape.i + 1][Shape.j] == 3 || board[Shape.i + 1][Shape.j] == 5 || board[Shape.i + 1][Shape.j] == 6 || board[Shape.i + 1][Shape.j] == 7 || board[Shape.i + 1][Shape.j] == 10 || board[Shape.i + 1][Shape.j] == 11)) {
+            if (board[Shape.i + 1][Shape.j] == 10 || board[Shape.i + 1][Shape.j] == 11) {
                 Shape.i++;
             }
             return true;
@@ -971,20 +986,18 @@ function monsterWaze(monShape, pacShape) {
     }
 }
 
-function MoveBack(shape, X) {
-    let revers; //back direction
-    if (X % 2 == 0) {
-        revers = X - 1;
-    } else {
-        revers = X + 1;
-    }
-    PositionMove(revers, shape);
-}
-
 function HandleCollision(shape) {
 
+    if (shape.number == 11) {
+        start_time.setSeconds(start_time.getSeconds() + 30);
+        var freeCell = findRandomEmptyCell(board);
+        board[shape.i][shape.j] = 0;
+        shape.i = freeCell[0];
+        shape.j = freeCell[1];
+        return;
+    }
     if (shape.number == 10) {
-        scor += 50;
+        score += 50;
         var freeCell = findRandomEmptyCell(board);
         board[shape.i][shape.j] = 0;
         shape.i = freeCell[0];
@@ -1001,16 +1014,16 @@ function HandleCollision(shape) {
 
 }
 
-function ClearAfterMonster(oldMonShape, monShape) {
-    if (board[oldMonShape.i][oldMonShape.j] == 2) {
+function ClearAfterMonster(oldMon, monShape) {
+    if (board[oldMon.i][oldMon.j] == 2) {
         HandleCollision(monShape);
         return;
     }
     if (monShape.hover_food > 0) {
-        board[oldMonShape.i][oldMonShape.j] = monShape.hover_food;
+        board[oldMon.i][oldMon.j] = monShape.hover_food;
         monShape.hover_food = 0;
     } else {
-        board[oldMonShape.i][oldMonShape.j] = 0;
+        board[oldMon.i][oldMon.j] = 0;
     }
     if (board[monShape.i][monShape.j] == 1 || board[monShape.i][monShape.j] == 8 || board[monShape.i][monShape.j] == 9) {
         monShape.hover_food = board[monShape.i][monShape.j];
@@ -1018,30 +1031,30 @@ function ClearAfterMonster(oldMonShape, monShape) {
     board[monShape.i][monShape.j] = monShape.number;
 }
 
-function MoveMonster(oldPacShape, oldMonShape, monShape) {
-    if (oldPacShape != undefined) {
-        let monX = monsterWaze(oldPacShape, oldMonShape);
+function MoveMonster(oldPac, oldMon, monShape) {
+    if (oldPac != undefined) {
+        let monX = monsterWaze(oldPac, oldMon);
         let moved = PositionMove(monX, monShape);
         while (!moved) {
             pssibleDirections.splice(monX - 1, monX - 1);
             monX = pssibleDirections[Math.floor(Math.random() * pssibleDirections.length)];
             moved = PositionMove(monX, monShape);
         }
-        ClearAfterMonster(oldMonShape, monShape);
+        ClearAfterMonster(oldMon, monShape);
         pssibleDirections = [1, 2, 3, 4];
     }
 
 }
 
-function MovePoints(oldFoodShape, foodShape) {
-    foodX = pssibleDirections[Math.floor(Math.random() * pssibleDirections.length)];
-    let moved = PositionMove(foodX, foodShape);
+function MovePoints(old, newShape) {
+    let foodX = pssibleDirections[Math.floor(Math.random() * pssibleDirections.length)];
+    let moved = PositionMove(foodX, newShape);
     while (!moved) {
         pssibleDirections.splice(foodX - 1, foodX - 1);
         foodX = pssibleDirections[Math.floor(Math.random() * pssibleDirections.length)];
-        moved = PositionMove(foodX, foodShape);
+        moved = PositionMove(foodX, newShape);
     }
-    ClearAfterMonster(oldFoodShape, foodShape);
+    ClearAfterMonster(old, newShape);
     pssibleDirections = [1, 2, 3, 4];
 }
 
@@ -1067,22 +1080,19 @@ function UpdateMonPosition() {
     }
     oldFoodShape = new Shape(foodShape.i, foodShape.j, foodShape.color, foodShape.number);
     MovePoints(oldFoodShape, foodShape);
+    oldTimerShape = new Shape(timerShape.i, timerShape.j, timerShape.color, timerShape.number);
+    MovePoints(oldTimerShape, timerShape);
 
 }
 
 function UpdatePosition() {
 
-    oldPacShape = new Shape(pacShape.i, pacShape.j)
+    oldPacShape.i = pacShape.i
+    oldPacShape.j = pacShape.j
     let x = GetKeyPressed();
     collision = PositionMove(x, pacShape);
     if (collision && oldPacShape.i == pacShape.i && oldPacShape.j == pacShape.j) {
         HandleCollision(pacShape);
-    }
-    if (board[oldPacShape.i][oldPacShape.j] == 10) {
-        var freeCell = findRandomEmptyCell(board);
-        foodShape.i = freeCell[0];
-        foodShape.j = freeCell[1];
-        score += 50;
     }
     board[oldPacShape.i][oldPacShape.j] = 0;
     if (board[pacShape.i][pacShape.j] == 1) {
@@ -1091,10 +1101,20 @@ function UpdatePosition() {
         score += 15;
     } else if (board[pacShape.i][pacShape.j] == 9) {
         score += 25;
+    } else if (board[pacShape.i][pacShape.j] == 10) {
+        var freeCell = findRandomEmptyCell(board);
+        foodShape.i = freeCell[0];
+        foodShape.j = freeCell[1];
+        score += 50;
+    } else if (board[pacShape.i][pacShape.j] == 11) {
+        var freeCell = findRandomEmptyCell(board);
+        timerShape.i = freeCell[0];
+        timerShape.j = freeCell[1];
+        start_time.setSeconds(start_time.getSeconds() + 30);
     }
     board[pacShape.i][pacShape.j] = 2;
     var currentTime = new Date();
-    time_elapsed = (currentTime - start_time) / 1000;
+    time_elapsed = Math.max((currentTime - start_time) / 1000, 0);
     if (failCounter > 4 || time_elapsed > document.getElementById("TotalTime").value) {
         resetDataGame(false);
     } else {
