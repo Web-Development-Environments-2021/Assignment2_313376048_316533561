@@ -37,12 +37,9 @@ let firstTimeSpecialFoodOccurence = true;
 let lbldict = { 'up_btn': 0, 'down_btn': 1, 'left_btn': 2, 'right_btn': 3 }
 let ghost_img = new Image(3, 3);
 ghost_img.src = "ghost.PNG";
-let avo_img = new Image(3, 3)
+let avo_img = new Image(6, 6)
 avo_img.src = "avocado.PNG"
 let foodShape;
-let timer_img = new Image(3, 3)
-timer_img.src = "timer.PNG"
-let timerShape;
 
 
 
@@ -1080,8 +1077,8 @@ function UpdatePosition() {
     }
     if (board[oldPacShape.i][oldPacShape.j] == 10) {
         var freeCell = findRandomEmptyCell(board);
-        foodShape.i = freeCell[0];
-        foodShape.j = freeCell[1];
+        shape.i = freeCell[0];
+        shape.j = freeCell[1];
         score += 50;
     }
     board[oldPacShape.i][oldPacShape.j] = 0;
