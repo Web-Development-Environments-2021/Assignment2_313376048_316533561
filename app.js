@@ -44,6 +44,10 @@ let timer_img = new Image(3, 3)
 timer_img.src = "timer.PNG"
 let timerShape;
 let oldPacShape;
+let timer_bool = false;
+let mooving_points_bool = false;
+let intervalTimer;
+let intervalMoovingPoints;
 
 
 
@@ -686,12 +690,12 @@ function Start(over = false) {
 
                         board[i][j] = 0;
                     }
-                } else if (randomNum < (1.0 * (points_remain + food_remain)) / cnt) {
+                } else if ((randomNum < (1.0 * (points_remain + food_remain)) / cnt) && mooving_points_bool) {
                     foodShape = new Shape(i, j, "gray", 10, i, j);
                     figuere_array.push(foodShape);
                     points_remain--;
                     board[i][j] = 10;
-                } else if (randomNum < (1.0 * (timerShape_remain + food_remain)) / cnt) {
+                } else if ((randomNum < (1.0 * (timerShape_remain + food_remain)) / cnt) && timer_bool) {
                     timerShape = new Shape(i, j, "gray", 11, i, j);
                     figuere_array.push(timerShape);
                     timerShape_remain--;
@@ -740,14 +744,14 @@ function Start(over = false) {
             figuere_array.push(pacShape);
             pacman_remain--;
         }
-        if (points_remain == 1) {
+        if (points_remain == 1 && mooving_points_bool) {
             var emptyCell = findRandomEmptyCell(board);
             board[emptyCell[0]][emptyCell[1]] = 10;
             foodShape = new Shape(emptyCell[0], emptyCell[1], "gray", 10, emptyCell[0], emptyCell[1]);
             figuere_array.push(foodShape);
             points_remain--;
         }
-        if (timerShape_remain == 1) {
+        if (timerShape_remain == 1 && timer_bool) {
             var emptyCell = findRandomEmptyCell(board);
             board[emptyCell[0]][emptyCell[1]] = 11;
             timerShape = new Shape(emptyCell[0], emptyCell[1], "gray", 11, emptyCell[0], emptyCell[1]);
@@ -774,8 +778,34 @@ function Start(over = false) {
             },
             false
         );
+        intervalTimer = setInterval(showHide_timer, 5000);
+        intervalMoovingPoints = setInterval(showHide_mooving_points, 4000);
         interval = setInterval(UpdatePosition, 250);
         intervalMon = setInterval(UpdateMonPosition, 1000);
+    }
+}
+
+
+function showHide_timer() {
+    timer_bool = !timer_bool;
+    if (timer_bool) {
+        var emptyCell = findRandomEmptyCell(board);
+        board[emptyCell[0]][emptyCell[1]] = 11;
+        timerShape = new Shape(emptyCell[0], emptyCell[1], "gray", 11, emptyCell[0], emptyCell[1]);
+        figuere_array.push(timerShape);
+    } else {
+        board[timerShape.i][timerShape.j] = 0;
+    }
+}
+
+function showHide_mooving_points() {
+    mooving_points_bool = !mooving_points_bool;
+    if (mooving_points_bool) {
+        var emptyCell = findRandomEmptyCell(board);
+        board[emptyCell[0]][emptyCell[1]] = 10;
+        foodShape = new Shape(emptyCell[0], emptyCell[1], "gray", 10, emptyCell[0], emptyCell[1]);
+    } else {
+        board[foodShape.i][foodShape.j] = 0;
     }
 }
 
@@ -1078,10 +1108,15 @@ function UpdateMonPosition() {
         oldMonShape4 = new Shape(monShape4.i, monShape4.j, monShape4.color, monShape4.number);
         MoveMonster(oldPacShape, oldMonShape4, monShape4);
     }
-    oldFoodShape = new Shape(foodShape.i, foodShape.j, foodShape.color, foodShape.number);
-    MovePoints(oldFoodShape, foodShape);
-    oldTimerShape = new Shape(timerShape.i, timerShape.j, timerShape.color, timerShape.number);
-    MovePoints(oldTimerShape, timerShape);
+    if (mooving_points_bool) {
+        oldFoodShape = new Shape(foodShape.i, foodShape.j, foodShape.color, foodShape.number);
+        MovePoints(oldFoodShape, foodShape);
+    }
+    if (timer_bool) {
+        oldTimerShape = new Shape(timerShape.i, timerShape.j, timerShape.color, timerShape.number);
+        MovePoints(oldTimerShape, timerShape);
+    }
+
 
 }
 
@@ -1125,6 +1160,8 @@ function UpdatePosition() {
 function resetDataGame(startNewGame) {
     window.clearInterval(interval);
     window.clearInterval(intervalMon);
+    window.clearInterval(intervalMoovingPoints);
+    window.clearInterval(intervalTimer);
     if (startNewGame == false) {
         if (5 - failCounter <= 0) {
             alert("Loser!");
