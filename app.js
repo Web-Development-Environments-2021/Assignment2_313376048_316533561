@@ -887,13 +887,23 @@ function Draw() {
 
 function DrawFood(center, color, points) {
     context.beginPath();
-    context.arc(center.x, center.y, 10, 0, 2 * Math.PI); // circle	
-    context.fillStyle = color;
-    context.fill();
-    context.fillStyle = 'black';
+
     if (points === '5') {
+        context.arc(center.x, center.y, 6, 0, 2 * Math.PI); // circle	
+        context.fillStyle = color;
+        context.fill();
+        context.fillStyle = 'black';
         context.fillText(points, center.x - 2, center.y + 2);
     } else {
+        if (points === '15') {
+            context.arc(center.x, center.y, 8, 0, 2 * Math.PI); // circle	
+        }
+        if (points === '25') {
+            context.arc(center.x, center.y, 10, 0, 2 * Math.PI); // circle	
+        }
+        context.fillStyle = color;
+        context.fill();
+        context.fillStyle = 'black';
         context.fillText(points, center.x - 4, center.y + 2);
     }
 }
@@ -1076,7 +1086,7 @@ function MoveMonster(oldPac, oldMon, monShape) {
 
 }
 
-function MovePoints(old, newShape) {
+function MoveSpacial(old, newShape) {
     let foodX = pssibleDirections[Math.floor(Math.random() * pssibleDirections.length)];
     let moved = PositionMove(foodX, newShape);
     while (!moved) {
@@ -1110,11 +1120,11 @@ function UpdateMonPosition() {
     }
     if (mooving_points_bool) {
         oldFoodShape = new Shape(foodShape.i, foodShape.j, foodShape.color, foodShape.number);
-        MovePoints(oldFoodShape, foodShape);
+        MoveSpacial(oldFoodShape, foodShape);
     }
     if (timer_bool) {
         oldTimerShape = new Shape(timerShape.i, timerShape.j, timerShape.color, timerShape.number);
-        MovePoints(oldTimerShape, timerShape);
+        MoveSpacial(oldTimerShape, timerShape);
     }
 
 
