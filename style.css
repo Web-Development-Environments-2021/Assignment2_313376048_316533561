@@ -40,8 +40,13 @@ Use: Main Screen Import
 #logo{
 	position: absolute; 
 	left: 95%;
-	height: 100%;
-	
+	height: 100%;	
+}
+
+#welcome_page{
+	position: absolute; 
+	left: 50%;
+	height: 50%;	
 }
 
 /*DIVS*/

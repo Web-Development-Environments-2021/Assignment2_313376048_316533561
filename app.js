@@ -1029,7 +1029,7 @@ function monsterWaze(monShape, pacShape) {
 function HandleCollision(shape) {
 
     if (shape.number == 11) {
-        start_time.setSeconds(start_time.getSeconds() + 30);
+        update30secs();
         var freeCell = findRandomEmptyCell(board);
         board[shape.i][shape.j] = 0;
         shape.i = freeCell[0];
@@ -1155,7 +1155,7 @@ function UpdatePosition() {
         var freeCell = findRandomEmptyCell(board);
         timerShape.i = freeCell[0];
         timerShape.j = freeCell[1];
-        start_time.setSeconds(start_time.getSeconds() + 30);
+        update30secs();
     }
     board[pacShape.i][pacShape.j] = 2;
     var currentTime = new Date();
@@ -1167,6 +1167,11 @@ function UpdatePosition() {
     }
 }
 
+function update30secs(){
+    document.getElementById("TotalTime").value = parseInt(document.getElementById("TotalTime").value) + 30;
+    document.getElementById("time_display").value = document.getElementById("TotalTime").value;
+}
+
 function resetDataGame(startNewGame) {
     window.clearInterval(interval);
     window.clearInterval(intervalMon);
@@ -1176,9 +1181,13 @@ function resetDataGame(startNewGame) {
         if (5 - failCounter <= 0) {
             alert("Loser!");
         } else {
-            if (score >= 100) {
-                alert("You are better than" + score + "points!");
+            lblTime.value = document.getElementById("TotalTime").value;
+            
+            if (score <= 100) {
+                sleep(2);
+                alert("You are better than " + score + " points!");
             } else {
+                sleep(2);
                 alert("Winner!!!");
             }
         }
