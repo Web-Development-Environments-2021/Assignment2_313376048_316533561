@@ -37,6 +37,12 @@ let firstTimeSpecialFoodOccurence = true;
 let lbldict = { 'up_btn': 0, 'down_btn': 1, 'left_btn': 2, 'right_btn': 3 }
 let ghost_img = new Image(3, 3);
 ghost_img.src = "ghost.PNG";
+let ghost_img1 = new Image(3, 3);
+ghost_img1.src = "wg1.PNG";
+let ghost_img2 = new Image(3, 3);
+ghost_img2.src = "wg2.PNG";
+let ghost_img3 = new Image(3, 3);
+ghost_img3.src = "wg3.PNG";
 let avo_img = new Image(3, 3)
 avo_img.src = "avocado.PNG"
 let foodShape;
@@ -872,13 +878,13 @@ function Draw() {
                 context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 28, 28)
 
             } else if ((board[i][j] == 5) && (monsterArray[1])) { //monster
-                context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 28, 28)
+                context.drawImage(ghost_img1, center.x - 10, center.y - 12.5, 28, 28)
 
             } else if ((board[i][j] == 6) && (monsterArray[2])) { //monster
-                context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 28, 28)
+                context.drawImage(ghost_img2, center.x - 10, center.y - 12.5, 28, 28)
 
             } else if ((board[i][j] == 7) && (monsterArray[3])) { //monster
-                context.drawImage(ghost_img, center.x - 10, center.y - 12.5, 28, 28)
+                context.drawImage(ghost_img3, center.x - 10, center.y - 12.5, 28, 28)
             } else if ((board[i][j] == 10)) { //points
                 context.drawImage(avo_img, center.x - 10, center.y - 10, 28, 28)
 
@@ -1103,7 +1109,7 @@ function MoveMonster(oldPac, oldMon, monShape) {
                     break;
                 }
             }
-            monX = RandomStep(monShape);
+            monX = randomMove(monShape);
             moved = PositionMove(monX, monShape);
 
         }
@@ -1114,11 +1120,11 @@ function MoveMonster(oldPac, oldMon, monShape) {
 }
 
 function MoveSpacial(old, newShape) {
-    let foodX = RandomStep(newShape);
+    let foodX = randomMove(newShape);
     let moved = PositionMove(foodX, newShape);
     while (!moved) {
         pssibleDirections.splice(foodX - 1, foodX - 1);
-        foodX = RandomStep(newShape);
+        foodX = randomMove(newShape);
         moved = PositionMove(foodX, newShape);
     }
     ClearAfterMonster(old, newShape);
@@ -1228,7 +1234,7 @@ function resetDataGame(startNewGame) {
     firstTimeSpecialFoodOccurence = true;
 }
 
-function RandomStep(monShape) {
+function randomMove(monShape) {
 
     let random;
 
