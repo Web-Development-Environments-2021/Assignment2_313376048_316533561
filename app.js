@@ -36,17 +36,18 @@ let figuere_array = [];
 let firstTimeSpecialFoodOccurence = true;
 let lbldict = { 'up_btn': 0, 'down_btn': 1, 'left_btn': 2, 'right_btn': 3 }
 let ghost_img = new Image(3, 3);
-ghost_img.src = "ghost.PNG";
+ghost_img.src = "https://github.com/Web-Development-Environments-2021/assignment2-Shai1-Levi/blob/master/ghost.png?raw=true";
 let ghost_img1 = new Image(3, 3);
 ghost_img1.src = "https://github.com/Web-Development-Environments-2021/assignment2-Shai1-Levi/blob/master/wg1.png?raw=true";
 let ghost_img2 = new Image(3, 3);
 ghost_img2.src = "https://github.com/Web-Development-Environments-2021/assignment2-Shai1-Levi/blob/master/wg2.png?raw=true";
 let ghost_img3 = new Image(3, 3);
 ghost_img3.src = "https://github.com/Web-Development-Environments-2021/assignment2-Shai1-Levi/blob/master/wg3.png?raw=true";
-let avo_img;
+let avo_img = new Image(3, 3)
+avo_img.src = "https://github.com/Web-Development-Environments-2021/assignment2-Shai1-Levi/blob/master/avocado.png?raw=true";
 let foodShape;
 let timer_img = new Image(3, 3)
-timer_img.src = "timer.PNG"
+timer_img.src = "https://github.com/Web-Development-Environments-2021/assignment2-Shai1-Levi/blob/master/timer.png?raw=true";
 let timerShape;
 let oldPacShape;
 let timer_bool = false;
@@ -57,8 +58,7 @@ let intervalMoovingPoints;
 
 
 $(document).ready(function() {
-    avo_img = new Image(3, 3)
-    avo_img.src = "avocado.PNG"
+
     context = canvas.getContext("2d");
     context.fillStyle = "pink";
     context.fillRect(0, 0, canvas.width, canvas.height);
