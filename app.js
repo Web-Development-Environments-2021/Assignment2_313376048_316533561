@@ -343,11 +343,16 @@ function pressX() {
     document.getElementById('configuration').style.display = 'none';
     $('#centerSignUp').show();
     $('#centerLogIn').show();
+    $('#WelcomePage').show();
+    $('#welcome_text').show();
+    $('#welcome_page').show(); 
 }
 
 function switchDives(Div_id) {
 
     $('#WelcomePage').hide();
+    $('#welcome_text').hide();
+    $('#welcome_page').hide();    
     $('#SIGNUP').hide();
     $('#footer_left').hide();
     $('#LOGIN').hide();

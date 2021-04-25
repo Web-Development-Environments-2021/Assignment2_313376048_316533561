@@ -20,7 +20,6 @@
             <div class="topnav">
                 <div class="topnav-left">
                     <img src="logo.png" alt="packman" id="logo">
-                    <img src="welcome_page.png" alt="packmanPage" id="welcome_page">
                     <a id="Navbar_welcome">Packman</a>
                     <a id="Navbar_login" onclick="switchDives('LOGIN')">Log In</a>
                     <a id="Navbar_register" onclick="switchDives('SIGNUP')">Sign Up</a>
@@ -28,11 +27,16 @@
                 </div>
             </div>
         </div>
-        Navbar_register centerSignUp centerLogIn
-        <!-- WelcomePage -->
+    </div>
+    
+    <!-- WelcomePage -->
     </div id="WelcomePage">
-    <button type="button" id="centerLogIn" onclick="switchDives('LOGIN')" class="btn btn-outline-primary" style="width: 20%;">LOG IN</button>
-    <button type="button" id="centerSignUp" onclick="switchDives('SIGNUP')" class="btn btn-outline-primary" style="width: 20%;">SIGN UP</button>
+        <div id="welcome_text">
+            <h1>Welcome To Packman Game</h1>
+        </div>        
+        <img src="welcome_page.jpg" alt="packmanPage" id="welcome_page">
+        <button type="button" id="centerLogIn" onclick="switchDives('LOGIN')" class="btn btn-outline-primary" style="width: 20%;">LOG IN</button>
+        <button type="button" id="centerSignUp" onclick="switchDives('SIGNUP')" class="btn btn-outline-primary" style="width: 20%;">SIGN UP</button>
     </div>
 
 
