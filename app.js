@@ -58,8 +58,7 @@ let intervalMoovingPoints;
 
 
 $(document).ready(function() {
-    avo_img = new Image(3, 3)
-    avo_img.src = "avocado.PNG"
+
     context = canvas.getContext("2d");
     context.fillStyle = "pink";
     context.fillRect(0, 0, canvas.width, canvas.height);
