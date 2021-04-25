@@ -43,8 +43,7 @@ let ghost_img2 = new Image(3, 3);
 ghost_img2.src = "https://github.com/Web-Development-Environments-2021/assignment2-Shai1-Levi/blob/master/wg2.png?raw=true";
 let ghost_img3 = new Image(3, 3);
 ghost_img3.src = "https://github.com/Web-Development-Environments-2021/assignment2-Shai1-Levi/blob/master/wg3.png?raw=true";
-let avo_img = new Image(3, 3)
-avo_img.src = "avocado.PNG"
+let avo_img;
 let foodShape;
 let timer_img = new Image(3, 3)
 timer_img.src = "timer.PNG"
@@ -58,6 +57,8 @@ let intervalMoovingPoints;
 
 
 $(document).ready(function() {
+    avo_img = new Image(3, 3)
+    avo_img.src = "avocado.PNG"
     context = canvas.getContext("2d");
     context.fillStyle = "pink";
     context.fillRect(0, 0, canvas.width, canvas.height);
