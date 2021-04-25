@@ -345,14 +345,14 @@ function pressX() {
     $('#centerLogIn').show();
     $('#WelcomePage').show();
     $('#welcome_text').show();
-    $('#welcome_page').show(); 
+    $('#welcome_page').show();
 }
 
 function switchDives(Div_id) {
 
     $('#WelcomePage').hide();
     $('#welcome_text').hide();
-    $('#welcome_page').hide();    
+    $('#welcome_page').hide();
     $('#SIGNUP').hide();
     $('#footer_left').hide();
     $('#LOGIN').hide();
@@ -610,7 +610,7 @@ function Start(over = false) {
                 (i == 6 && j == 9) || (i == 6 && j == 13) ||
                 (i == 7 && j == 5) || (i == 6 && j == 14) ||
                 (i == 8 && j == 1) || (i == 6 && j == 15) ||
-                (i == 8 && j == 2) || (i == 6 && j == 17) ||
+                (i == 8 && j == 2) ||
                 (i == 8 && j == 7) || (i == 6 && j == 18) ||
                 (i == 8 && j == 8) || (i == 6 && j == 19) ||
                 (i == 9 && j == 5) || (i == 7 && j == 15) ||
@@ -665,7 +665,7 @@ function Start(over = false) {
                 (i == 16 && j == 13) ||
                 (i == 16 && j == 14) ||
                 (i == 16 && j == 15) ||
-                (i == 16 && j == 17) ||
+                // (i == 16 && j == 17) ||
                 (i == 16 && j == 18) ||
                 (i == 16 && j == 19) ||
                 (i == 17 && j == 15) ||
@@ -1011,7 +1011,7 @@ function sleep(milliseconds) {
 function monsterWaze(monShape, pacShape) {
     // m = (monShape.i-pacShape.i)/(monShape.j-pacShape.j);
     // m = Math.abs(monShape.i-pacShape.i)/Math.abs(monShape.j-pacShape.j);
-    alpha = (180 * Math.atan2((monShape.j - pacShape.j), (monShape.i - pacShape.i)) / Math.PI);
+    alpha = (180 * Math.atan2(-(monShape.j - pacShape.j), -(monShape.i - pacShape.i)) / Math.PI);
     // alpha =(180*Math.atan(m)/Math.PI);
     if (alpha <= 0) {
         alpha = 360 + alpha;
@@ -1078,12 +1078,34 @@ function ClearAfterMonster(oldMon, monShape) {
 
 function MoveMonster(oldPac, oldMon, monShape) {
     if (oldPac != undefined) {
-        let monX = monsterWaze(oldPac, oldMon);
+        let monX = monsterWaze(oldMon, oldPac);
         let moved = PositionMove(monX, monShape);
         while (!moved) {
-            pssibleDirections.splice(monX - 1, monX - 1);
-            monX = pssibleDirections[Math.floor(Math.random() * pssibleDirections.length)];
+            if (oldPac.i > oldMon.i) {
+                monX = 4;
+                moved = PositionMove(monX, monShape);
+                if (moved) { break; }
+            }
+            if (oldPac.j > oldMon.j) {
+                monX = 2;
+                moved = PositionMove(monX, monShape);
+                if (moved) { break; }
+            }
+            if (oldPac.i < oldMon.i) {
+                monX = 3;
+                moved = PositionMove(monX, monShape);
+                if (moved) { break; }
+            }
+            if (oldPac.j < oldMon.j) {
+                monX = 1;
+                moved = PositionMove(monX, monShape);
+                if (moved) {
+                    break;
+                }
+            }
+            monX = RandomStep(monShape);
             moved = PositionMove(monX, monShape);
+
         }
         ClearAfterMonster(oldMon, monShape);
         pssibleDirections = [1, 2, 3, 4];
@@ -1092,11 +1114,11 @@ function MoveMonster(oldPac, oldMon, monShape) {
 }
 
 function MoveSpacial(old, newShape) {
-    let foodX = pssibleDirections[Math.floor(Math.random() * pssibleDirections.length)];
+    let foodX = RandomStep(newShape);
     let moved = PositionMove(foodX, newShape);
     while (!moved) {
         pssibleDirections.splice(foodX - 1, foodX - 1);
-        foodX = pssibleDirections[Math.floor(Math.random() * pssibleDirections.length)];
+        foodX = RandomStep(newShape);
         moved = PositionMove(foodX, newShape);
     }
     ClearAfterMonster(old, newShape);
@@ -1172,7 +1194,7 @@ function UpdatePosition() {
     }
 }
 
-function update30secs(){
+function update30secs() {
     document.getElementById("TotalTime").value = parseInt(document.getElementById("TotalTime").value) + 30;
     document.getElementById("time_display").value = document.getElementById("TotalTime").value;
 }
@@ -1187,7 +1209,7 @@ function resetDataGame(startNewGame) {
             alert("Loser!");
         } else {
             lblTime.value = document.getElementById("TotalTime").value;
-            
+
             if (score <= 100) {
                 sleep(2);
                 alert("You are better than " + score + " points!");
@@ -1206,6 +1228,29 @@ function resetDataGame(startNewGame) {
     firstTimeSpecialFoodOccurence = true;
 }
 
+function RandomStep(monShape) {
+
+    let random;
+
+    while (true) {
+
+        random = Math.random()
+
+        if (random < 0.25 && board[monShape.i + 1][monShape.j] != 4) {
+            return 4;
+
+        } else if (random >= 0.25 && random < 0.5 && board[monShape.i - 1][monShape.j] != 4) {
+            return 3;
+
+        } else if (random >= 0.5 && random < 0.75 && board[monShape.i][monShape.j + 1] != 4) {
+            return 2;
+
+        } else if (random >= 0.75 && board[monShape.i][monShape.j - 1] != 4) {
+            return 1;
+
+        }
+    }
+}
 class User {
     constructor(username, passward, score) {
         this.username = username;
