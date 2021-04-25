@@ -24,7 +24,7 @@ var monster3_color;
 var monster4_color;
 var time_elapsed;
 let dirction;
-var dirctions_dict = { 1: [-0.35, 1.35, 17], 2: [-1.35, 0.35, 17], 3: [-0.85, 0.85, 4], 4: [0.15, 1.85, 6] }
+var dirctions_dict = { 1: [-0.35, 1.35, 17], 2: [-1.35, 0.35, 17], 3: [-0.85, 0.85, 6], 4: [0.15, 1.85, 6] }
 var currentUser = new Object();
 let ate = false;
 let failCounter = 0;
