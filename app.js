@@ -354,7 +354,7 @@ function switchDives(Div_id) {
     $('#welcome_text').hide();
     $('#welcome_page').hide();
     $('#SIGNUP').hide();
-    $('#footer_left').hide();
+    // $('#footer_left').hide();
     $('#LOGIN').hide();
     $('#centerSignUp').hide();
     $('#centerLogIn').hide();
@@ -372,9 +372,13 @@ function switchDives(Div_id) {
     // $('#footer_center').hide();
     // $('#footer_right').show();
 
-    if (!(Div_id === 'game')) {
-        $('#footer_center').show();
-        $('#footer_right').hide();
+    // if (!(Div_id === 'game')) {
+    //     $('#footer_center').show();
+    //     // $('#footer_right').hide();
+    // }
+
+    if(Div_id === 'configuration'){
+        resetDataGame(true);
     }
 
     if (Div_id === 'game') {
@@ -384,8 +388,8 @@ function switchDives(Div_id) {
         DrawSettings();
         resetDataGame(true);
         Start();
-        $('#footer_center').hide();
-        $('#footer_right').show();
+        // $('#footer_center').hide();
+        // $('#footer_right').show();
 
     } else if (Div_id === 'Random_game') {
         // $('#game').show();
@@ -495,10 +499,13 @@ function displayRadioValue() {
 
 function openDialog() {
     document.getElementById("myDialog").showModal();
+    // switchDives('WelcomePage');
 }
 
 function closeDialog() {
     document.getElementById("myDialog").close();
+    // $('#WelcomePage').hide();
+    // pressX();
 }
 
 
@@ -1204,6 +1211,7 @@ function resetDataGame(startNewGame) {
     window.clearInterval(intervalMon);
     window.clearInterval(intervalMoovingPoints);
     window.clearInterval(intervalTimer);
+    // if the user fail
     if (startNewGame == false) {
         if (5 - failCounter <= 0) {
             alert("Loser!");
@@ -1226,6 +1234,11 @@ function resetDataGame(startNewGame) {
     document.getElementById("lblScore").value = score;
     document.getElementById("lblLIVES").value = 5;
     firstTimeSpecialFoodOccurence = true;
+}
+
+function startNewGameFunc(){
+    resetDataGame(true)
+
 }
 
 function RandomStep(monShape) {
