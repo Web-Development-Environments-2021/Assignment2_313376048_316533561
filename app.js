@@ -383,6 +383,7 @@ function switchDives(Div_id) {
     //     $('#footer_center').show();
     //     // $('#footer_right').hide();
     // }
+    resetDataGame(true);
 
     if (Div_id === 'configuration') {
         resetDataGame(true);
