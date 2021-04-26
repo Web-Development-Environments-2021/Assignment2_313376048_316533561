@@ -64,7 +64,6 @@ $(document).ready(function() {
     context.fillRect(0, 0, canvas.width, canvas.height);
     //Start();
 
-
     // validate LOGIN form 
     $("#LOGIN").validate({
         rules: {
@@ -245,8 +244,6 @@ $(function() {
         var userPassword = users_dict[user];
         if (inputPassword === userPassword) {
             userLogedin = user;
-            // document.getElementById("usernameLogin").value = null;
-            // document.getElementById("passwordLogin").value = null;
             return true;
         }
         return false;
@@ -281,11 +278,8 @@ function canlogin() {
     var inputPassword = document.getElementById("passwordLogin").value;
     var userPassword = users_dict[user];
     if (inputPassword === userPassword) {
-        // document.getElementById("usernameLogin").value = null;
-        // document.getElementById("passwordLogin").value = null;
         switchDives('configuration');
     } else {
-        //alert("User name not exist or incorrect password");
         return false;
     }
 }
@@ -306,7 +300,6 @@ function fillInKeys() {
 
 
 function uniKeyCode(lbl, event) {
-    // var key = evevnt.keyCode      colud be we will need this line later in the game
 
     let error = document.getElementById(lbl)
 
@@ -315,8 +308,6 @@ function uniKeyCode(lbl, event) {
             if (i != lbldict[lbl]) {
                 error.innerHTML = "<span style='color: red;'>" +
                     "You chose this key allready</span>"
-                    //document.getElementsById(lbl).error("You chose this key allready")
-                    //arrowsKeys[i]=null;
                 return false;
             } else {
                 break;
@@ -361,7 +352,6 @@ function switchDives(Div_id) {
     $('#welcome_text').hide();
     $('#welcome_page').hide();
     $('#SIGNUP').hide();
-    // $('#footer_left').hide();
     $('#LOGIN').hide();
     $('#centerSignUp').hide();
     $('#centerLogIn').hide();
@@ -369,20 +359,12 @@ function switchDives(Div_id) {
     $('#configuration').hide();
     $('#about').hide();
     $('#config').hide();
-    // document.getElementById("myAudio").pause();
+    document.getElementById("myAudio").pause();
+    document.getElementById("myAudio").volume = 0.6;
 
 
     $('#' + Div_id).show();
 
-    // if((Div_id === 'SIGNUP')||(Div_id === 'configuration')
-    // 	||(Div_id === 'centerSignUp'))
-    // $('#footer_center').hide();
-    // $('#footer_right').show();
-
-    // if (!(Div_id === 'game')) {
-    //     $('#footer_center').show();
-    //     // $('#footer_right').hide();
-    // }
     resetDataGame(true);
 
     if (Div_id === 'configuration') {
@@ -390,23 +372,15 @@ function switchDives(Div_id) {
     }
 
     if (Div_id === 'game') {
-
-
-        // document.getElementById("myAudio").play();
+        document.getElementById("myAudio").play();
         DrawSettings();
         resetDataGame(true);
         Start();
-        // $('#footer_center').hide();
-        // $('#footer_right').show();
+
 
     } else if (Div_id === 'Random_game') {
-        // $('#game').show();
         $('#configuration').show();
-        //$('#settings').show();
-
         setRandomData();
-        // Start();
-        //DrawSettings();
     }
 }
 
@@ -507,13 +481,10 @@ function displayRadioValue() {
 
 function openDialog() {
     document.getElementById("myDialog").showModal();
-    // switchDives('WelcomePage');
 }
 
 function closeDialog() {
     document.getElementById("myDialog").close();
-    // $('#WelcomePage').hide();
-    // pressX();
 }
 
 
@@ -1024,10 +995,7 @@ function sleep(milliseconds) {
 }
 
 function monsterWaze(monShape, pacShape) {
-    // m = (monShape.i-pacShape.i)/(monShape.j-pacShape.j);
-    // m = Math.abs(monShape.i-pacShape.i)/Math.abs(monShape.j-pacShape.j);
     alpha = (180 * Math.atan2(-(monShape.j - pacShape.j), -(monShape.i - pacShape.i)) / Math.PI);
-    // alpha =(180*Math.atan(m)/Math.PI);
     if (alpha <= 0) {
         alpha = 360 + alpha;
     }

@@ -42,8 +42,6 @@
 
     <!-- LOG_IN -->
     <form class="cmxform animate" id="LOGIN">
-        <!-- onsubmit="return canlogin()"-->
-        <!-- <span onclick="pressX()" class="close" title="Close Modal">&times;</span> -->
         <fieldset>
             <div class="imgcontainer">
                 <span onclick="pressX()" class="close" title="Close Modal">&times;</span>
@@ -66,7 +64,6 @@
     </form>
     <!-- SIGN_UP -->
     <form class="cmxform animate" id="SIGNUP">
-        <!-- onsubmit="return addUser()"-->
         <fieldset>
             <div class="imgcontainer">
                 <span onclick="pressX()" class="close" title="Close Modal">&times;</span>
@@ -110,7 +107,6 @@
 
     <!-- Configuration -->
     <form class="cmxform animate" id="configuration">
-        <!-- onsubmit="return addUser()"-->
         <fieldset>
             <div class="imgcontainer">
                 <span onclick="pressX()" class="close" title="Close Modal">&times;</span>
@@ -187,7 +183,7 @@
 
     <div id="game">
         <br/><br/>
-        <!-- <audio src="music1.mp3" type="audio/mpeg" autoplay id="myAudio"></audio> -->
+        <audio src="music1.mp3" type="audio/mpeg" autoplay id="myAudio"></audio>
         <b>   Welcome: <span id="playerName"></span></b>
         <br/><br/>
         <label id="lblScore_text" for="lblScore">SCORE: </label>
@@ -266,33 +262,8 @@
             if (!$target.is($("#Nabvar_about"))) {
                 closeDialog();
             }
-            /*if(!$target.is($("#Navbar_login")) || ($target.is($("#centerLogIn")))){
-            	pressX();
-            }
-            if($target.is($("#Navbar_login")) || (!$target.is($("#centerLogIn")))){
-            	pressX();
-            }
-            if(!$target.is($("#Navbar_register")) || ($target.is($("#centerSignUp")))){
-            	pressX();
-            }
-            if($target.is($("#Navbar_register")) || (!$target.is($("#centerSignUp")))){
-            	pressX();
-            }*/
         });
     </script>
-
-    <!-- <script>
-			// Get the modal
-			var modal = document.getElementById('SIGNUP');
-			// When the user clicks anywhere outside of the modal, close it
-			window.onclick = function (event) {
-				if (event.target == modal) {
-					modal.style.display = "none";
-					$('#centerSignUp').show();
-					$('#centerLogIn').show();
-				}
-			}
-		</script> -->
 
     <script>
         // Get the modal
@@ -326,14 +297,6 @@
             <a href="mailto:shouei@post.bgu.ac.il">shouei@post.bgu.ac.il</a> <span>  </span>
             <a href="mailto:shouei@post.bgu.ac.il">shai1@post.bgu.ac.il</a></p>
     </footer>
-
-    <!-- <footer id="footer_right" style="display: none;">
-        <p>This site was built in In blood sweat and tears as part of a university course work,
-            we hope you enjoy playing the game, We would love to hear your opinion :)<br>       
-            Author: Shimon Shoei and Shai Shimon Levi<br>
-            <a href="mailto:shouei@post.bgu.ac.il">shouei@post.bgu.ac.il</a> <span>  </span>
-            <a href="mailto:shouei@post.bgu.ac.il">shai1@post.bgu.ac.il</a></p>
-    </footer> -->
 
 </body>
 
