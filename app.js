@@ -771,8 +771,8 @@ function Start(over = false) {
         );
         intervalTimer = setInterval(showHide_timer, 5000);
         intervalMoovingPoints = setInterval(showHide_mooving_points, 4000);
-        interval = setInterval(UpdatePosition, 250);
-        intervalMon = setInterval(UpdateMonPosition, 1000);
+        interval = setInterval(UpdatePosition, 200);
+        intervalMon = setInterval(UpdateMonPosition, 600);
     }
 }
 
