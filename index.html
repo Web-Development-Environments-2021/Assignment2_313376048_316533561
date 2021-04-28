@@ -170,6 +170,14 @@
                     <input type="radio" name="monster" id="m4" value="4">4
                 </legend>
                 <br>
+                <legend>Monster Speed:
+                    <input type="radio" name="monsterSpeed" id="ms1" value="1" >1
+                    <input type="radio" name="monsterSpeed" id="ms2" value="2">2
+                    <input type="radio" name="monsterSpeed" id="ms3" value="3"checked>3
+                    <input type="radio" name="monsterSpeed" id="ms4" value="4">4
+                    <input type="radio" name="monsterSpeed" id="ms5" value="5">5
+                </legend>
+                <br>
                 <input type="button" onclick="switchDives('Random_game')" value="choose random" style="background-color: yellow;"></input>
 
                 <input type="submit" id="config_btn" value="Start Game"></input>
@@ -193,7 +201,6 @@
         <label id="lblLIVES_text" for="lblLIVES">LIVES: </label>
         <input id="lblLIVES" type="text" size="5" style="width: 10%" value="5" readonly/>
         <br/><br/>
-
         <button type="submit" id="newGame_btn" onclick="switchDives('configuration')">Start New Game</button>
         <canvas id="canvas" height="600" width="600"></canvas>
 
@@ -219,6 +226,9 @@
         <b for="monster_display">Number of monsters:  </b>
         <input id="monster_display" type="number" size="5" style="width: 10%;" readonly/>
         <br/>
+        <b for="monSpeed">Monster Speed:  </b>
+        <input id="mon_Speed" type="number" size="5" style="width: 10%;" readonly/> 
+        <br/>
         <b for="food_25">25 point food color:  </b>
         <input id="food_25" type="color" size="5" style="width: 10%;" readonly/>
         <br/>
@@ -233,6 +243,7 @@
         <br/>
         <b for="time_display">Total time:  </b>
         <input id="time_display" type="number" size="5" style="width: 10%;" readonly/>
+
 
     </div>
 
