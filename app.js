@@ -773,6 +773,7 @@ function Start(over = false) {
         intervalMoovingPoints = setInterval(showHide_mooving_points, 4000);
         interval = setInterval(UpdatePosition, 200);
         intervalMon = setInterval(UpdateMonPosition, 600);
+        intervalSpecial = setInterval(UpdateSpecialPosition, 600);
     }
 }
 
@@ -1108,6 +1109,17 @@ function MoveSpacial(old, newShape) {
     pssibleDirections = [1, 2, 3, 4];
 }
 
+function UpdateSpecialPosition() {
+    if (mooving_points_bool) {
+        oldFoodShape = new Shape(foodShape.i, foodShape.j, foodShape.color, foodShape.number);
+        MoveSpacial(oldFoodShape, foodShape);
+    }
+    if (timer_bool) {
+        oldTimerShape = new Shape(timerShape.i, timerShape.j, timerShape.color, timerShape.number);
+        MoveSpacial(oldTimerShape, timerShape);
+    }
+}
+
 function UpdateMonPosition() {
     if (monsterArray[0]) { //monster
         oldMonShape1 = new Shape(monShape1.i, monShape1.j, monShape1.color, monShape1.number);
@@ -1128,14 +1140,7 @@ function UpdateMonPosition() {
         oldMonShape4 = new Shape(monShape4.i, monShape4.j, monShape4.color, monShape4.number);
         MoveMonster(oldPacShape, oldMonShape4, monShape4);
     }
-    if (mooving_points_bool) {
-        oldFoodShape = new Shape(foodShape.i, foodShape.j, foodShape.color, foodShape.number);
-        MoveSpacial(oldFoodShape, foodShape);
-    }
-    if (timer_bool) {
-        oldTimerShape = new Shape(timerShape.i, timerShape.j, timerShape.color, timerShape.number);
-        MoveSpacial(oldTimerShape, timerShape);
-    }
+
 
 
 }
