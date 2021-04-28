@@ -491,7 +491,7 @@ function displayRadioValue() {
     }
 }
 
-function displayMonsterSpeed(){
+function displayMonsterSpeed() {
     var ele = document.getElementsByName('monsterSpeed');
 
     for (i = 0; i < ele.length; i++) {
@@ -794,17 +794,9 @@ function Start(over = false) {
         intervalTimer = setInterval(showHide_timer, 5000);
         intervalMoovingPoints = setInterval(showHide_mooving_points, 4000);
         interval = setInterval(UpdatePosition, 200);
-<<<<<<< HEAD
-        intervalMon = setInterval(UpdateMonPosition, 600);
+        intervalMon = setInterval(UpdateMonPosition, 200 * (6 - displayMonsterSpeed()));
         intervalSpecial = setInterval(UpdateSpecialPosition, 600);
-=======
-        intervalMon = setInterval(UpdateMonPosition, 200 * (6-displayMonsterSpeed()));
-        // intervalMon = setInterval(UpdateMonPosition, 600);
-        // superInterval = setInterval(() => {
-        //     // window.clearInterval(intervalMon);
-        //     intervalMon = setInterval(UpdateMonPosition, 200 * (6-displayMonsterSpeed()));
-        // }, 600);
->>>>>>> ddac3408c9aec3ca050a19ec5ddca90426f631ee
+
     }
 }
 
