@@ -54,6 +54,7 @@ let timer_bool = false;
 let mooving_points_bool = false;
 let intervalTimer;
 let intervalMoovingPoints;
+let superInterval;
 
 
 
@@ -390,6 +391,7 @@ function setRandomData() {
     setPointsColor();
     setTotalTime();
     setNumberOfMonsters();
+    setSpeedForMonsters();
 }
 
 function setkeysForGame() {
@@ -442,6 +444,14 @@ function setNumberOfMonsters() {
     document.getElementsByName('monster')[index - 1].checked = true;
 }
 
+function setSpeedForMonsters() {
+
+    var index = Math.floor(Math.random() * 5) + 1; // returns a random integer from 1 to 5
+
+    document.getElementsByName('monsterSpeed')[index - 1].value = index;
+    document.getElementsByName('monsterSpeed')[index - 1].checked = true;
+}
+
 function DrawSettings() {
     $('#config').show();
     // buttons
@@ -467,10 +477,22 @@ function DrawSettings() {
     // number of monsters
     document.getElementById("monster_display").value = displayRadioValue();
 
+    //monsters speed
+    document.getElementById("mon_Speed").value = displayMonsterSpeed();
+
 }
 
 function displayRadioValue() {
     var ele = document.getElementsByName('monster');
+
+    for (i = 0; i < ele.length; i++) {
+        if (ele[i].checked)
+            return ele[i].value;
+    }
+}
+
+function displayMonsterSpeed(){
+    var ele = document.getElementsByName('monsterSpeed');
 
     for (i = 0; i < ele.length; i++) {
         if (ele[i].checked)
@@ -772,7 +794,12 @@ function Start(over = false) {
         intervalTimer = setInterval(showHide_timer, 5000);
         intervalMoovingPoints = setInterval(showHide_mooving_points, 4000);
         interval = setInterval(UpdatePosition, 200);
-        intervalMon = setInterval(UpdateMonPosition, 600);
+        intervalMon = setInterval(UpdateMonPosition, 200 * (6-displayMonsterSpeed()));
+        // intervalMon = setInterval(UpdateMonPosition, 600);
+        // superInterval = setInterval(() => {
+        //     // window.clearInterval(intervalMon);
+        //     intervalMon = setInterval(UpdateMonPosition, 200 * (6-displayMonsterSpeed()));
+        // }, 600);
     }
 }
 
@@ -1109,6 +1136,7 @@ function MoveSpacial(old, newShape) {
 }
 
 function UpdateMonPosition() {
+
     if (monsterArray[0]) { //monster
         oldMonShape1 = new Shape(monShape1.i, monShape1.j, monShape1.color, monShape1.number);
         MoveMonster(oldPacShape, oldMonShape1, monShape1);
