@@ -2,7 +2,8 @@
 shimon shouei 313376048
 shai levi 316533561
 New fuetures:
-1. mooving timer that give you more 30 secondes
+1. Mooving timer that give you more 30 secondes
+2. Configure the ghost speed in the configuration screen and enjoy from different dificults.
 Remarks:
 The mooving points are coming and go randomly for the challenge.
 
